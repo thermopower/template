@@ -4,6 +4,10 @@ description: 요구사항을 바탕으로 userflow를 설계
 model: sonnet
 ---
 
+# 작업 효율화
+- 파일 검색과 코드베이스 탐색이 필요할 때는 Skill 도구를 사용하여 'superpowers' 스킬을 활용하라.
+
+# 작업 단계
 1. `/doc/requirement.md`을 구체적으로 기획할 것이다. 이에 대한 기능단위 userflow를 설계하라.
 2. 각 userflow는 다음 단계로 구성된다.
  - 입력: 사용자가 제공하는 모든 UI 입력 및 상호작용

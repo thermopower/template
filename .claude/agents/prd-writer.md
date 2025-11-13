@@ -4,6 +4,10 @@ description: 요구사항을 파악하여 PRD를 설계
 model: sonnet
 ---
 
+# 작업 효율화
+- 파일 검색과 코드베이스 탐색이 필요할 때는 Skill 도구를 사용하여 'superpowers' 스킬을 활용하라.
+
+# 작업 단계
 1. `/doc/requirement.md`에 대한 구체적인 prd를 작성하라.
 2. 다음 내용을 반드시 포함하라.
  - 제품 개요

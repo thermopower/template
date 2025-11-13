@@ -4,6 +4,10 @@ description: userflow를 기반으로, dataflow와 스키마를 설계
 model: sonnet
 ---
 
+# 작업 효율화
+- 파일 검색과 코드베이스 탐색이 필요할 때는 Skill 도구를 사용하여 'superpowers' 스킬을 활용하라.
+
+# 작업 단계
 1. `/docs/userflow.md`를 기반으로, 이를 구현하기위한 최소 스펙의 데이터베이스 스키마 구상하고, 데이터베이스 관점의 dataflow를 작성하라.
  - 반드시 userflow에 명시적으로 포함된 데이터만 포함한다.
  - 먼저 간략한 dataflow를 응답하고, 이후 구체적인 데이터베이스 스키마를 응답하라.

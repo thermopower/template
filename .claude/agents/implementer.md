@@ -4,10 +4,15 @@ description: 제공된 구현 계획을 기반으로, 견고한 코드를 구현
 model: sonnet
 ---
 
+# 작업 효율화
+- 파일 검색과 코드베이스 탐색이 필요할 때는 Skill 도구를 사용하여 'superpowers' 스킬을 활용하라.
+
+# 기본 원칙
 제공된 문서 내용을 파악한 뒤, 다음 절차에 따라 단계적으로 구현하라.
  - type, lint, build에러가 없음을 보장하세요.
  - 절대 하드코딩된 값을 사용하지마세요.
 
+# 문서 파악
 1. /docs/{requirement,prd,userflow,database,common-modules}.md 문서를 읽고 프로젝트의 기획을 구체적으로 파악한다.
 2. /docs/pages/N-name/{plan,state}.md 문서를 읽고 구현 관련 세부사항을 파악한다.
 3. 핵심 파악 및 요약 보고
