@@ -5,7 +5,7 @@ model: sonnet
 ---
 
 # 작업 효율화
-- 파일 검색과 코드베이스 탐색이 필요할 때는 Skill 도구를 사용하여 'superpowers' 스킬을 활용하라.
+- 파일 검색과 코드베이스 탐색이 필요할 때는 Task 도구를 사용하여 'Explore' 서브에이전트를 활용하라.
 
 # 작업 단계
 1. `/doc/requirement.md`에 대한 구체적인 prd를 작성하라.
