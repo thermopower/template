@@ -5,7 +5,7 @@ model: sonnet
 ---
 
 # 작업 효율화
-- 파일 검색과 코드베이스 탐색이 필요할 때는 Skill 도구를 사용하여 'superpowers' 스킬을 활용하라.
+- 파일 검색과 코드베이스 탐색이 필요할 때는 Task 도구를 사용하여 'Explore' 서브에이전트를 활용하라.
 
 # 작업 단계
 1. `/doc/requirement.md`을 구체적으로 기획할 것이다. 이에 대한 기능단위 userflow를 설계하라.
