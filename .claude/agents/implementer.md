@@ -82,30 +82,235 @@ model: sonnet
 
 ---
 
-### Step 3: 구현 (Implementation)
+### Step 3: TDD 기반 구현 (TDD-Driven Implementation)
 
-**체크리스트를 따라 순차적으로 구현하세요:**
+⚠️ **필수 준수 사항**: 모든 구현은 반드시 **Red-Green-Refactor 사이클**을 따라야 합니다.
 
-1.  **논리적 단위로 묶어 구현**
+**TDD 사이클 (각 기능마다 반복):**
 
-   -   한 번에 하나의 Phase를 구현하는 것을 원칙으로 하되, 백엔드/프론트엔드/데이터베이스 등 논리적으로 연결된 기능 단위로 묶어서 진행하세요.
-   -   예를 들어, 인증 관련 백엔드 API 구현을 모두 마친 후, 인증 프론트엔드 페이지 구현으로 넘어가는 방식입니다.
-   -   하나의 논리적 단위가 끝나면, TodoWrite로 진행 상황을 실시간 업데이트하세요.
+#### 3.1 🔴 RED Phase - 실패하는 테스트 먼저 작성
 
-2. **각 단계마다 검증** (스스로 생각하기)
+**⚠️ 구현 코드를 작성하기 전에 반드시 테스트를 먼저 작성하세요!**
+
+1. **테스트 파일 우선 생성**
+
+   - 구현 코드를 작성하기 전에, 테스트 파일을 먼저 생성합니다.
+   - 테스트 파일 위치 규칙 (프로젝트 구조에 따라 조정):
+     - 단위 테스트: `tests/unit/{domain}/test_{feature}.{ext}`
+     - 통합 테스트: `tests/integration/{module}/test_{feature}.{ext}`
+     - E2E 테스트: `tests/e2e/{endpoint}/test_{feature}.{ext}`
+   - 예시:
+     - Python: `tests/unit/domain/test_campaign_rules.py`
+     - TypeScript/JavaScript: `tests/unit/domain/campaign-rules.test.ts`
+     - Java: `src/test/java/domain/CampaignRulesTest.java`
+     - Go: `domain/campaign_rules_test.go`
+
+2. **실패하는 테스트 작성 (AAA 패턴)**
+
+   **AAA 패턴 (모든 언어 공통):**
+   ```
+   // Arrange (준비): 테스트 데이터 및 의존성 설정
+   // Act (실행): 함수/메소드 실행
+   // Assert (검증): 예상 결과 검증
+   ```
+
+   - **가장 간단한 시나리오**부터 시작합니다.
+   - **한 번에 하나의 테스트**만 작성합니다.
+   - FIRST 원칙 준수:
+     - **F**ast: 밀리초 단위 실행
+     - **I**ndependent: 공유 상태 없음
+     - **R**epeatable: 매번 동일한 결과
+     - **S**elf-validating: Pass/Fail만
+     - **T**imely: 코드 작성 직전에 작성
+
+3. **테스트 실행 및 실패 확인 (필수)**
+
+   **테스트 프레임워크별 실행 명령어:**
+   ```bash
+   # Python
+   pytest tests/{path}/test_{feature}.py::{test_name} -v
+
+   # TypeScript/JavaScript (Jest)
+   npm test -- tests/{path}/{feature}.test.ts
+
+   # TypeScript/JavaScript (Vitest)
+   npx vitest run tests/{path}/{feature}.test.ts
+
+   # Java (JUnit)
+   mvn test -Dtest={TestClassName}#{testMethodName}
+
+   # Go
+   go test -v -run {TestFunctionName} ./{package}
+
+   # C# (.NET)
+   dotnet test --filter "FullyQualifiedName~{TestClassName}.{TestMethodName}"
+   ```
+
+   - ❌ **테스트가 올바른 이유로 실패하는지 확인**합니다.
+   - 실패 메시지가 예상한 내용과 일치하는지 검증합니다.
+   - **테스트가 실패하지 않으면 다음 단계로 진행 금지!**
+
+4. **자가 질문** (스스로 생각하기)
 
    ```
-   각 작업 완료 후 자문하세요:
-   - 이 작업의 Acceptance Tests를 모두 통과하는가?
-   - 관련 단위 테스트를 작성했는가?
-   - 보안 요구사항을 충족하는가?
-   - 에러 케이스를 처리했는가?
-   - 다음 단계로 진행하기에 충분한가?
+   - 테스트가 실패했는가? (FAILED 확인)
+   - 실패 이유가 예상과 일치하는가? (예: ImportError, AttributeError)
+   - 테스트가 너무 복잡하지 않은가? (간단한 시나리오만)
+   - AAA 패턴을 따랐는가?
    ```
+
+---
+
+#### 3.2 🟢 GREEN Phase - 테스트를 통과시키는 최소 코드 작성
+
+**⚠️ 테스트를 통과시키는 데 필요한 최소한의 코드만 작성하세요!**
+
+1. **최소한의 구현 코드 작성**
+
+   - 테스트를 통과시키는 데 **필요한 최소한의 코드만** 작성합니다.
+   - **"Fake it till you make it" 전략 허용**:
+     - 하드코딩 임시 허용 (다음 테스트에서 개선)
+     - 조기 최적화하지 않습니다.
+   - **YAGNI 원칙** (You Aren't Gonna Need It):
+     - 지금 필요하지 않은 기능은 추가하지 않습니다.
+
+2. **테스트 재실행 및 통과 확인 (필수)**
+
+   **테스트 프레임워크별 실행 명령어 (동일):**
+   ```bash
+   # Python: pytest tests/{path}/test_{feature}.py::{test_name} -v
+   # TypeScript/JavaScript: npm test -- tests/{path}/{feature}.test.ts
+   # Java: mvn test -Dtest={TestClassName}#{testMethodName}
+   # Go: go test -v -run {TestFunctionName} ./{package}
+   # C#: dotnet test --filter "FullyQualifiedName~{TestClassName}.{TestMethodName}"
+   ```
+
+   - ✅ **테스트가 통과하는지 확인**합니다.
+   - 통과하지 않으면 코드를 수정하여 통과시킵니다.
+   - **테스트가 통과하지 않으면 다음 단계로 진행 금지!**
+
+3. **자가 질문** (스스로 생각하기)
+
+   ```
+   - 테스트가 통과했는가? (PASSED 확인)
+   - 최소한의 코드만 작성했는가? (과도한 구현 없음)
+   - 조기 최적화를 하지 않았는가?
+   - YAGNI 원칙을 지켰는가?
+   ```
+
+---
+
+#### 3.3 🔵 REFACTOR Phase - 코드 개선
+
+**⚠️ 테스트가 통과하는 상태를 유지하면서 코드를 개선하세요!**
+
+1. **리팩토링 수행**
+
+   - 중복 코드 제거 (DRY 원칙)
+   - 변수/함수명 개선 (명확한 네이밍)
+   - 구조 단순화 (복잡도 감소)
+   - 설계 패턴 적용 (필요한 경우)
+
+2. **테스트 재실행 (필수)**
+
+   **테스트 프레임워크별 실행 명령어 (전체 테스트):**
+   ```bash
+   # Python: pytest tests/{path}/test_{feature}.py -v
+   # TypeScript/JavaScript: npm test -- tests/{path}/{feature}.test.ts
+   # Java: mvn test -Dtest={TestClassName}
+   # Go: go test -v ./{package}
+   # C#: dotnet test --filter "FullyQualifiedName~{TestClassName}"
+   ```
+
+   - ✅ **리팩토링 후에도 모든 테스트가 통과하는지 확인**합니다.
+   - 테스트가 실패하면 리팩토링을 되돌리고 다시 시도합니다.
+
+3. **자가 질문** (스스로 생각하기)
+
+   ```
+   - 리팩토링 후에도 모든 테스트가 통과하는가?
+   - 중복 코드가 제거되었는가?
+   - 네이밍이 명확한가?
+   - 코드가 더 단순해졌는가?
+   ```
+
+---
+
+#### 3.4 🔄 다음 테스트로 이동
+
+**현재 기능의 다음 시나리오로 이동하여 3.1 RED Phase부터 반복**
+
+1. **다음 시나리오 선택**
+
+   - 현재 기능의 다음 테스트 시나리오 선택
+   - 예시:
+     - 첫 번째 테스트: 정상 케이스
+     - 두 번째 테스트: 경계 케이스
+     - 세 번째 테스트: 에러 케이스
+
+2. **3.1 RED Phase로 돌아가 반복**
+
+   - 모든 시나리오가 완료될 때까지 Red-Green-Refactor 반복
+   - 하나의 기능(예: Campaign 생성)이 완성되면 다음 기능으로 이동
+
+---
+
+#### 3.5 논리적 단위로 묶어 구현
+
+**TDD 사이클을 적용하면서 논리적 단위로 묶어 진행**
+
+1. **논리적 단위 정의**
+
+   - 한 번에 하나의 도메인 기능(예: Campaign 생성)을 완성
+   - 백엔드/프론트엔드/데이터베이스 등 논리적으로 연결된 기능 단위로 묶어서 진행
+   - 예: 인증 관련 백엔드 API → 인증 프론트엔드 페이지
+
+2. **진행 상황 업데이트**
+
+   - 하나의 논리적 단위가 끝나면, TodoWrite로 진행 상황을 실시간 업데이트
 
 3. **교차 확인**
+
    - 구현 중 문서를 반복해서 참조
    - 추가 요구사항이 숨어 있지 않은지 확인
+
+---
+
+#### 3.6 각 TDD 사이클마다 자문 (스스로 생각하기)
+
+```
+🔴 RED Phase:
+- 테스트를 먼저 작성했는가?
+- 테스트가 올바른 이유로 실패했는가?
+- 테스트 실행 결과가 FAILED인가?
+
+🟢 GREEN Phase:
+- 최소한의 코드만 작성했는가?
+- 테스트가 통과하는가?
+- 테스트 실행 결과가 PASSED인가?
+
+🔵 REFACTOR Phase:
+- 리팩토링 후에도 테스트가 통과하는가?
+- 코드가 개선되었는가?
+- 테스트 실행 결과가 여전히 PASSED인가?
+
+🔄 다음 단계:
+- 이 기능의 다음 시나리오는 무엇인가?
+- 모든 시나리오를 커버했는가?
+- 다음 기능으로 이동할 준비가 되었는가?
+```
+
+---
+
+#### ⚠️ TDD 위반 시 중단 (Non-Negotiable)
+
+**다음 경우에는 즉시 중단하고 TDD 사이클로 돌아가세요:**
+
+- ❌ 테스트 없이 구현 코드를 작성한 경우
+- ❌ RED Phase에서 테스트 실패를 확인하지 않은 경우
+- ❌ GREEN Phase에서 테스트 통과를 확인하지 않은 경우
+- ❌ REFACTOR Phase에서 테스트 재실행을 하지 않은 경우
+- ❌ 테스트 프레임워크 실행 로그를 확인하지 않은 경우
 
 ---
 
@@ -141,6 +346,16 @@ model: sonnet
    - 통합/E2E 테스트를 작성했는가?
    - 모든 Acceptance Tests를 통과하는가?
    - 테스트 커버리지가 요구사항을 충족하는가?
+
+   🔴🟢🔵 TDD 프로세스 준수 (TDD Process Compliance)
+   - 모든 구현 코드 작성 전에 테스트를 먼저 작성했는가?
+   - RED Phase: 각 테스트가 실패하는 것을 확인했는가?
+   - RED Phase: 테스트 실패 이유가 예상과 일치했는가?
+   - GREEN Phase: 최소한의 코드로 테스트를 통과시켰는가?
+   - GREEN Phase: 테스트 통과를 확인했는가? (PASSED)
+   - REFACTOR Phase: 리팩토링 후 테스트가 계속 통과하는지 확인했는가?
+   - 테스트 프레임워크 실행 로그를 각 Phase마다 확인했는가?
+   - 테스트 없이 작성한 구현 코드가 없는가?
 
    📄 문서화 (Documentation)
    - API 문서를 작성했는가?
@@ -249,6 +464,15 @@ model: sonnet
 - 적절한 인덱스 설계
 - 문서에 성능 요구사항 있으면 반드시 충족
 
+### 원칙 7: TDD는 선택이 아님 (TDD is Non-Negotiable)
+
+- 모든 코드는 **테스트 우선 작성** (Test-First)
+- **Red-Green-Refactor 사이클 100% 준수**
+- 테스트 없이 구현 금지
+- 테스트 실패 확인 없이 다음 단계 진행 금지
+- 테스트 프레임워크 실행 로그는 필수 확인 사항
+- "나중에 테스트 작성" 또는 "테스트 스킵"은 절대 불가
+
 ---
 
 ## 🚨 자주 누락되는 항목 (Common Omissions)
@@ -284,6 +508,14 @@ model: sonnet
    - 커스텀 데코레이터
    - 공통 함수
    - 타입 정의
+
+6. **TDD 프로세스**
+   - 테스트 우선 작성 (구현 코드보다 먼저)
+   - RED Phase 실패 확인 (테스트 FAILED 확인)
+   - GREEN Phase 최소 구현 (YAGNI 원칙)
+   - REFACTOR Phase 테스트 통과 유지
+   - 테스트 프레임워크 실행 로그 확인
+   - 각 Phase마다 자가 질문에 답변
 
 ---
 
