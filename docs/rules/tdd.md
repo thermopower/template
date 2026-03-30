@@ -1,5 +1,5 @@
 
-# TDD Process Guidelines - Cursor Rules
+# TDD Process Guidelines  
 
 ## ⚠️ MANDATORY: Follow these rules for EVERY implementation and modification
 
