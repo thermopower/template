@@ -66,9 +66,10 @@ next-env.d.ts
 /.mcp.json.bak
 /AGENTS.md
 /AGENTS.md.bak
-/CLAUDE.md
-/CLAUDE.md.bak
 # END Ruler Generated Files
+
+# Harness - 하네스 핵심 파일은 git에 포함 (CLAUDE.md, .claude-state/, .ruler/)
+# .claude/settings.local.json은 위에서 이미 제외됨
 
 # repomix
 repomix-output.xml
