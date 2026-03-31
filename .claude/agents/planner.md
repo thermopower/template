@@ -22,15 +22,71 @@ maxTurns: 40
    - `product-spec.md` — 제품 목표, 핵심 사용자, 핵심 플로우, 범위, 제외 범위
    - `feature-list.json` — 기능 ID, 우선순위, status, acceptance_criteria, verification_linkage
    - `sprint-plan.md` — feature 순서, sprint sequencing, 예상 리스크
-7. 첫 번째 sprint의 `sprint-contract.md` 초안을 작성한다 (status: draft).
-   - `profile:` 필드: `profiles/` 디렉터리에 존재하는 profile 이름 중 기술 스택에 맞는 것을 기입한다. 없으면 생략한다.
+7. 요구사항에서 기술 스택을 결정하고, `profiles/<stack>/scripts/` 아래 세 스크립트를 생성한다.
+   - 이미 존재하는 스크립트는 덮어쓰지 않는다.
+   - 스크립트는 실행 가능해야 하므로 내용은 아래 **프로필 스크립트 작성 규칙**을 따른다.
+8. 첫 번째 sprint의 `sprint-contract.md` 초안을 작성한다 (status: draft).
+   - `profile:` 필드: 7단계에서 결정한 `<stack>` 이름을 기입한다.
    - 이번 sprint 범위
    - done 정의
    - acceptance criteria
    - 제외 항목
    - 검증 계획
-8. sprint-contract 내용을 사용자에게 제시하고 승인을 요청한다.
-9. 승인을 받으면 status를 approved로 갱신한다. **승인 없이 sprint-builder를 실행하지 않는다.**
+9. sprint-contract 내용을 사용자에게 제시하고 승인을 요청한다.
+10. 승인을 받으면 status를 approved로 갱신한다. **승인 없이 sprint-builder를 실행하지 않는다.**
+
+## 프로필 스크립트 작성 규칙
+
+세 파일 `profiles/<stack>/scripts/smoke`, `unit`, `e2e`를 bash 스크립트로 작성한다.
+
+### smoke
+- 빌드 성공 여부와 타입 체크를 검증한다.
+- 실패 시 exit 1, 성공 시 exit 0.
+- 예시 (nextjs-supabase):
+  ```bash
+  #!/usr/bin/env bash
+  set -e
+  echo "[smoke] type check..."
+  npx tsc --noEmit
+  echo "[smoke] build..."
+  npm run build
+  echo "[smoke] PASS"
+  ```
+
+### unit
+- 프로젝트의 단위 테스트를 실행한다.
+- 테스트 파일이 없으면 SKIP(exit 0)으로 처리해 CI를 막지 않는다.
+- 예시 (nextjs-supabase, vitest):
+  ```bash
+  #!/usr/bin/env bash
+  if ! find . -name "*.test.*" -not -path "*/node_modules/*" | grep -q .; then
+    echo "[unit] SKIP - 테스트 파일 없음"
+    exit 0
+  fi
+  npx vitest run
+  ```
+
+### e2e
+- E2E 테스트를 실행한다.
+- 테스트 파일이 없으면 SKIP(exit 0).
+- 예시 (nextjs-supabase, playwright):
+  ```bash
+  #!/usr/bin/env bash
+  if ! find . -name "*.spec.*" -not -path "*/node_modules/*" | grep -q .; then
+    echo "[e2e] SKIP - 테스트 파일 없음"
+    exit 0
+  fi
+  npx playwright test
+  ```
+
+### 스택별 판단 기준
+| 요구사항 키워드 | profile 이름 | 빌드 도구 | 단위 테스트 | E2E |
+|---|---|---|---|---|
+| Next.js + Supabase | nextjs-supabase | `npm run build` + `tsc --noEmit` | vitest | playwright |
+| Next.js (단독) | nextjs | `npm run build` + `tsc --noEmit` | vitest | playwright |
+| React + Vite | react-vite | `npm run build` | vitest | playwright |
+| Python FastAPI | fastapi | `python -m py_compile` + `pytest --collect-only` | pytest | httpx |
+| 판단 불가 | generic | `npm run build` (있으면) | SKIP | SKIP |
 
 ## 금지사항
 

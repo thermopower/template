@@ -3,7 +3,8 @@
 # 산출물 파일이 갱신되었는지 확인합니다.
 # 미갱신 시 exit 2로 완료를 차단합니다.
 
-PYTHON="${PYTHON_CMD:-$(command -v python3 2>/dev/null || command -v python 2>/dev/null || echo 'python')}"
+_try_python() { "$1" -c "import sys; sys.exit(0)" 2>/dev/null && echo "$1"; }
+PYTHON="${PYTHON_CMD:-$(_try_python python || _try_python python3 || echo 'python')}"
 
 INPUT=$(cat)
 

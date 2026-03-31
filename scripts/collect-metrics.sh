@@ -33,7 +33,8 @@ TOTAL_TURNS=$(grep '^total_turns:' "$EVAL_REPORT" 2>/dev/null | awk '{print $2}'
 
 DATE=$(date +%Y-%m-%d)
 
-PYTHON="${PYTHON_CMD:-$(command -v python3 2>/dev/null || command -v python 2>/dev/null || echo 'python')}"
+_try_python() { "$1" -c "import sys; sys.exit(0)" 2>/dev/null && echo "$1"; }
+PYTHON="${PYTHON_CMD:-$(_try_python python || _try_python python3 || echo 'python')}"
 "$PYTHON" - <<EOF
 import json, sys
 

@@ -42,7 +42,8 @@ fi
 # 2. Python 프로젝트: syntax 검사
 if [ -f "pyproject.toml" ] || [ -f "requirements.txt" ] || [ -f "setup.py" ]; then
   echo "[smoke] Python 프로젝트 발견. syntax 검사..."
-  PYTHON="${PYTHON_CMD:-$(command -v python3 2>/dev/null || command -v python 2>/dev/null || echo '')}"
+  _try_python() { "$1" -c "import sys; sys.exit(0)" 2>/dev/null && echo "$1"; }
+  PYTHON="${PYTHON_CMD:-$(_try_python python || _try_python python3 || echo '')}"
   if [ -n "$PYTHON" ]; then
     PY_ERRORS=$(find "$APP_DIR" -name "*.py" -exec "$PYTHON" -m py_compile {} \; 2>&1)
     if [ -z "$PY_ERRORS" ]; then
