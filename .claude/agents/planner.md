@@ -22,7 +22,11 @@ maxTurns: 40
    - `product-spec.md` — 제품 목표, 핵심 사용자, 핵심 플로우, 범위, 제외 범위
    - `feature-list.json` — 기능 ID, 우선순위, status, acceptance_criteria, verification_linkage
    - `sprint-plan.md` — feature 순서, sprint sequencing, 예상 리스크
-7. 요구사항에서 기술 스택을 결정하고, 앱 코드 루트를 `src/`로 확정한다. (프레임워크 관행과 무관하게 `src/` 아래에 앱 코드가 위치한다.) 이후 `profiles/<stack>/scripts/` 아래 세 스크립트를 생성한다.
+7. 요구사항에서 기술 스택을 결정하고, `src/` 아래 레이어드 아키텍처 폴더 구조를 확정한다.
+   - 앱 코드는 항상 `src/` 아래에 위치한다.
+   - 폴더명은 스택 관행을 따르되, `.ruler/AGENTS.md`의 Folder Structure 표를 기준으로 각 폴더가 어느 레이어(Presentation/Application/Domain/Infrastructure)에 해당하는지 명시한다.
+   - 확정된 폴더 구조를 `product-spec.md`의 비기능 요구사항 항목에 기록한다.
+   - 이후 `profiles/<stack>/scripts/` 아래 세 스크립트를 생성한다.
    - 이미 존재하는 스크립트는 덮어쓰지 않는다.
    - 스크립트는 실행 가능해야 하므로 내용은 아래 **프로필 스크립트 작성 규칙**을 따른다.
 8. 첫 번째 sprint의 `sprint-contract.md` 초안을 작성한다 (status: draft).

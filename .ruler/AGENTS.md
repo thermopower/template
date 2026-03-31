@@ -62,6 +62,18 @@
 - 레이어 역방향 의존성 금지
 - 레이어 건너뛰기 금지
 
+### Folder Structure
+모든 앱 코드는 `src/` 아래에 위치한다. 레이어 폴더명은 스택 관행을 따르되, 각 폴더가 어느 레이어에 해당하는지 명확해야 한다.
+
+| 스택 | Presentation | Application | Domain | Infrastructure |
+|------|-------------|-------------|--------|----------------|
+| Next.js | `src/app/`, `src/components/` | `src/lib/` | `src/domain/` | `src/server/`, `src/lib/db/` |
+| React + Vite | `src/pages/`, `src/components/` | `src/hooks/`, `src/services/` | `src/domain/` | `src/api/`, `src/lib/` |
+| FastAPI | `src/routers/`, `src/schemas/` | `src/services/` | `src/domain/` | `src/repositories/`, `src/db/` |
+
+- 위 표는 기준 예시이며, planner가 요구사항에 맞게 확정한다.
+- 레이어 경계가 모호한 폴더는 만들지 않는다.
+
 ### Implementation Rules
 - 새 기능은 먼저 어느 레이어에 속하는지 판단한다.
 - 비즈니스 규칙은 Domain 또는 Application에만 둔다.
