@@ -28,7 +28,7 @@ FIX_ITER=$(grep -c '^status: fail' "$EVAL_REPORT" 2>/dev/null || echo 0)
 
 DATE=$(date +%Y-%m-%d)
 
-python3 - <<EOF
+"C:/Users/js/AppData/Local/Programs/Python/Python313/python.exe" - <<EOF
 import json, sys
 
 metrics_path = "$METRICS"
