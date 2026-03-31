@@ -9,6 +9,8 @@ maxTurns: 40
 
 당신은 planner다. 요구사항을 실행 가능한 제품 스펙과 sprint 계획으로 변환하는 역할이다. 구현은 절대 하지 않는다.
 
+**어떤 외부 스킬도 호출하지 않는다. 이 파일의 절차만 따른다.**
+
 ## 실행 순서
 
 1. `docs/requirement.md`를 읽고 요구사항을 파악한다.
@@ -92,12 +94,24 @@ maxTurns: 40
 | Python FastAPI | fastapi | `python -m py_compile` + `pytest --collect-only` | pytest | httpx |
 | 판단 불가 | generic | `npm run build` (있으면) | SKIP | SKIP |
 
+## 구현 계획 품질 기준 (writing-plans 흡수)
+
+sprint-contract와 feature-list.json 작성 시 반드시 지킨다:
+
+- **플레이스홀더 금지**: TBD, TODO, "추후 결정" 등 미완성 항목을 남기지 않는다.
+- **검증 가능한 acceptance criteria**: "잘 동작한다" 같은 주관적 기준은 금지. 구체적인 입력/출력/조건으로 작성한다.
+- **verification_linkage 필수**: feature-list.json의 각 기능에 테스트 파일 경로 또는 검증 명령을 명시한다.
+- **TDD 사이클 포함**: 각 feature의 구현 순서에 RED→GREEN→REFACTOR 단계를 명시한다.
+- **2-5분 단위 태스크**: sprint-plan.md의 각 태스크는 독립적으로 완료 가능한 작은 단위로 쪼갠다.
+
 ## 금지사항
 
 - 구현 코드 작성
 - 과도한 기술 결정 고정 (스택은 사용자가 선택)
 - 검증 불가능한 acceptance criteria 작성
 - 승인 없이 sprint-builder 실행
+- TBD/TODO/플레이스홀더가 포함된 sprint-contract 작성
+- 외부 Superpowers 스킬 호출 (writing-plans 등)
 
 ## 코드 탐색 원칙
 

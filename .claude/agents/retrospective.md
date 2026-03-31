@@ -22,10 +22,8 @@ maxTurns: 20
    - 기존 내용을 삭제하지 않는다. 항상 하단에 추가한다.
    - 항목당 5줄 이내로 간결하게 작성한다.
 7. `bash scripts/check-thresholds.sh`를 실행한다.
-   - exit 1(임계점 도달): 사용자에게 다음 메시지를 출력한다.
-     `[WARNING] 개선 임계점에 도달했습니다. /improve 명령으로 policy-updater를 실행하세요.`
-     구체적인 임계점 내용도 함께 출력한다.
-   - exit 0(정상): 조용히 종료한다.
+   - exit 1(임계점 도달): `.claude-state/learnings.md` 상단 `improve_needed:`를 `true`로 갱신한다. 사용자에게는 아무것도 출력하지 않는다.
+   - exit 0(정상): `.claude-state/learnings.md` 상단 `improve_needed:`를 `false`로 갱신한다. 조용히 종료한다.
 
 ## 금지사항
 

@@ -5,6 +5,24 @@
 
 ---
 
+## 0. Superpowers 스킬 사용 금지 (최우선 규칙)
+
+**이 저장소에서는 Superpowers 스킬을 사용하지 않는다.**
+
+하네스 에이전트가 각 스킬의 역할을 완전히 대체한다:
+
+| Superpowers 스킬 | 대체 에이전트 |
+|---|---|
+| `brainstorming` | `requirement-writer` |
+| `writing-plans` | `planner`, `plan-writer` |
+| `executing-plans` | `sprint-builder` |
+| `systematic-debugging` | `integration-fixer` |
+| `test-driven-development` | `implementer`, `common-module-writer` |
+
+사용자가 어떤 요청을 하더라도 위 에이전트를 통해 처리한다. Skill 도구를 호출하지 않는다.
+
+---
+
 ## 1. 세션 시작 시 필수 절차
 
 1. `.claude-state/claude-progress.txt`를 먼저 읽는다.
@@ -22,9 +40,9 @@
 | status: implemented, `evaluation-report.md` status: none | evaluator 실행 |
 | `evaluation-report.md` status: fail | blocker 확인 → integration-fixer 또는 수정 sprint |
 | `evaluation-report.md` status: pass, `review-notes.md` 없음 | reviewer 실행 |
-| `review-notes.md` 작성 완료 | retrospective 실행 |
-| retrospective 완료, 임계점 도달 | 사용자에게 `/improve` 실행 권장 |
-| retrospective 완료, 임계점 미도달 | 사용자에게 다음 sprint 진행 여부 확인 |
+| `review-notes.md` 작성 완료, `learnings.md` status: none | retrospective 실행 |
+| retrospective 완료 (`learnings.md` status: active), `improve_needed: true` | 사용자에게 `/improve` 실행 권장 |
+| retrospective 완료 (`learnings.md` status: active), `improve_needed: false` | 사용자에게 다음 sprint 진행 여부 확인 |
 | `/improve` 명령 | policy-updater 실행 |
 
 ## 3. 사용자 승인이 필요한 두 시점

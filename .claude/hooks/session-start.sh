@@ -60,7 +60,20 @@ else
         if [ -z "$REVIEW_STATUS" ] || [ "$REVIEW_STATUS" = "none" ]; then
           NEXT_STEP="evaluation이 pass입니다. reviewer를 실행하세요."
         else
-          NEXT_STEP="review가 완료되었습니다. retrospective가 완료되었으면 사용자에게 다음 sprint 진행 여부를 확인하세요."
+          # retrospective 완료 여부 확인 (learnings.md status)
+          LEARNINGS=".claude-state/learnings.md"
+          LEARN_STATUS=$(grep '^status:' "$LEARNINGS" 2>/dev/null | awk '{print $2}')
+          if [ -z "$LEARN_STATUS" ] || [ "$LEARN_STATUS" = "none" ]; then
+            NEXT_STEP="review가 완료되었습니다. retrospective 에이전트를 실행하세요."
+          else
+            # improve_needed 확인
+            IMPROVE_NEEDED=$(grep '^improve_needed:' "$LEARNINGS" 2>/dev/null | awk '{print $2}')
+            if [ "$IMPROVE_NEEDED" = "true" ]; then
+              NEXT_STEP="retrospective가 완료되었습니다. 개선 임계점에 도달했습니다. 사용자에게 /improve 실행을 권장하세요."
+            else
+              NEXT_STEP="retrospective가 완료되었습니다. 사용자에게 다음 sprint 진행 여부를 확인하세요."
+            fi
+          fi
         fi
       fi
       ;;
