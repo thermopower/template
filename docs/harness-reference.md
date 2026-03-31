@@ -47,7 +47,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | 에이전트 | 모델 | 역할 | 금지 |
 |---|---|---|---|
 | **requirement-writer** | sonnet | 사용자 인터뷰→docs/requirement.md 작성 | 설계·구현, 스택 임의 결정, 섹션 건너뜀 |
-| **planner** | sonnet | 요구사항→설계 문서+sprint-contract 초안 | 구현, 승인 없이 sprint-builder 실행 |
+| **planner** | sonnet | 요구사항→설계 문서+sprint-contract 초안, `src/` 기준 레이어 폴더 구조 확정 | 구현, 승인 없이 sprint-builder 실행 |
 | **sprint-builder** | sonnet | 승인된 범위만 구현 | 범위 초과, 검증 없이 done 선언 |
 | **evaluator** | haiku | pass/fail 판정만 | 개선 제안, reviewer 역할 |
 | **reviewer** | opus | 품질 비평·개선 제안 | pass/fail 판정, evaluator 역할 |
@@ -80,6 +80,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | `review-notes.md` | reviewer | `status: reviewed`, Critical/Important/Suggestions |
 | `learnings.md` | retrospective | `status: active/reviewed`, sprint별 요약 |
 | `metrics.json` | retrospective | sprints[], summary (pass_rate, avg_blockers 등) |
+| `harness-version.md` | 수동 | 하네스 버전, 변경 이력, 구성 요소 |
 | `decisions.md` | 수동 | 아키텍처 결정 기록 |
 | `backlog.md` | 수동 | 다음 sprint 후보 |
 
@@ -131,13 +132,15 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 
 ## 스택 판단 기준 (planner가 프로필 스크립트 생성 시)
 
-| 요구사항 키워드 | profile 이름 | 빌드 도구 | 단위 테스트 | E2E |
-|---|---|---|---|---|
-| Next.js + Supabase | nextjs-supabase | npm run build + tsc | vitest | playwright |
-| Next.js (단독) | nextjs | npm run build + tsc | vitest | playwright |
-| React + Vite | react-vite | npm run build | vitest | playwright |
-| Python FastAPI | fastapi | py_compile + pytest | pytest | httpx |
-| 판단 불가 | generic | npm run build (있으면) | SKIP | SKIP |
+| 요구사항 키워드 | profile 이름 | 빌드 도구 | 단위 테스트 | E2E | src/ 레이어 구조 |
+|---|---|---|---|---|---|
+| Next.js + Supabase | nextjs-supabase | npm run build + tsc | vitest | playwright | app/(P), lib/(A), domain/(D), server/+lib/db/(I) |
+| Next.js (단독) | nextjs | npm run build + tsc | vitest | playwright | app/(P), lib/(A), domain/(D), server/(I) |
+| React + Vite | react-vite | npm run build | vitest | playwright | pages/+components/(P), hooks/+services/(A), domain/(D), api/+lib/(I) |
+| Python FastAPI | fastapi | py_compile + pytest | pytest | httpx | routers/+schemas/(P), services/(A), domain/(D), repositories/+db/(I) |
+| 판단 불가 | generic | npm run build (있으면) | SKIP | SKIP | planner가 직접 확정 |
+
+P=Presentation, A=Application, D=Domain, I=Infrastructure
 
 ---
 
