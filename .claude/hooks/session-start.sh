@@ -19,8 +19,22 @@ fi
 
 # 2. sprint-contract 상태 판별
 NEXT_STEP=""
-if [ ! -f "$CONTRACT" ]; then
-  NEXT_STEP="planner를 실행하세요. docs/requirement.md에 요구사항이 있는지 먼저 확인하세요."
+
+# requirement.md 내용 확인 (없거나 비어있으면 requirement-writer 실행)
+REQ_FILE="docs/requirement.md"
+REQ_EMPTY=false
+if [ ! -f "$REQ_FILE" ] || [ ! -s "$REQ_FILE" ]; then
+  REQ_EMPTY=true
+else
+  # 주석(#)과 공백만 있는 경우도 비어있다고 판단
+  CONTENT=$(grep -v '^\s*$' "$REQ_FILE" 2>/dev/null | grep -v '^\s*#' || true)
+  [ -z "$CONTENT" ] && REQ_EMPTY=true
+fi
+
+if $REQ_EMPTY; then
+  NEXT_STEP="docs/requirement.md가 비어있습니다. requirement-writer를 실행해 사용자와 대화로 요구사항을 수집하세요."
+elif [ ! -f "$CONTRACT" ]; then
+  NEXT_STEP="planner를 실행하세요."
 else
   STATUS=$(grep '^status:' "$CONTRACT" 2>/dev/null | awk '{print $2}')
   case "$STATUS" in

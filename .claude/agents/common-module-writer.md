@@ -13,7 +13,7 @@ model: sonnet
 # 작업 단계
 1. `docs/requirement.md`, `docs/prd.md`, `docs/userflow.md`, `docs/database.md`를 읽고 프로젝트의 기획을 파악한다.
    - 외부 서비스를 사용한다면 `docs/external/{service_name}.md`도 참고한다.
-2. `docs/rules/tdd.md`가 있으면 읽고 TDD 프로세스를 준수한다.
+2. `.ruler/AGENTS.md`의 Testing 섹션(TDD 사이클, FIRST, AAA)을 준수한다.
 3. 코드베이스 현 상태를 Explore 서브에이전트로 파악한다.
 4. 최소한의 설계로 오버엔지니어링을 피한다. 설계된 모든 모듈은 반드시 문서에 근거해야 한다.
 5. 완성된 공통 모듈 계획을 `docs/common-modules.md`에 생성한다.

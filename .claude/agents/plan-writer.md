@@ -15,7 +15,7 @@ model: sonnet
 3. 페이지에 대한 최소한의 모듈화 설계를 진행한다:
    - 어느 레이어에 속하는지 먼저 판단한다 (`.ruler/AGENTS.md`의 Layered Architecture 준수)
    - shared로 분리 가능한 공통 모듈 및 제네릭을 고려한다
-   - `docs/rules/tdd.md`가 있으면 TDD 원칙에 입각한 테스트 설계를 포함한다
+   - `.ruler/AGENTS.md`의 TDD 원칙에 입각한 테스트 설계를 포함한다
 4. 완성된 문서를 다음과 같이 구성하여 `docs/pages/{page_name}/plan.md`에 생성한다:
    - 개요: 모듈 이름, 위치, 간략한 설명 목록
    - Diagram: mermaid 문법으로 모듈 간 관계 시각화
