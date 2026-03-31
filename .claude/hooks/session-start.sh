@@ -41,11 +41,12 @@ else
       elif [ "$EVAL_STATUS" = "fail" ]; then
         NEXT_STEP="evaluation이 fail입니다. blocker를 확인하고 integration-fixer 또는 수정 sprint를 진행하세요."
       elif [ "$EVAL_STATUS" = "pass" ]; then
-        # review-notes 확인
-        if [ ! -f "$REVIEW_NOTES" ] || ! grep -q "##" "$REVIEW_NOTES" 2>/dev/null; then
+        # review-notes 확인: status: reviewed 이면 완료로 판단
+        REVIEW_STATUS=$(grep '^status:' "$REVIEW_NOTES" 2>/dev/null | awk '{print $2}')
+        if [ -z "$REVIEW_STATUS" ] || [ "$REVIEW_STATUS" = "none" ]; then
           NEXT_STEP="evaluation이 pass입니다. reviewer를 실행하세요."
         else
-          NEXT_STEP="review가 완료되었습니다. 사용자에게 다음 sprint 진행 여부를 확인하세요."
+          NEXT_STEP="review가 완료되었습니다. retrospective가 완료되었으면 사용자에게 다음 sprint 진행 여부를 확인하세요."
         fi
       fi
       ;;
@@ -73,7 +74,7 @@ fi
 CONTEXT="${CONTEXT}\n## 다음 단계\n${NEXT_STEP}\n"
 
 # JSON output for additionalContext
-PYTHON="C:/Users/js/AppData/Local/Programs/Python/Python313/python.exe"
+PYTHON="${PYTHON_CMD:-$(command -v python3 2>/dev/null || command -v python 2>/dev/null || echo 'python')}"
 "$PYTHON" -c "
 import json, sys
 context = sys.argv[1]

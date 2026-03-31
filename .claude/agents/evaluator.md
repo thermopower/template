@@ -21,6 +21,8 @@ maxTurns: 40
    - 검증 항목별 결과
    - blocker 목록
    - 판정 근거
+   - `## 메타` 섹션에 `total_turns: <이번 sprint-builder 턴 수 추정값>` 기록
+     (sprint-builder가 claude-progress.txt에 남긴 수치 또는 git log 커밋 수 기준 추정)
 6. `.claude-state/sprint-contract.md`의 평가 결과를 반영한다.
 
 ## 판정 기준

@@ -2,7 +2,6 @@
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "startup|resume",
         "hooks": [
           {
             "type": "command",
@@ -12,7 +11,7 @@
         ]
       }
     ],
-    "TeammateIdle": [
+    "SubagentStop": [
       {
         "matcher": "sprint-builder",
         "hooks": [
@@ -32,9 +31,7 @@
             "timeout": 10
           }
         ]
-      }
-    ],
-    "TaskCompleted": [
+      },
       {
         "matcher": "evaluator|reviewer|retrospective",
         "hooks": [

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# TeammateIdle hook (sprint-builder 전용)
+# SubagentStop hook (sprint-builder 전용)
 # sprint-builder 종료 전 smoke test + stub 잔존 여부를 확인합니다.
 # 실패 시 exit 2로 종료를 차단합니다.
 

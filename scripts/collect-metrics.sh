@@ -23,12 +23,18 @@ BLOCKER_COUNT=$(awk '/^## Blocker/,/^## /' "$EVAL_REPORT" 2>/dev/null | grep -c 
 # blocker 유형 추출 (첫 번째 단어 기준)
 BLOCKER_TYPES=$(awk '/^## Blocker/,/^## /' "$EVAL_REPORT" 2>/dev/null | grep '^- ' | awk '{print $2}' | tr '\n' ',' | sed 's/,$//' || echo "")
 
-# fix_iterations: evaluation fail 횟수
-FIX_ITER=$(grep -c '^status: fail' "$EVAL_REPORT" 2>/dev/null || echo 0)
+# fix_iterations: 이번 sprint에서 fail이 발생했는지 여부 (0 또는 1)
+# grep -c는 파일 전체의 status: fail 줄 수를 세므로 과대집계 가능 — 존재 여부만 판별
+FIX_ITER=$(grep -m 1 '^status: fail' "$EVAL_REPORT" >/dev/null 2>&1 && echo 1 || echo 0)
+
+# total_turns: evaluation-report의 ## 메타 섹션에서 추출 (evaluator가 기록)
+TOTAL_TURNS=$(grep '^total_turns:' "$EVAL_REPORT" 2>/dev/null | awk '{print $2}' | head -1)
+[ -z "$TOTAL_TURNS" ] && TOTAL_TURNS=0
 
 DATE=$(date +%Y-%m-%d)
 
-"C:/Users/js/AppData/Local/Programs/Python/Python313/python.exe" - <<EOF
+PYTHON="${PYTHON_CMD:-$(command -v python3 2>/dev/null || command -v python 2>/dev/null || echo 'python')}"
+"$PYTHON" - <<EOF
 import json, sys
 
 metrics_path = "$METRICS"
@@ -41,7 +47,7 @@ sprint = {
     "eval_result": "$EVAL_STATUS",
     "blocker_count": $BLOCKER_COUNT,
     "blocker_types": [t for t in "$BLOCKER_TYPES".split(',') if t],
-    "total_turns": 0,
+    "total_turns": $TOTAL_TURNS,
     "fix_iterations": $FIX_ITER
 }
 data["sprints"].append(sprint)

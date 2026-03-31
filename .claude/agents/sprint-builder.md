@@ -23,9 +23,11 @@ maxTurns: 80
    - state-writer: 상태관리 설계
    - plan-writer: 페이지/기능별 구현 계획
 3. implementer 에이전트를 실행해 구현 계획을 구현한다.
-4. `scripts/smoke`를 실행한다. (profile 없으면 skip)
-5. `.claude-state/sprint-contract.md`의 status를 `implemented`로 갱신한다.
-6. `.claude-state/claude-progress.txt`를 갱신한다.
+4. `bash scripts/smoke`를 실행한다. 실패하면 완료로 처리하지 않고 문제를 수정한다.
+5. stub/placeholder 잔존 여부를 확인한다: `grep -rn "TODO\|FIXME\|stub\|placeholder\|not implemented" app/ src/ 2>/dev/null`
+   - 발견되면 핵심 경로인지 판단하고 핵심 경로이면 수정 후 재확인한다.
+6. `.claude-state/sprint-contract.md`의 status를 `implemented`로 갱신한다.
+7. `.claude-state/claude-progress.txt`를 갱신한다. total_turns 추정값을 기록한다.
 
 ## 코드 탐색 원칙
 

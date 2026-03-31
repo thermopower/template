@@ -23,6 +23,7 @@ maxTurns: 40
    - `feature-list.json` — 기능 ID, 우선순위, status, acceptance_criteria, verification_linkage
    - `sprint-plan.md` — feature 순서, sprint sequencing, 예상 리스크
 7. 첫 번째 sprint의 `sprint-contract.md` 초안을 작성한다 (status: draft).
+   - `profile:` 필드: `profiles/` 디렉터리에 존재하는 profile 이름 중 기술 스택에 맞는 것을 기입한다. 없으면 생략한다.
    - 이번 sprint 범위
    - done 정의
    - acceptance criteria

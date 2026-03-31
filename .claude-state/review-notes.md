@@ -1,5 +1,7 @@
 # Review Notes
 
+status: none
+
 <!-- reviewer가 작성합니다. 직접 편집하지 마세요. -->
 
 ## UX 검토

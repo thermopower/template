@@ -12,7 +12,7 @@ if [ ! -f "$METRICS" ]; then
   exit 0
 fi
 
-PYTHON="C:/Users/js/AppData/Local/Programs/Python/Python313/python.exe"
+PYTHON="${PYTHON_CMD:-$(command -v python3 2>/dev/null || command -v python 2>/dev/null || echo 'python')}"
 "$PYTHON" - "$@" <<'PYEOF'
 import json, sys
 
