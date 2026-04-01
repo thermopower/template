@@ -1,15 +1,16 @@
 # 하네스 운영 규칙
 
 이 저장소는 Claude Code 기반 앱 생성 하네스다.
-요구사항을 직접 작성하거나, requirement-writer와 대화해 `docs/requirement.md`를 작성하면 planner → sprint-builder → evaluator → reviewer → retrospective 루프로 앱을 생성하고 스스로 학습한다.
+기본 모드는 **일반 편집 모드**다. 하네스 루프(requirement-writer → planner → sprint-builder → ...)는 `/harness` 명령으로 명시적으로 시작한다.
 
 ---
 
-## 0. Superpowers 스킬 사용 금지 (최우선 규칙)
+## 0. Superpowers 스킬 — 모드별 사용 규칙
 
-**이 저장소에서는 Superpowers 스킬을 사용하지 않는다.**
+**일반 편집 모드에서는 Superpowers 스킬을 정상적으로 사용한다.**
 
-하네스 에이전트가 각 스킬의 역할을 완전히 대체한다:
+**하네스 루프 모드(`/harness` 실행 후)에서는 Superpowers 스킬을 사용하지 않는다.**
+하네스 에이전트가 각 스킬의 역할을 완전히 대체하기 때문이다:
 
 | Superpowers 스킬 | 대체 에이전트 |
 |---|---|
@@ -19,17 +20,34 @@
 | `systematic-debugging` | `integration-fixer` |
 | `test-driven-development` | `implementer`, `common-module-writer` |
 
-사용자가 어떤 요청을 하더라도 위 에이전트를 통해 처리한다. Skill 도구를 호출하지 않는다.
+하네스 루프 모드에서는 Skill 도구를 호출하지 않는다.
 
 ---
 
-## 1. 세션 시작 시 필수 절차
+## 1. 기본 모드: 일반 편집 모드
 
+**세션 시작 시 기본값은 일반 편집 모드다.**
+
+- 하네스 루프를 자동으로 시작하지 않는다.
+- 단계 전환 규칙(섹션 2)을 적용하지 않는다.
+- 사용자의 요청을 직접 수행한다.
+
+**하네스 루프 관련 명령어:**
+
+| 명령어 | 동작 |
+|---|---|
+| `/harness` | 하네스 루프 모드로 전환. 상태 파일을 읽고 단계 전환 규칙을 적용한다. |
+| `/harness start` | 요구사항 수집부터 새로 시작 (requirement-writer 실행) |
+| `/improve` | learnings 기반 policy-updater 실행 |
+
+## 2. 하네스 모드: 단계 전환 규칙
+
+`/harness` 명령 실행 후에만 아래 규칙을 적용한다.
+
+세션 진입 시:
 1. `.claude-state/claude-progress.txt`를 먼저 읽는다.
 2. `.claude-state/sprint-contract.md`의 status를 확인한다.
-3. 아래 단계 전환 규칙으로 현재 위치를 판단한다.
-
-## 2. 단계 전환 규칙
+3. 아래 규칙으로 현재 위치를 판단한다.
 
 | 조건 | 다음 단계 |
 |---|---|

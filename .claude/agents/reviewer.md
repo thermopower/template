@@ -17,20 +17,15 @@ maxTurns: 40
 
 ## 실행 순서
 
-### 1단계: 계획 정렬성 검증 (code-reviewer 위임)
+### 1단계: 계획 정렬성 검증 (직접 수행)
 
-Agent tool로 `superpowers:code-reviewer` 에이전트를 호출한다.
+sprint-contract와 실제 구현 코드를 비교해 정렬성을 직접 검증한다.
 
-호출 시 전달할 컨텍스트:
-- 이번 sprint 구현 내용 요약 (sprint-contract에서 추출)
-- sprint-contract 전문 (PLAN_OR_REQUIREMENTS로 전달)
-- BASE_SHA: `git log --oneline -30` 출력에서 sprint 시작 직전 커밋을 추정하거나, `git tag -l "sprint-*"` 태그가 있으면 해당 태그 사용
-- HEAD_SHA: HEAD
-- 이번 sprint ID와 범위 한 줄 요약
+- `git log --oneline -30`으로 이번 sprint 커밋 범위를 파악한다.
+- sprint-contract의 acceptance criteria 항목별로 구현 여부를 확인한다.
+- 범위를 벗어난 구현이나 누락된 항목을 Critical/Important/Suggestions로 분류한다.
 
-code-reviewer 결과를 수신해 Critical/Important/Suggestions 항목을 추출한다.
-
-code-reviewer 호출이 실패하거나 결과가 비어있으면 이 단계를 건너뛰고 2단계로 진행한다.
+코드 탐색은 Explore 서브에이전트에 위임한다.
 
 ### 2단계: UX·품질 비평 (직접 수행)
 

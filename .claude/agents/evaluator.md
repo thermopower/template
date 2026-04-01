@@ -3,7 +3,7 @@ name: evaluator
 description: sprint-contract의 acceptance criteria 기준으로 pass/fail을 판정한다. 개선 제안은 하지 않는다.
 model: haiku
 memory: project
-tools: Read, Bash, Glob, Grep
+tools: Read, Write, Bash, Glob, Grep
 maxTurns: 40
 ---
 

@@ -3,9 +3,11 @@
 # profile이 설정된 경우 profile smoke를 실행합니다.
 # profile이 없는 경우 앱 디렉토리의 기본 검사를 실행합니다.
 
-PROFILE_SCRIPT="profiles/$(cat .claude-state/sprint-contract.md 2>/dev/null | grep '^profile:' | awk '{print $2}')/scripts/smoke"
+PROFILE=$(grep '^profile:' .claude-state/sprint-contract.md 2>/dev/null | awk '{print $2}')
+PROFILE_SCRIPT=""
+[ -n "$PROFILE" ] && PROFILE_SCRIPT="profiles/$PROFILE/scripts/smoke"
 
-if [ -f "$PROFILE_SCRIPT" ]; then
+if [ -n "$PROFILE_SCRIPT" ] && [ -f "$PROFILE_SCRIPT" ]; then
   echo "[smoke] profile smoke 실행: $PROFILE_SCRIPT"
   bash "$PROFILE_SCRIPT"
   exit $?
