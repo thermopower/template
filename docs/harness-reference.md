@@ -112,9 +112,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | `collect-metrics.sh <sprint_id>` | metrics.json 갱신 | retrospective |
 | `check-thresholds.sh [--summary]` | 임계점 판정 | retrospective, session-start |
 
-스택별 스크립트 위치: `profiles/<stack>/scripts/{smoke,unit,e2e}`
-
-현재 생성된 프로필: `profiles/nextjs-supabase/` (smoke 스크립트 포함 — 환경변수 확인, tsc, npm run build, stub 검사)
+스택별 스크립트 위치: `profiles/<stack>/scripts/{smoke,unit,e2e}` (planner가 sprint 시작 시 생성)
 
 ---
 

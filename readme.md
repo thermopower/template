@@ -80,7 +80,7 @@ requirement-writer  →  사용자 인터뷰 → docs/requirement.md
   settings.json    # 훅 연결 설정
 .claude-state/     # sprint 상태 · 진행상황 · learnings · metrics
 scripts/           # smoke · unit · e2e · evaluation-gate · collect-metrics · check-thresholds
-profiles/          # 스택별 검증 스크립트 (현재: nextjs-supabase)
+profiles/          # 스택별 검증 스크립트 (planner가 sprint 시작 시 생성)
 docs/              # 설계 문서 · harness-reference.md
 src/               # 앱 코드 (planner가 스택 확정 후 생성)
 CLAUDE.md          # 하네스 운영 규칙

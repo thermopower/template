@@ -31,7 +31,7 @@
 - 하네스 루프를 자동으로 시작하지 않는다.
 - 단계 전환 규칙(섹션 2)을 적용하지 않는다.
 - 사용자의 요청을 직접 수행한다.
-- **하네스 구조 관련 작업 시 `docs/harness-reference.md`를 먼저 참조한다.**
+- 세션 시작 시 `docs/harness-reference.md`를 먼저 읽어 현재 구조를 파악한다. 이후 작업은 이 문서를 기준점으로 삼는다.
 - **하네스 구조에 영향을 주는 변경이 발생하면 `docs/harness-reference.md`와 `.claude-state/harness-version.md`를 자동으로 업데이트한다.**
   - 업데이트 대상: 에이전트 파일, 훅 스크립트, settings.json, 검증 스크립트, CLAUDE.md, .ruler/AGENTS.md, 커맨드 파일, 프로필 스크립트
   - 업데이트 안 하는 것: sprint 진행 중 생성되는 앱 코드, `.claude-state/` 상태 데이터

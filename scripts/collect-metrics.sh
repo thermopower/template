@@ -18,7 +18,8 @@ EVAL_STATUS=$(grep '^status:' "$EVAL_REPORT" 2>/dev/null | awk '{print $2}' | he
 [ -z "$EVAL_STATUS" ] && EVAL_STATUS="unknown"
 
 # blocker 수 추출 (## Blocker 섹션의 항목 수)
-BLOCKER_COUNT=$(awk '/^## Blocker/,/^## /' "$EVAL_REPORT" 2>/dev/null | grep -c '^- ' || echo 0)
+BLOCKER_COUNT=$(awk '/^## Blocker/,/^## /' "$EVAL_REPORT" 2>/dev/null | grep -c '^- '; true)
+[ -z "$BLOCKER_COUNT" ] && BLOCKER_COUNT=0
 
 # blocker 유형 추출 (첫 번째 단어 기준)
 BLOCKER_TYPES=$(awk '/^## Blocker/,/^## /' "$EVAL_REPORT" 2>/dev/null | grep '^- ' | awk '{print $2}' | tr '\n' ',' | sed 's/,$//' || echo "")
