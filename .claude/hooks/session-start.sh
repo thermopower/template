@@ -107,6 +107,8 @@ PYTHON="${PYTHON_CMD:-$(_try_python python || _try_python python3 || echo 'pytho
 import json, sys, io
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 context = sys.argv[1]
+# 리터럴 \n 을 실제 줄바꿈으로 통일
+context = context.replace('\\\\n', '\n')
 output = {
   'hookSpecificOutput': {
     'hookEventName': 'SessionStart',

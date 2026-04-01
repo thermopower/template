@@ -3,7 +3,7 @@ name: evaluator
 description: sprint-contract의 acceptance criteria 기준으로 pass/fail을 판정한다. 개선 제안은 하지 않는다.
 model: haiku
 memory: project
-tools: Read, Write, Bash, Glob, Grep
+tools: Read, Write, Bash, Glob, Grep, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_console_messages, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_fill_form, mcp__plugin_playwright_playwright__browser_take_screenshot, mcp__plugin_playwright_playwright__browser_close
 maxTurns: 40
 ---
 
@@ -16,14 +16,21 @@ maxTurns: 40
 3. 각 acceptance criteria 항목을 검증한다.
 4. stub/placeholder 잔존 여부를 확인한다.
    - `grep -rn "TODO\|FIXME\|stub\|placeholder\|not implemented"` (app/ 또는 src/ 기준)
-5. `.claude-state/evaluation-report.md`에 결과를 기록한다:
+5. 앱이 실제로 동작하는지 **Playwright MCP**로 브라우저 검증한다.
+   - `mcp__plugin_playwright_playwright__browser_navigate`로 앱에 접속한다.
+   - acceptance criteria의 핵심 user flow를 직접 실행한다 (클릭, 폼 입력 등).
+   - `mcp__plugin_playwright_playwright__browser_console_messages`로 콘솔 에러 여부를 확인한다.
+   - 검증 결과(스크린샷 포함)를 evaluation-report.md에 기록한다.
+   - 앱이 아직 실행 중이 아니라면 이 단계를 SKIP하고 그 사유를 report에 명시한다.
+6. `.claude-state/evaluation-report.md`에 결과를 기록한다:
    - status: pass 또는 fail
    - 검증 항목별 결과
    - blocker 목록
    - 판정 근거
+   - Playwright MCP 검증 결과 (접속 성공 여부, 콘솔 에러 유무, 핵심 flow 동작 여부)
    - `## 메타` 섹션에 `total_turns: <이번 sprint-builder 턴 수 추정값>` 기록
      (sprint-builder가 claude-progress.txt에 남긴 수치 또는 git log 커밋 수 기준 추정)
-6. `.claude-state/sprint-contract.md`의 평가 결과를 반영한다.
+7. `.claude-state/sprint-contract.md`의 평가 결과를 반영한다.
 
 ## 판정 기준
 

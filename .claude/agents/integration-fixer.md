@@ -4,7 +4,7 @@ description: 환경, 의존성, 런타임, 배선, broken state를 복구한다.
 model: sonnet
 memory: project
 isolation: worktree
-tools: Read, Write, Edit, Bash, Glob, Grep
+tools: Read, Write, Edit, Bash, Glob, Grep, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_console_messages, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_fill_form, mcp__plugin_playwright_playwright__browser_take_screenshot, mcp__plugin_playwright_playwright__browser_close
 maxTurns: 50
 ---
 
@@ -50,7 +50,15 @@ maxTurns: 50
 
 ### 4단계: 검증
 
-복구 후 `scripts/smoke`를 실행해 기본 동작을 검증한다.
+복구 후 다음 순서로 검증한다.
+
+1. `scripts/smoke`를 실행해 빌드·타입 체크를 확인한다.
+2. 앱이 실제로 브라우저에서 동작하는지 **Playwright MCP**로 직접 확인한다.
+   - `mcp__plugin_playwright_playwright__browser_navigate`로 앱 URL에 접속한다.
+   - `mcp__plugin_playwright_playwright__browser_snapshot`으로 화면 상태를 확인한다.
+   - 복구한 경로(route, API, 화면)를 직접 조작해 오류가 사라졌는지 확인한다.
+   - `mcp__plugin_playwright_playwright__browser_console_messages`로 콘솔 에러 잔존 여부를 확인한다.
+3. Playwright MCP 확인 결과를 5단계 기록에 포함한다.
 
 ### 5단계: 기록
 
