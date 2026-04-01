@@ -104,7 +104,8 @@ CONTEXT="${CONTEXT}\n## 다음 단계\n${NEXT_STEP}\n"
 _try_python() { "$1" -c "import sys; sys.exit(0)" 2>/dev/null && echo "$1"; }
 PYTHON="${PYTHON_CMD:-$(_try_python python || _try_python python3 || echo 'python')}"
 "$PYTHON" -c "
-import json, sys
+import json, sys, io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 context = sys.argv[1]
 output = {
   'hookSpecificOutput': {

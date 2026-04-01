@@ -15,7 +15,8 @@ fi
 _try_python() { "$1" -c "import sys; sys.exit(0)" 2>/dev/null && echo "$1"; }
 PYTHON="${PYTHON_CMD:-$(_try_python python || _try_python python3 || echo 'python')}"
 "$PYTHON" - "$@" <<'PYEOF'
-import json, sys
+import json, sys, io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 with open(".claude-state/metrics.json", "r") as f:
     data = json.load(f)
