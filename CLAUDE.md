@@ -31,6 +31,7 @@
 - 하네스 루프를 자동으로 시작하지 않는다.
 - 단계 전환 규칙(섹션 2)을 적용하지 않는다.
 - 사용자의 요청을 직접 수행한다.
+- **하네스 구조 관련 작업 시 `docs/harness-reference.md`를 먼저 참조한다.**
 - **하네스 구조에 영향을 주는 변경이 발생하면 `docs/harness-reference.md`와 `.claude-state/harness-version.md`를 자동으로 업데이트한다.**
   - 업데이트 대상: 에이전트 파일, 훅 스크립트, settings.json, 검증 스크립트, CLAUDE.md, .ruler/AGENTS.md, 커맨드 파일, 프로필 스크립트
   - 업데이트 안 하는 것: sprint 진행 중 생성되는 앱 코드, `.claude-state/` 상태 데이터
@@ -40,7 +41,7 @@
 | 명령어 | 동작 |
 |---|---|
 | `/harness` | 하네스 루프 모드로 전환. 상태 파일을 읽고 단계 전환 규칙을 적용한다. |
-| `/harness start` | 요구사항 수집부터 새로 시작 (requirement-writer 실행) |
+| `/harness start` | 요구사항 수집부터 새로 시작. 기존 상태 파일과 무관하게 requirement-writer를 실행한다. |
 | `/edit-harness` | 하네스 루프 모드에서 일반 편집 모드로 복귀. |
 | `/improve` | learnings 기반 policy-updater 실행 |
 
@@ -62,16 +63,17 @@
 | status: implemented, `evaluation-report.md` status: none | evaluator 실행 |
 | `evaluation-report.md` status: fail | blocker 확인 → integration-fixer 또는 수정 sprint |
 | `evaluation-report.md` status: pass, `review-notes.md` 없음 | reviewer 실행 |
-| `review-notes.md` 작성 완료, `learnings.md` status: none | retrospective 실행 |
+| `review-notes.md` status: reviewed, `learnings.md` status: none | retrospective 실행 |
 | retrospective 완료 (`learnings.md` status: active), `improve_needed: true` | 사용자에게 `/improve` 실행 권장 |
 | retrospective 완료 (`learnings.md` status: active), `improve_needed: false` | 사용자에게 다음 sprint 진행 여부 확인 |
 | `/improve` 명령 | policy-updater 실행 |
 
-## 3. 사용자 승인이 필요한 두 시점
+## 3. 사용자 승인이 필요한 세 시점
 
 **반드시 멈추고 사용자 확인을 받는다:**
 - planner 완료 후: sprint-contract 초안을 제시하고 범위 승인을 받는다. 승인 없이 sprint-builder를 시작하지 않는다.
 - 리뷰 완료 후: 다음 sprint 범위를 제안하고 진행 여부를 확인한다.
+- policy-updater 완료 후: 에이전트/정책 개정안을 diff 형태로 제시하고 승인을 받는다. 승인 없이 파일을 수정하지 않는다.
 
 ## 4. 역할 구분
 
@@ -111,5 +113,7 @@ evaluator와 reviewer는 다른 역할이다. 절대 혼용하지 않는다.
   - learnings가 없으면 실행하지 않는다.
 
 ## 9. 코딩 원칙
+
+> 에이전트 포함 모든 코드 작업에 적용된다.
 
 @.ruler/AGENTS.md

@@ -81,10 +81,10 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | `feature-list.json` | planner | id, priority, status, acceptance_criteria, verification_linkage |
 | `sprint-plan.md` | planner | feature 순서, 예상 리스크 |
 | `evaluation-report.md` | evaluator | `status: pass/fail`, blocker 목록, total_turns |
-| `review-notes.md` | reviewer | `status: reviewed`, Critical/Important/Suggestions |
+| `review-notes.md` | reviewer | `status: reviewed` (이 값이 retrospective 트리거 조건), Critical/Important/Suggestions |
 | `learnings.md` | retrospective | `status: active/reviewed`, `improve_needed: true/false`, sprint별 요약 |
 | `metrics.json` | retrospective | sprints[], summary (pass_rate, avg_blockers 등) |
-| `harness-version.md` | 수동 | 하네스 버전, 변경 이력, 구성 요소 |
+| `harness-version.md` | 자동 (하네스 구조 변경 시) | 하네스 버전, 변경 이력, 구성 요소 |
 | `decisions.md` | 수동 | 아키텍처 결정 기록 |
 | `backlog.md` | 수동 | 다음 sprint 후보 |
 
@@ -132,7 +132,8 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 ## 사용자 승인 필수 시점
 
 1. **planner 완료 후**: sprint-contract 초안 제시 → 승인 후에만 sprint-builder 시작
-2. **policy-updater**: 개정안 diff 제시 → 승인 후에만 파일 적용
+2. **리뷰 완료 후**: 다음 sprint 범위 제안 → 진행 여부 확인
+3. **policy-updater 완료 후**: 개정안 diff 제시 → 승인 후에만 파일 적용
 
 ---
 
