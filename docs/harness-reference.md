@@ -98,6 +98,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | 이벤트 | 조건 | 스크립트 | 역할 |
 |---|---|---|---|
 | SessionStart | 항상 | `session-start.sh` | 상태 스캔 → additionalContext 주입 |
+| Stop | 항상 | `auto-checkpoint.sh` | 변경사항 자동 커밋+푸시 (체크포인트) |
 | SubagentStop | sprint-builder | `check-smoke.sh` | smoke + stub 검사, 실패 시 exit 2로 차단 |
 | SubagentStop | reviewer | `trigger-retrospective.sh` | retrospective 트리거 |
 | SubagentStop | evaluator·reviewer·retrospective | `check-output.sh` | 출력 결과 검증 |
