@@ -11,17 +11,6 @@
         ]
       }
     ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bash .claude/hooks/auto-checkpoint.sh",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
     "SubagentStop": [
       {
         "matcher": "sprint-builder",
