@@ -2,14 +2,17 @@
 # sprint 결과에서 정량 지표를 추출해 metrics.json에 추가합니다.
 # 사용법: bash scripts/collect-metrics.sh <sprint_id>
 
-set -e
-
 SPRINT_ID="${1:-sprint-$(date +%Y%m%d%H%M%S)}"
 EVAL_REPORT=".claude-state/evaluation-report.md"
 METRICS=".claude-state/metrics.json"
 
 if [ ! -f "$EVAL_REPORT" ]; then
   echo "[collect-metrics] evaluation-report.md 없음. 지표 수집 건너뜀." >&2
+  exit 0
+fi
+
+if [ ! -f "$METRICS" ]; then
+  echo "[collect-metrics] metrics.json 없음. 지표 수집 건너뜀." >&2
   exit 0
 fi
 

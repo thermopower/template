@@ -130,6 +130,14 @@ case "$AGENT_NAME" in
         echo "[check-output] 에이전트 이름 불명 — learnings.md 미갱신 감지 (retrospective 미완료 추정)" >&2
         BLOCKED=1
       fi
+
+      # eval(pass) 상태에서 review-notes가 none이면 reviewer 미완료로 판단
+      if [ -n "$EVAL_STATUS" ] && [ "$EVAL_STATUS" != "none" ] && \
+         { [ -z "$REVIEW_STATUS" ] || [ "$REVIEW_STATUS" = "none" ]; } && \
+         { [ -z "$LEARN_STATUS" ] || [ "$LEARN_STATUS" = "none" ]; }; then
+        echo "[check-output] 에이전트 이름 불명 — review-notes.md 미갱신 감지 (reviewer 미완료 추정)" >&2
+        BLOCKED=1
+      fi
     fi
 
     if [ "$BLOCKED" = "1" ]; then

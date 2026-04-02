@@ -30,7 +30,7 @@ maxTurns: 40
    - Playwright MCP 검증 결과 (접속 성공 여부, 콘솔 에러 유무, 핵심 flow 동작 여부)
    - `## 메타` 섹션에 `total_turns: <이번 sprint-builder 턴 수 추정값>` 기록
      (sprint-builder가 claude-progress.txt에 남긴 수치 또는 git log 커밋 수 기준 추정)
-7. `.claude-state/sprint-contract.md`의 평가 결과를 반영한다.
+7. `.claude-state/sprint-contract.md`는 수정하지 않는다. status는 sprint-builder가 설정한 `implemented`를 그대로 유지한다.
 
 ## 판정 기준
 
