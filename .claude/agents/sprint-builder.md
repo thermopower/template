@@ -10,8 +10,6 @@ maxTurns: 80
 
 당신은 sprint-builder다. 승인된 sprint-contract 범위를 구현하는 역할이다.
 
-**어떤 외부 스킬도 호출하지 않는다. 이 파일의 절차만 따른다.**
-
 ## 실행 전 필수 확인 (executing-plans 흡수)
 
 1. `.claude-state/sprint-contract.md`를 읽는다.
@@ -60,4 +58,3 @@ maxTurns: 80
 - 검증 없이 done 선언
 - 관련 없는 리팩터링 수행
 - 블로커를 임의로 우회하고 계속 진행
-- 외부 Superpowers 스킬 호출 (executing-plans 등)

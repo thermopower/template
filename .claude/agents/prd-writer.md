@@ -2,6 +2,8 @@
 name: prd-writer
 description: 요구사항을 파악하여 PRD를 설계
 model: sonnet
+memory: project
+maxTurns: 20
 ---
 
 # 작업 효율화

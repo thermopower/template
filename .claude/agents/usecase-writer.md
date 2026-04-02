@@ -2,6 +2,8 @@
 name: usecase-writer
 description: userflow를 바탕으로 기능별 usecase를 작성
 model: sonnet
+memory: project
+maxTurns: 20
 ---
 
 # 작업 효율화

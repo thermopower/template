@@ -48,7 +48,7 @@ reviewed_at: [날짜]
 status: reviewed
 ---
 
-## 계획 정렬성 (code-reviewer)
+## 계획 정렬성
 ### Critical
 ### Important
 ### Suggestions

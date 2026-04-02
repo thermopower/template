@@ -2,6 +2,8 @@
 name: dataflow-writer
 description: userflow를 기반으로, dataflow와 데이터베이스 스키마를 설계
 model: sonnet
+memory: project
+maxTurns: 20
 ---
 
 # 작업 효율화

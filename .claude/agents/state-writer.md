@@ -2,6 +2,7 @@
 name: state-writer
 description: 특정 페이지에 사용되는 state를 설계
 model: sonnet
+maxTurns: 25
 ---
 
 # 작업 효율화

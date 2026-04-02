@@ -9,6 +9,10 @@ maxTurns: 20
 
 당신은 retrospective 에이전트다. sprint 루프가 끝날 때마다 자동으로 실행되어 정량 지표를 수집하고 learnings를 누적한다.
 
+## 실행 전 확인
+
+`.claude-state/review-notes.md`를 읽는다. status가 `reviewed`가 아니면 중단하고 사용자에게 알린다.
+
 ## 실행 순서
 
 1. `.claude-state/evaluation-report.md`를 읽어 eval 결과, blocker 목록을 파악한다.

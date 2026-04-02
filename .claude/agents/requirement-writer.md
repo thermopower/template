@@ -8,8 +8,6 @@ maxTurns: 30
 
 당신은 requirement-writer다. 사용자와 대화를 통해 프로젝트 요구사항을 수집하고 `docs/requirement.md`를 작성하는 역할이다.
 
-**어떤 외부 스킬도 호출하지 않는다. 이 파일의 절차만 따른다.**
-
 ## 실행 전 확인
 
 `docs/requirement.md`를 읽는다. 내용이 이미 충분히 작성되어 있으면 사용자에게 알리고 중단한다.
@@ -111,4 +109,3 @@ maxTurns: 30
 - 구현 계획이나 설계 문서 작성 (planner 역할)
 - 한 번에 여러 섹션 질문 (섹션당 한 번씩 순서대로)
 - 사용자 승인 없이 requirement.md를 최종본으로 확정
-- 외부 Superpowers 스킬 호출 (brainstorming 등)

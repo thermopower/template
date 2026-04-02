@@ -46,28 +46,31 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 
 ## 에이전트 역할 요약
 
-| 에이전트 | 모델 | 특이 설정 | 역할 | 흡수한 스킬 | 금지 |
-|---|---|---|---|---|---|
-| **requirement-writer** | sonnet | — | 사용자 인터뷰→docs/requirement.md 작성. 단계별 명확화 질문, 대안 탐색, 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리 |
-| **planner** | sonnet | — | 요구사항→설계 문서+sprint-contract 초안. 플레이스홀더 금지, 검증 가능한 criteria, TDD 사이클 포함 계획 작성 | `writing-plans` | 구현, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물 |
-| **sprint-builder** | sonnet | `permissionMode: acceptEdits` | 승인된 범위만 구현. 계획 비판적 검토, 블로커 즉시 중단·보고 | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회 |
-| **evaluator** | haiku | Playwright MCP | pass/fail 판정만. 브라우저 실동작 검증 포함. evaluation-report.md 작성 | — | 개선 제안, reviewer 역할 |
-| **reviewer** | opus | — | 품질 비평·개선 제안 | — | pass/fail 판정, evaluator 역할 |
-| **integration-fixer** | sonnet | `isolation: worktree`, Playwright MCP | 환경/의존성/broken state 복구. 5단계 조사 절차 (복구 후 브라우저 검증 포함) | `systematic-debugging` | 기능 추가, 범위 확장, 근본 원인 미확인 수정 |
-| **retrospective** | haiku | — | 지표 수집, learnings 누적 | — | learnings.md·metrics.json 외 파일 수정 |
-| **policy-updater** | sonnet | — | learnings 기반 에이전트/정책 개정안 생성 | — | 승인 없이 파일 수정 |
-| **implementer** | sonnet | — | 구현 계획 기반 TDD 구현. 테스트 먼저, 구현 코드 나중 | `test-driven-development` | 테스트 없이 구현 코드 작성, TDD 사이클 위반 |
-| **common-module-writer** | sonnet | — | 공통 모듈 계획 작성 및 TDD 구현 | `test-driven-development` | 테스트 없이 구현 코드 작성, 문서 근거 없는 모듈 설계 |
+| 에이전트 | 모델 | maxTurns | 특이 설정 | 역할 | 흡수한 스킬 | 금지 |
+|---|---|---|---|---|---|---|
+| **requirement-writer** | sonnet | 30 | — | 사용자 인터뷰→docs/requirement.md 작성. 단계별 명확화 질문, 대안 탐색, 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리 |
+| **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안. 플레이스홀더 금지, 검증 가능한 criteria, TDD 사이클 포함 계획 작성 | `writing-plans` | 구현, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물 |
+| **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 승인된 범위만 구현. 계획 비판적 검토, 블로커 즉시 중단·보고 | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회 |
+| **evaluator** | haiku | 40 | Playwright MCP | pass/fail 판정만. 브라우저 실동작 검증 포함. evaluation-report.md 작성 | — | 개선 제안, reviewer 역할 |
+| **reviewer** | opus | 40 | — | 품질 비평·개선 제안 | — | pass/fail 판정, evaluator 역할 |
+| **integration-fixer** | sonnet | 50 | `isolation: worktree`, Playwright MCP | evaluation-report fail 시 진입. 환경/의존성/broken state 복구. 5단계 조사 절차 | `systematic-debugging` | 기능 추가, 범위 확장, 근본 원인 미확인 수정 |
+| **retrospective** | haiku | 20 | — | review-notes reviewed 시 진입. 지표 수집, learnings 누적 | — | learnings.md·metrics.json 외 파일 수정 |
+| **policy-updater** | sonnet | 30 | — | learnings 존재 시 진입. learnings 기반 에이전트/정책 개정안 생성 | — | 승인 없이 파일 수정 |
+| **implementer** | sonnet | 60 | — | plan.md 존재 시 진입. 구현 계획 기반 TDD 구현. 테스트 먼저, 구현 코드 나중 | `test-driven-development` | 테스트 없이 구현 코드 작성, TDD 사이클 위반 |
+| **common-module-writer** | sonnet | 30 | — | 공통 모듈 계획 작성 및 TDD 구현 | `test-driven-development` | 테스트 없이 구현 코드 작성, 문서 근거 없는 모듈 설계 |
 
 ### sub-agents (planner/sprint-builder가 내부적으로 호출)
-- **prd-writer** → `docs/prd.md`
-- **userflow-writer** → `docs/userflow.md`
-- **dataflow-writer** → `docs/database.md`
-- **usecase-writer** → `docs/usecases/`
-- **common-module-writer** → 공통 모듈 작업 계획 및 구현
-- **state-writer** → 상태관리 설계
-- **plan-writer** → 페이지/기능별 구현 계획
-- **implementer** → 구현 계획 실행
+
+| 에이전트 | maxTurns | memory | 산출물 |
+|---|---|---|---|
+| **prd-writer** | 20 | project | `docs/prd.md` |
+| **userflow-writer** | 20 | project | `docs/userflow.md` |
+| **dataflow-writer** | 20 | project | `docs/database.md` |
+| **usecase-writer** | 20 | project | `docs/usecases/` |
+| **common-module-writer** | 30 | — | `docs/common-modules.md` + 구현 |
+| **state-writer** | 25 | — | `docs/pages/{page}/state.md` |
+| **plan-writer** | 25 | — | `docs/pages/{page}/plan.md` |
+| **implementer** | 60 | — | 구현 코드 (plan.md 존재 시 진입) |
 
 ---
 

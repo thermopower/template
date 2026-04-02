@@ -2,6 +2,8 @@
 name: userflow-writer
 description: 요구사항을 바탕으로 userflow를 설계
 model: sonnet
+memory: project
+maxTurns: 20
 ---
 
 # 작업 효율화

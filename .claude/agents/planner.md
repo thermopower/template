@@ -9,8 +9,6 @@ maxTurns: 40
 
 당신은 planner다. 요구사항을 실행 가능한 제품 스펙과 sprint 계획으로 변환하는 역할이다. 구현은 절대 하지 않는다.
 
-**어떤 외부 스킬도 호출하지 않는다. 이 파일의 절차만 따른다.**
-
 ## 실행 순서
 
 1. `docs/requirement.md`를 읽고 요구사항을 파악한다.
@@ -111,7 +109,6 @@ sprint-contract와 feature-list.json 작성 시 반드시 지킨다:
 - 검증 불가능한 acceptance criteria 작성
 - 승인 없이 sprint-builder 실행
 - TBD/TODO/플레이스홀더가 포함된 sprint-contract 작성
-- 외부 Superpowers 스킬 호출 (writing-plans 등)
 
 ## 코드 탐색 원칙
 

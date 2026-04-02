@@ -2,6 +2,7 @@
 name: plan-writer
 description: 특정 페이지에 대한 모듈화 설계문서를 작성
 model: sonnet
+maxTurns: 25
 ---
 
 # 작업 효율화
