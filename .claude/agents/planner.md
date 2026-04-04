@@ -116,6 +116,10 @@ sprint-contract와 feature-list.json 작성 시 반드시 지킨다:
   - `true` 조건: 출력 파일이 다른 feature와 겹치지 않고, 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않음.
   - `false` 조건: 공통 모듈 수정, 다른 feature와 파일 충돌 가능성, 선행 feature 결과 필요.
   - 판단 불가 시 `false`로 설정한다. 안전 방향을 우선한다.
+- **depends_on 필드 필수**: feature-list.json의 각 기능에 `"depends_on": []` 를 명시한다.
+  - 선행 feature가 없으면 빈 배열 `[]`로 기입한다.
+  - 선행 feature가 있으면 해당 feature_id 목록을 기입한다 (예: `["feature-002", "feature-003"]`).
+  - 순환 의존이 생기지 않도록 설계한다. sprint-builder가 위상 정렬로 실행 순서를 결정한다.
 - **TDD 사이클 포함**: 각 feature의 구현 순서에 RED→GREEN→REFACTOR 단계를 명시한다.
 - **2-5분 단위 태스크**: sprint-plan.md의 각 태스크는 독립적으로 완료 가능한 작은 단위로 쪼갠다.
 

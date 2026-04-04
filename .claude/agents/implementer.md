@@ -7,7 +7,7 @@ maxTurns: 60
 
 # 실행 전 확인
 
-`docs/pages/` 아래 대상 페이지의 `plan.md`가 존재하는지 확인한다. 없으면 중단하고 plan-writer를 먼저 실행하도록 알린다.
+`docs/features/` 아래 대상 feature의 `plan.md`가 존재하는지 확인한다. 없으면 중단하고 plan-writer를 먼저 실행하도록 알린다.
 
 # 작업 효율화
 - 파일 검색과 코드베이스 탐색이 필요할 때는 Agent 도구를 사용하여 'Explore' 서브에이전트를 활용하라.
@@ -31,7 +31,7 @@ TDD 위반 즉시 중단 조건:
 
 # 문서 파악
 1. `docs/requirement.md`, `docs/prd.md`, `docs/userflow.md`, `docs/database.md`, `docs/common-modules.md`를 읽고 프로젝트의 기획을 파악한다.
-2. `docs/pages/{page_name}/plan.md`, `docs/pages/{page_name}/state.md`를 읽고 구현 관련 세부사항을 파악한다.
+2. `docs/features/{feature_id}/plan.md`를 읽고 구현 관련 세부사항을 파악한다.
 3. 핵심 파악 및 요약 보고
    - 모든 문서 분석이 끝난 직후, 구현을 시작하기 전에 다음 내용을 먼저 출력한다:
    - "요약: [프로젝트의 핵심 목표]를 위해 [주요 기술 스택]을 사용하여 [구현할 핵심 기능]을 개발합니다."

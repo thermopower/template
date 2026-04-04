@@ -71,7 +71,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | **retrospective** | haiku | 20 | — | review-notes reviewed 시 진입. 지표 수집, learnings 누적 | — | learnings.md·metrics.json 외 파일 수정 |
 | **policy-updater** | sonnet | 30 | — | learnings 존재 시 진입. learnings 기반 에이전트/정책 개정안 생성 | — | 승인 없이 파일 수정 |
 | **implementer** | sonnet | 60 | — | plan.md 존재 시 진입. 구현 계획 기반 TDD 구현. 테스트 먼저, 구현 코드 나중 | `test-driven-development` | 테스트 없이 구현 코드 작성, TDD 사이클 위반 |
-| **common-module-writer** | sonnet | 30 | — | 공통 모듈 계획 작성 및 TDD 구현. `docs/usecases/` 전체를 읽고 2개 이상 페이지에서 반복될 패턴을 미리 추출해 `docs/common-modules.md`에 포함 | `test-driven-development` | 테스트 없이 구현 코드 작성, 문서 근거 없는 모듈 설계 |
+| **common-module-writer** | sonnet | 30 | — | 공통 모듈 계획 작성 및 TDD 구현. `docs/usecases/` 전체를 읽고 2개 이상 기능(feature)에서 반복될 패턴을 미리 추출해 `docs/common-modules.md`에 포함 | `test-driven-development` | 테스트 없이 구현 코드 작성, 문서 근거 없는 모듈 설계 |
 
 ### sub-agents (planner/sprint-builder가 내부적으로 호출)
 
@@ -94,7 +94,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | `claude-progress.txt` | 모든 에이전트 | 현재 상태, blocker, 다음 액션 |
 | `sprint-contract.md` | planner | `status: none/draft/approved/implemented` |
 | `product-spec.md` | planner | 제품 목표, 핵심 플로우, 범위 |
-| `feature-list.json` | planner | id, priority, status, acceptance_criteria, verification_linkage |
+| `feature-list.json` | planner | id, priority, status, acceptance_criteria, verification_linkage, parallel_safe, depends_on |
 | `sprint-plan.md` | planner | feature 순서, 예상 리스크 |
 | `evaluation-report.md` | evaluator | `status: pass/fail`, blocker 목록, total_turns |
 | `review-notes.md` | reviewer | `status: reviewed` (이 값이 retrospective 트리거 조건), Critical/Important/Suggestions |
