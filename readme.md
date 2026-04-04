@@ -66,7 +66,7 @@ requirement-writer  →  사용자 인터뷰 → docs/requirement.md
 
 ### 서브 에이전트 (planner/sprint-builder가 내부 호출)
 
-`prd-writer` · `userflow-writer` · `dataflow-writer` · `usecase-writer` · `state-writer` · `plan-writer` · `common-module-writer` · `implementer`
+`prd-writer` · `userflow-writer` · `dataflow-writer` · `usecase-writer` · `plan-writer` · `common-module-writer` · `implementer`
 
 ---
 
@@ -74,7 +74,7 @@ requirement-writer  →  사용자 인터뷰 → docs/requirement.md
 
 ```
 .claude/
-  agents/          # 에이전트 정의 (16개)
+  agents/          # 에이전트 정의 (16개, 서브에이전트 포함)
   hooks/           # SessionStart · SubagentStop 훅 스크립트
   commands/        # 커스텀 커맨드
   settings.json    # 훅 연결 설정
