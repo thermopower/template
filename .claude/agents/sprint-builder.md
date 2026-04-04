@@ -36,6 +36,11 @@ maxTurns: 80
 4. `bash scripts/smoke`를 실행한다. 실패하면 완료로 처리하지 않고 문제를 수정한다.
 5. stub/placeholder 잔존 여부를 확인한다: `grep -rn "TODO\|FIXME\|stub\|placeholder\|not implemented" app/ src/ 2>/dev/null`
    - 발견되면 핵심 경로인지 판단하고 핵심 경로이면 수정 후 재확인한다.
+5-1. **완료 선언 전 자가 검증** — 아래 항목을 직접 확인한다. 하나라도 해당하면 수정 후 재확인한다.
+   - **AC → 코드 추적**: AC 문구에 명시된 조건(필터링, 정렬, 분기 등)이 실제 코드 경로에 구현됐는가. "구현했다"는 판단이 아니라 코드를 직접 읽어 확인한다.
+   - **dead code**: 선언됐지만 값이 채워지지 않는 상태/컬렉션(Set, Map, 배열 등)이 있는가. 초기화만 하고 사용되지 않는 변수가 있는가.
+   - **catch 블록**: 빈 catch, 주석 처리된 에러 처리, `// 무시` 패턴이 있는가. 에러를 삼키는 코드는 완료가 아니다.
+   - **제어 흐름**: 오류가 발생했을 때 성공 경로가 계속 실행되지 않는가. (예: 에러 후 router.push가 여전히 실행되는 경우)
 6. `.claude-state/sprint-contract.md`의 status를 `implemented`로 갱신한다.
 7. `.claude-state/claude-progress.txt`를 갱신한다. total_turns 추정값을 기록한다.
 
