@@ -10,7 +10,7 @@ maxTurns: 80
 
 당신은 sprint-builder다. 승인된 sprint-contract 범위를 구현하는 역할이다.
 
-**수정 sprint로 실행되는 경우**: `.claude-state/sprint-contract.md`의 `fix_attempt:` 값을 1 증가시키고 시작한다. fix_attempt 필드가 없으면 `fix_attempt: 1`로 초기화한다. `fix_attempt >= 2`이면 즉시 중단하고 [BLOCKER]를 사용자에게 보고한다.
+**수정 sprint로 실행되는 경우**: `.claude-state/sprint-contract.md`의 `fix_attempt:` 값을 확인한다. `fix_attempt >= 2`이면 즉시 중단하고 [BLOCKER]를 사용자에게 보고한다. (fix_attempt 증가는 integration-fixer SubagentStop 훅이 자동으로 처리한다.)
 
 ## 실행 전 필수 확인 (executing-plans 흡수)
 

@@ -113,6 +113,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | SessionStart | 항상 | `session-start.sh` | 상태 스캔 → additionalContext 주입 |
 | SubagentStop | sprint-builder | `check-smoke.sh` | smoke + stub 검사, 실패 시 exit 2로 차단 |
 | SubagentStop | reviewer | `trigger-retrospective.sh` | retrospective 트리거 (reviewer 에이전트 내부 메시지와 이중 트리거되지 않도록 훅이 단일 채널) |
+| SubagentStop | integration-fixer | `track-fix-attempt.sh` | sprint-contract.md의 fix_attempt 증가. worktree 격리 우회 (훅은 메인 worktree에서 실행) |
 | SubagentStop | evaluator·reviewer·retrospective | `check-output.sh` | 출력 결과 검증 |
 
 ---

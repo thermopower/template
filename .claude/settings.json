@@ -34,6 +34,16 @@
         ]
       },
       {
+        "matcher": "integration-fixer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/track-fix-attempt.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
         "matcher": "evaluator|reviewer|retrospective",
         "hooks": [
           {
