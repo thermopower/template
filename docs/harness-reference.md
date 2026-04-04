@@ -62,7 +62,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 
 | 에이전트 | 모델 | maxTurns | 특이 설정 | 역할 | 흡수한 스킬 | 금지 |
 |---|---|---|---|---|---|---|
-| **requirement-writer** | sonnet | 30 | — | 사용자 인터뷰→docs/requirement.md 작성. 단계별 명확화 질문, 대안 탐색, 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리 |
+| **requirement-writer** | sonnet | 20 | WebSearch | 사용자 인터뷰→docs/requirement.md 작성. 섹션 순서: 목표→(자동 리서치)→기능→스택. 섹션 1 완료 직후 WebSearch 2회 이내로 유사 서비스 자동 조사 후 기능 명세에 반영. 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리, WebSearch 3회 이상 |
 | **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안. prd/userflow 병렬, dataflow/usecase 병렬. feature-list.json에 parallel_safe 필드 포함. 기존 코드베이스 있으면 수정 대상 패턴 전체 탐색 후 sprint 범위 확정 | `writing-plans` | 구현, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물 |
 | **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 승인된 범위만 구현. common-module 먼저 확정 후 state/plan-writer 병렬, parallel_safe 기준으로 implementer 병렬/순차 분리. code-reviewer 루프(최대 2회) 포함 | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회 |
 | **code-reviewer** | sonnet | 20 | — | sprint 내부 코드 리뷰. major 이상만 피드백. LGTM 또는 NEEDS_WORK 반환. 수정 패턴과 동일한 패턴의 잔존 여부 grep 확인 포함. minor 언급 금지 | — | minor 지적, 리팩터링 제안, 범위 확장 요구 |
