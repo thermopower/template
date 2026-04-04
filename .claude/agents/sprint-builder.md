@@ -41,11 +41,9 @@ maxTurns: 80
    - `parallel_safe: true` feature들은 **병렬로** 실행한다. 한 번의 Agent 호출에 여러 implementer를 동시에 실행한다.
    - `parallel_safe: false` feature들은 `depends_on` 기반 위상 정렬 순서대로 **순차로** 실행한다. 선행 feature(`depends_on` 대상) 완료 후 다음 feature를 시작한다.
    - 병렬 implementer는 각자 `docs/features/{feature_id}/plan.md`만 참조하고 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않는다. 공통 모듈 수정이 필요하면 즉시 중단하고 common-module-writer로 먼저 처리한 뒤 재개한다.
-   - **병렬 그룹 커밋 규칙**: 각 implementer는 자신이 담당하는 feature 파일만 `git add`하고 feature 단위로 커밋한다.
-     커밋 메시지 형식: `feat(<feature_id>): implement <feature_name>`
-     모든 병렬 implementer 완료 후, sprint-builder는 `git status`로 uncommitted 파일이 없는지 확인한다. 남은 파일이 있으면 BLOCKER 처리한다.
+   - `parallel_safe: true` 조건 자체가 "출력 파일이 다른 feature와 겹치지 않음"을 보장하므로, 병렬 실행 중 git 파일 충돌은 발생하지 않는다. 별도 커밋을 강제할 필요 없다.
 5. code-reviewer 에이전트를 실행해 major 이상 문제를 확인한다.
-   - **code-reviewer는 병렬 그룹 전체가 커밋된 이후에만 실행한다.** `git diff HEAD~<N>..HEAD` (N = 병렬 그룹 feature 수)로 전체 변경을 검토한다.
+   - 모든 implementer(병렬/순차 모두) 완료 후 실행한다. `git diff`로 이번 sprint에서 변경된 전체 파일을 대상으로 한다.
    - 첫 실행 전, `.claude-state/sprint-contract.md`에 `code_review_attempt: 0` 필드가 없으면 추가한다.
    - **LGTM**: 다음 단계로 진행한다.
    - **NEEDS_WORK**: `code_review_attempt` 값을 1 증가시키고 sprint-contract.md에 기록한다.
