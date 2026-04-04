@@ -10,6 +10,7 @@ TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 SMOKE_RESULT="SKIP"
 UNIT_RESULT="SKIP"
 STUB_RESULT="PASS"
+AUDIT_RESULT="SKIP"
 OVERALL="pass"
 BLOCKERS=()
 
@@ -59,13 +60,32 @@ if [ -n "$SEARCH_DIRS" ]; then
   fi
 fi
 
-# 4. 결과 출력 (evaluator가 이 출력을 읽어 evaluation-report.md를 작성)
+# 4. npm audit (high 이상 취약점 검사)
+echo "[4/4] npm audit 실행..."
+if [ -f "package.json" ] && command -v npm >/dev/null 2>&1; then
+  AUDIT_OUTPUT=$(npm audit --audit-level=high 2>&1)
+  AUDIT_EXIT=$?
+  echo "$AUDIT_OUTPUT"
+  if [ $AUDIT_EXIT -eq 0 ]; then
+    AUDIT_RESULT="PASS"
+  else
+    AUDIT_RESULT="FAIL"
+    OVERALL="fail"
+    BLOCKERS+=("npm audit high 이상 취약점 발견")
+  fi
+else
+  echo "[4/4] package.json 없음 또는 npm 없음. 건너뜀."
+  AUDIT_RESULT="SKIP"
+fi
+
+# 5. 결과 출력 (evaluator가 이 출력을 읽어 evaluation-report.md를 작성)
 echo ""
 echo "=== evaluation-gate 결과 ==="
 echo "overall: $OVERALL"
 echo "smoke: $SMOKE_RESULT"
 echo "unit: $UNIT_RESULT"
 echo "stub: $STUB_RESULT"
+echo "audit: $AUDIT_RESULT"
 if [ ${#BLOCKERS[@]} -gt 0 ]; then
   echo "blockers:"
   for b in "${BLOCKERS[@]}"; do

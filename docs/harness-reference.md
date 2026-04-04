@@ -119,10 +119,10 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 
 | 스크립트 | 역할 | 호출 시점 |
 |---|---|---|
-| `smoke` | 빌드 + 타입체크 | sprint-builder 완료 시, check-smoke hook |
+| `smoke` | lint + 타입체크 + 빌드 | sprint-builder 완료 시, check-smoke hook |
 | `unit` | 단위 테스트 (없으면 SKIP) | evaluator |
 | `e2e` | E2E 테스트 (없으면 SKIP) | evaluator |
-| `evaluation-gate` | 전체 평가 게이트 | evaluator |
+| `evaluation-gate` | lint + 빌드 + 단위테스트 + stub검사 + npm audit | evaluator |
 | `collect-metrics.sh <sprint_id>` | metrics.json 갱신 | retrospective |
 | `check-thresholds.sh [--summary]` | 임계점 판정 | retrospective, session-start |
 

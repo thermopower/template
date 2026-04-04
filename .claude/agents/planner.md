@@ -51,6 +51,8 @@ maxTurns: 40
   ```bash
   #!/usr/bin/env bash
   set -e
+  echo "[smoke] lint..."
+  npm run lint
   echo "[smoke] type check..."
   npx tsc --noEmit
   echo "[smoke] build..."
@@ -85,12 +87,12 @@ maxTurns: 40
   ```
 
 ### 스택별 판단 기준
-| 요구사항 키워드 | profile 이름 | 빌드 도구 | 단위 테스트 | E2E |
+| 요구사항 키워드 | profile 이름 | smoke (lint→type→build) | 단위 테스트 | E2E |
 |---|---|---|---|---|
-| Next.js + Supabase | nextjs-supabase | `npm run build` + `tsc --noEmit` | vitest | playwright |
-| Next.js (단독) | nextjs | `npm run build` + `tsc --noEmit` | vitest | playwright |
-| React + Vite | react-vite | `npm run build` | vitest | playwright |
-| Python FastAPI | fastapi | `python -m py_compile` + `pytest --collect-only` | pytest | httpx |
+| Next.js + Supabase | nextjs-supabase | `npm run lint` + `tsc --noEmit` + `npm run build` | vitest | playwright |
+| Next.js (단독) | nextjs | `npm run lint` + `tsc --noEmit` + `npm run build` | vitest | playwright |
+| React + Vite | react-vite | `npm run lint` + `npm run build` | vitest | playwright |
+| Python FastAPI | fastapi | `ruff check` + `python -m py_compile` | pytest | httpx |
 | 판단 불가 | generic | `npm run build` (있으면) | SKIP | SKIP |
 
 ## 구현 계획 품질 기준 (writing-plans 흡수)

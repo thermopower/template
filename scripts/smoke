@@ -26,10 +26,18 @@ fi
 echo "[smoke] profile 없음. 기본 검사 실행 (대상: $APP_DIR)"
 FAILED=0
 
-# 1. TypeScript/JavaScript 프로젝트: 빌드 확인
+# 1. TypeScript/JavaScript 프로젝트: lint + 빌드 확인
 if [ -f "package.json" ]; then
-  echo "[smoke] package.json 발견. 빌드 확인..."
+  echo "[smoke] package.json 발견."
   if command -v npm >/dev/null 2>&1; then
+    # lint
+    if npm run lint --if-present 2>&1; then
+      echo "[smoke] lint PASS"
+    else
+      echo "[smoke] lint FAIL" >&2
+      FAILED=1
+    fi
+    # build
     if npm run build --if-present 2>&1; then
       echo "[smoke] build PASS"
     else
@@ -37,7 +45,7 @@ if [ -f "package.json" ]; then
       FAILED=1
     fi
   else
-    echo "[smoke] npm 없음. build 검사 건너뜀."
+    echo "[smoke] npm 없음. lint/build 검사 건너뜀."
   fi
 fi
 
