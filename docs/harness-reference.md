@@ -14,11 +14,13 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
         ↓
     planner ──→ sprint-contract (draft) ──→ [사용자 승인]
         ↓
-  sprint-builder ──→ status: implemented
+  sprint-builder:
+    implementer ──→ code-reviewer ──→ [NEEDS_WORK → implementer (최대 2회 루프)]
+                                   ──→ [LGTM → smoke → status: implemented]
         ↓ (hook: check-smoke.sh)
     evaluator ──→ evaluation-report (pass/fail)
         ↓ fail → integration-fixer 또는 수정 sprint
-    reviewer ──→ review-notes.md
+    reviewer ──→ review-notes.md (Critical/Major → 개선 우선순위, Minor → Backlog 후보)
         ↓ (hook: trigger-retrospective.sh)
   retrospective ──→ learnings.md (improve_needed: true/false) + metrics.json
         ↓ improve_needed: true 일 때만
@@ -50,9 +52,10 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 |---|---|---|---|---|---|---|
 | **requirement-writer** | sonnet | 30 | — | 사용자 인터뷰→docs/requirement.md 작성. 단계별 명확화 질문, 대안 탐색, 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리 |
 | **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안. 플레이스홀더 금지, 검증 가능한 criteria, TDD 사이클 포함 계획 작성 | `writing-plans` | 구현, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물 |
-| **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 승인된 범위만 구현. 계획 비판적 검토, 블로커 즉시 중단·보고 | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회 |
+| **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 승인된 범위만 구현. implementer → code-reviewer 루프(최대 2회) 포함. 블로커 즉시 중단·보고 | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회 |
+| **code-reviewer** | sonnet | 20 | — | sprint 내부 코드 리뷰. major 이상만 피드백. LGTM 또는 NEEDS_WORK 반환. minor 언급 금지 | — | minor 지적, 리팩터링 제안, 범위 확장 요구 |
 | **evaluator** | haiku | 40 | Playwright MCP | pass/fail 판정만. 브라우저 실동작 검증 포함. evaluation-report.md 작성. sprint-contract.md 수정 금지 | — | 개선 제안, reviewer 역할, sprint-contract 수정 |
-| **reviewer** | opus | 40 | — | 품질 비평·개선 제안 | — | pass/fail 판정, evaluator 역할 |
+| **reviewer** | opus | 40 | — | 품질 비평·개선 제안. Critical/Major → 통합 개선 우선순위. Minor → Backlog 후보 섹션에만 기록 | — | pass/fail 판정, evaluator 역할, minor를 개선 우선순위에 포함 |
 | **integration-fixer** | sonnet | 50 | `isolation: worktree`, Playwright MCP | evaluation-report fail 시 진입. 환경/의존성/broken state 복구. 5단계 조사 절차 | `systematic-debugging` | 기능 추가, 범위 확장, 근본 원인 미확인 수정 |
 | **retrospective** | haiku | 20 | — | review-notes reviewed 시 진입. 지표 수집, learnings 누적 | — | learnings.md·metrics.json 외 파일 수정 |
 | **policy-updater** | sonnet | 30 | — | learnings 존재 시 진입. learnings 기반 에이전트/정책 개정안 생성 | — | 승인 없이 파일 수정 |

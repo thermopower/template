@@ -59,8 +59,13 @@ status: reviewed
 ### Minor
 
 ## 통합 개선 우선순위
-[두 섹션을 통합한 우선순위 5개 이내]
+[Critical/Major 항목만 포함. 최대 5개. Minor는 포함하지 않는다.]
+
+## Backlog 후보
+[Minor 지적 항목. 다음 sprint 범위에 자동으로 포함되지 않는다. 사용자가 명시적으로 선택해야 한다.]
 ```
+
+**통합 개선 우선순위 작성 규칙**: Critical과 Major 항목만 포함한다. Minor는 `## Backlog 후보`에만 기록한다. 우선순위 목록에 minor가 포함되면 다음 sprint 범위가 불필요하게 늘어난다.
 
 ### 4단계: retrospective 트리거
 

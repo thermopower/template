@@ -24,6 +24,15 @@ maxTurns: 80
    - state-writer: 상태관리 설계
    - plan-writer: 페이지/기능별 구현 계획
 3. implementer 에이전트를 실행해 구현 계획을 구현한다.
+3-1. code-reviewer 에이전트를 실행해 major 이상 문제를 확인한다.
+   - **LGTM**: 다음 단계로 진행한다.
+   - **NEEDS_WORK**: implementer를 재실행해 지적 항목만 수정한다. 이후 code-reviewer를 한 번 더 실행한다.
+   - 2회 루프 후에도 NEEDS_WORK이면 즉시 중단하고 사용자에게 보고한다:
+     ```
+     [BLOCKER] code-reviewer 2회 루프 후에도 major 문제 미해결
+     미해결 항목: <목록>
+     필요한 결정: 수동 수정 또는 sprint 범위 조정
+     ```
 4. `bash scripts/smoke`를 실행한다. 실패하면 완료로 처리하지 않고 문제를 수정한다.
 5. stub/placeholder 잔존 여부를 확인한다: `grep -rn "TODO\|FIXME\|stub\|placeholder\|not implemented" app/ src/ 2>/dev/null`
    - 발견되면 핵심 경로인지 판단하고 핵심 경로이면 수정 후 재확인한다.
