@@ -1,13 +1,13 @@
 # Harness Version
 
-version: 1.1
+version: 1.0
 updated: 2026-04-05
 
 ## 변경 이력
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
-| 1.1 | 2026-04-05 | state-writer 제거. plan-writer를 페이지 단위 → feature 단위로 재설계. 상태 설계(source of truth, 전역/로컬 구분, cross-page 공유 상태) plan.md 안에 통합. 산출물 경로 `docs/pages/{page}/` → `docs/features/{feature_id}/` |
+| 1.0 | 2026-04-05 | state-writer 제거. plan-writer를 페이지 단위 → feature 단위로 재설계. 상태 설계(source of truth, 전역/로컬 구분, cross-page 공유 상태) plan.md 안에 통합. 산출물 경로 `docs/pages/{page}/` → `docs/features/{feature_id}/` |
 | 1.0 | 2026-04-05 | planner: AC를 정상/경계/에러 케이스로 분리 작성 강제. 요구사항에 없는 케이스도 planner가 직접 채우도록 명시 |
 | 1.0 | 2026-04-05 | common-module-writer: docs/usecases/ 전체 읽고 반복 패턴 미리 추출하는 단계 추가. plan-writer: 필요한 공통 모듈 누락 시 중단 후 보완 요청 경로 추가 |
 | 1.0 | 2026-04-05 | planner: 범주형·파생 필드 AC 명시 규칙 추가 (저장→변환→레이어). reviewer: 1-A 요구사항↔구현 직접 비교 단계 추가 (AC 완결성 검증) |
