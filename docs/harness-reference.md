@@ -74,10 +74,10 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 
 | 에이전트 | maxTurns | memory | 산출물 |
 |---|---|---|---|
-| **prd-writer** | 20 | project | `docs/prd.md` ← userflow-writer와 병렬 실행 |
-| **userflow-writer** | 20 | project | `docs/userflow.md` ← prd-writer와 병렬 실행 |
-| **dataflow-writer** | 20 | project | `docs/database.md` ← usecase-writer와 병렬 실행 (prd/userflow 완료 후) |
-| **usecase-writer** | 20 | project | `docs/usecases/` ← dataflow-writer와 병렬 실행 |
+| **prd-writer** | 20 | project | `docs/prd.md` |
+| **userflow-writer** | 20 | project | `docs/userflow.md` (prd 완료 후) |
+| **dataflow-writer** | 20 | project | `docs/database.md` ← usecase-writer와 병렬 실행 (prd+userflow 완료 후) |
+| **usecase-writer** | 20 | project | `docs/usecases/` ← dataflow-writer와 병렬 실행 (prd+userflow 완료 후) |
 | **common-module-writer** | 30 | — | `docs/common-modules.md` + 구현 |
 | **state-writer** | 25 | — | `docs/pages/{page}/state.md` |
 | **plan-writer** | 25 | — | `docs/pages/{page}/plan.md` |

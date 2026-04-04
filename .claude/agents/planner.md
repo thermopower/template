@@ -13,12 +13,11 @@ maxTurns: 40
 
 1. `docs/requirement.md`를 읽고 요구사항을 파악한다.
 2. 요구사항이 비어 있으면 사용자에게 요구사항 작성을 요청하고 중단한다.
-3. prd-writer와 userflow-writer를 **병렬로** 실행한다.
-   - prd-writer → `docs/prd.md`
-   - userflow-writer → `docs/userflow.md`
-4. 3단계 완료 후, dataflow-writer와 usecase-writer를 **병렬로** 실행한다.
+3. prd-writer 에이전트를 실행해 `docs/prd.md`를 생성한다.
+4. prd 완료 후 userflow-writer 에이전트를 실행해 `docs/userflow.md`를 생성한다.
+5. userflow 완료 후, dataflow-writer와 usecase-writer를 **병렬로** 실행한다.
    - dataflow-writer → `docs/database.md` (prd.md + userflow.md 필요)
-   - usecase-writer → `docs/usecases/` (userflow.md 필요)
+   - usecase-writer → `docs/usecases/` (prd.md + userflow.md 필요)
 6. 다음 파일을 `.claude-state/`에 작성한다:
    - `product-spec.md` — 제품 목표, 핵심 사용자, 핵심 플로우, 범위, 제외 범위
    - `feature-list.json` — 기능 ID, 우선순위, status, acceptance_criteria, verification_linkage
