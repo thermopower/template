@@ -7,6 +7,7 @@ updated: 2026-04-05
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
+| 1.0 | 2026-04-05 | planner: AC를 정상/경계/에러 케이스로 분리 작성 강제. 요구사항에 없는 케이스도 planner가 직접 채우도록 명시 |
 | 1.0 | 2026-04-05 | common-module-writer: docs/usecases/ 전체 읽고 반복 패턴 미리 추출하는 단계 추가. plan-writer: 필요한 공통 모듈 누락 시 중단 후 보완 요청 경로 추가 |
 | 1.0 | 2026-04-05 | planner: 범주형·파생 필드 AC 명시 규칙 추가 (저장→변환→레이어). reviewer: 1-A 요구사항↔구현 직접 비교 단계 추가 (AC 완결성 검증) |
 | 1.0 | 2026-04-04 | smoke에 lint 추가, evaluation-gate에 npm audit(high 이상) 추가, planner smoke 템플릿 업데이트 |

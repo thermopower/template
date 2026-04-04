@@ -63,7 +63,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | 에이전트 | 모델 | maxTurns | 특이 설정 | 역할 | 흡수한 스킬 | 금지 |
 |---|---|---|---|---|---|---|
 | **requirement-writer** | sonnet | 20 | WebSearch | 사용자 인터뷰→docs/requirement.md 작성. 섹션 순서: 목표→(자동 리서치)→기능→스택. 섹션 1 완료 직후 WebSearch 2회 이내로 유사 서비스 자동 조사 후 기능 명세에 반영. 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리, WebSearch 3회 이상 |
-| **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안. prd/userflow 병렬, dataflow/usecase 병렬. feature-list.json에 parallel_safe 필드 포함. 기존 코드베이스 있으면 수정 대상 패턴 전체 탐색 후 sprint 범위 확정. AC에 범주형·파생 필드의 저장→변환→레이어 위치를 명시해야 통과 | `writing-plans` | 구현, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물, 데이터 변환 설계 누락 AC |
+| **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안. prd/userflow 병렬, dataflow/usecase 병렬. feature-list.json에 parallel_safe 필드 포함. 기존 코드베이스 있으면 수정 대상 패턴 전체 탐색 후 sprint 범위 확정. AC에 범주형·파생 필드의 저장→변환→레이어 위치를 명시해야 통과. **AC는 정상/경계/에러 케이스를 반드시 분리 작성. 요구사항에 없는 경계·에러도 planner가 직접 채움** | `writing-plans` | 구현, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물, 데이터 변환 설계 누락 AC, 정상 케이스만 있는 AC |
 | **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 승인된 범위만 구현. common-module 먼저 확정 후 state/plan-writer 병렬, parallel_safe 기준으로 implementer 병렬/순차 분리. code-reviewer 루프(최대 2회) 포함 | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회 |
 | **code-reviewer** | sonnet | 20 | — | sprint 내부 코드 리뷰. major 이상만 피드백. LGTM 또는 NEEDS_WORK 반환. 수정 패턴과 동일한 패턴의 잔존 여부 grep 확인 포함. minor 언급 금지 | — | minor 지적, 리팩터링 제안, 범위 확장 요구 |
 | **evaluator** | haiku | 40 | Playwright MCP | pass/fail 판정만. 브라우저 실동작 검증 포함. evaluation-report.md 작성. 완료 후 browser_close·스크린샷 삭제·cleanup 기록. sprint-contract.md 수정 금지 | — | 개선 제안, reviewer 역할, sprint-contract 수정 |
