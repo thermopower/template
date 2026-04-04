@@ -58,22 +58,33 @@
 |---|---|
 | `docs/requirement.md` 내용 없음 | requirement-writer 실행 (사용자와 대화로 요구사항 수집) |
 | `.claude-state/sprint-contract.md` status: none | planner 실행 |
-| status: draft | 사용자에게 sprint-contract 내용 제시 후 승인 요청 |
+| status: draft, **첫 번째 sprint** | 사용자에게 sprint-contract 내용 제시 후 승인 요청 |
+| status: draft, **두 번째 이후 sprint** | 사용자 승인 없이 자동으로 status를 approved로 갱신 후 sprint-builder 실행 |
 | status: approved | sprint-builder 실행 |
 | status: implemented, `evaluation-report.md` status: none | evaluator 실행 |
-| `evaluation-report.md` status: fail | blocker 확인 → integration-fixer 또는 수정 sprint |
+| `evaluation-report.md` status: fail, 수정 시도 횟수 < 2 | integration-fixer 또는 수정 sprint 자동 실행 (사용자에게 묻지 않음) |
+| `evaluation-report.md` status: fail, 수정 시도 횟수 ≥ 2 | **[BLOCKER]** 사용자에게 상황 보고 후 중단 |
 | `evaluation-report.md` status: pass, `review-notes.md` 없음 | reviewer 실행 |
 | `review-notes.md` status: reviewed, `learnings.md` status: none | retrospective 실행 |
-| retrospective 완료 (`learnings.md` status: active), `improve_needed: true` | 사용자에게 `/improve` 실행 권장 |
-| retrospective 완료 (`learnings.md` status: active), `improve_needed: false` | 사용자에게 다음 sprint 진행 여부 확인 |
+| retrospective 완료, 미완료 sprint 남아있음 | 자동으로 다음 sprint planner 실행 |
+| retrospective 완료, 모든 sprint 완료 (`feature-list.json` 전체 done), `improve_needed: true` | 사용자에게 완성품 제시 + `/improve` 실행 권장 |
+| retrospective 완료, 모든 sprint 완료, `improve_needed: false` | 사용자에게 완성품 제시 후 종료 |
 | `/improve` 명령 | policy-updater 실행 |
 
-## 3. 사용자 승인이 필요한 세 시점
+## 3. 사용자 승인이 필요한 시점
 
-**반드시 멈추고 사용자 확인을 받는다:**
-- planner 완료 후: sprint-contract 초안을 제시하고 범위 승인을 받는다. 승인 없이 sprint-builder를 시작하지 않는다.
-- 리뷰 완료 후: 다음 sprint 범위를 제안하고 진행 여부를 확인한다.
-- policy-updater 완료 후: 에이전트/정책 개정안을 diff 형태로 제시하고 승인을 받는다. 승인 없이 파일을 수정하지 않는다.
+**기본 원칙: 요구사항을 한 번 승인하면 완성품이 나올 때까지 자동으로 진행한다.**
+
+**반드시 멈추고 사용자 확인을 받는다 (3가지):**
+- **첫 번째 sprint-contract**: planner 완료 후 범위를 제시하고 승인을 받는다. 이후 sprint는 자동 진행한다.
+- **수정 sprint 2회 초과 블로커**: evaluation fail 후 수정 시도가 2회를 초과하면 사용자에게 보고하고 중단한다.
+- **policy-updater 완료 후**: 에이전트/정책 개정안을 diff 형태로 제시하고 승인을 받는다. 승인 없이 파일을 수정하지 않는다.
+
+**자동으로 진행하는 것 (사용자에게 묻지 않음):**
+- 두 번째 이후 sprint-contract 승인
+- evaluation fail 후 수정 sprint (2회 이내)
+- sprint 완료 후 다음 sprint 전환
+- reviewer → retrospective → 다음 sprint planner 전환
 
 ## 4. 역할 구분
 

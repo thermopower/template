@@ -12,7 +12,7 @@ requirement.md 비어있음
         ↓
 requirement-writer (사용자 인터뷰 → 파일 작성)
         ↓
-    planner ──→ sprint-contract (draft) ──→ [사용자 승인]
+    planner ──→ sprint-contract (draft) ──→ [첫 번째 sprint만 사용자 승인 / 이후 자동 승인]
         ↓
   sprint-builder:
     common-module-writer (공통 영역 먼저 확정)
@@ -27,11 +27,12 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
                    ──→ [LGTM → smoke → status: implemented]
         ↓ (hook: check-smoke.sh)
     evaluator ──→ evaluation-report (pass/fail)
-        ↓ fail → integration-fixer 또는 수정 sprint
+        ↓ fail → integration-fixer 또는 수정 sprint (자동, 최대 2회 / 초과 시 사용자 보고)
     reviewer ──→ review-notes.md (Critical/Major → 개선 우선순위, Minor → Backlog 후보)
         ↓ (hook: trigger-retrospective.sh)
   retrospective ──→ learnings.md (improve_needed: true/false) + metrics.json
-        ↓ improve_needed: true 일 때만
+        ↓ 미완료 sprint 있음 → 다음 sprint planner 자동 실행
+        ↓ 모든 sprint 완료 → 완성품 제시 (improve_needed: true 이면 /improve 권장)
   /improve → policy-updater ──→ 에이전트/정책 개정안 [사용자 승인 후 적용]
 ```
 
@@ -43,14 +44,17 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 |---|---|---|---|---|---|
 | 비어있음 | - | - | - | - | requirement-writer 실행 |
 | 있음 | none | - | - | - | planner 실행 |
-| 있음 | draft | - | - | - | 사용자에게 승인 요청 |
+| 있음 | draft, sprint_number=1 | - | - | - | 사용자에게 승인 요청 |
+| 있음 | draft, sprint_number>1 | - | - | - | 자동 승인 후 sprint-builder 실행 |
 | 있음 | approved | - | - | - | sprint-builder 실행 |
 | 있음 | implemented | none/없음 | - | - | evaluator 실행 |
-| 있음 | implemented | fail | - | - | integration-fixer 또는 수정 sprint |
+| 있음 | implemented | fail | - | - (fix_attempt < 2) | integration-fixer 또는 수정 sprint 자동 실행 |
+| 있음 | implemented | fail | - | - (fix_attempt ≥ 2) | [BLOCKER] 사용자 보고 후 중단 |
 | 있음 | implemented | pass | 없음 | - | reviewer 실행 |
 | 있음 | implemented | pass | reviewed | none/없음 | retrospective 실행 |
-| 있음 | implemented | pass | reviewed | active, improve_needed: true | /improve 실행 권장 |
-| 있음 | implemented | pass | reviewed | active, improve_needed: false | 다음 sprint 진행 여부 확인 |
+| 있음 | implemented | pass | reviewed | active, remaining_sprints: true | 다음 sprint planner 자동 실행 |
+| 있음 | implemented | pass | reviewed | active, remaining_sprints: false, improve_needed: true | 완성품 제시 + /improve 권장 |
+| 있음 | implemented | pass | reviewed | active, remaining_sprints: false, improve_needed: false | 완성품 제시 후 종료 |
 
 ---
 
@@ -143,9 +147,16 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 
 ## 사용자 승인 필수 시점
 
-1. **planner 완료 후**: sprint-contract 초안 제시 → 승인 후에만 sprint-builder 시작
-2. **리뷰 완료 후**: 다음 sprint 범위 제안 → 진행 여부 확인
-3. **policy-updater 완료 후**: 개정안 diff 제시 → 승인 후에만 파일 적용
+**원칙: 요구사항 승인 한 번 → 완성품이 나올 때까지 자동 진행**
+
+1. **첫 번째 sprint-contract**: 범위 제시 → 승인 후에만 sprint-builder 시작. 이후 sprint는 자동 승인.
+2. **수정 sprint 2회 초과**: evaluation fail 후 fix_attempt ≥ 2이면 [BLOCKER] 보고 후 중단.
+3. **policy-updater 완료 후**: 개정안 diff 제시 → 승인 후에만 파일 적용.
+
+**자동으로 진행 (사용자에게 묻지 않음):**
+- 두 번째 이후 sprint-contract 승인
+- evaluation fail 수정 sprint (fix_attempt < 2)
+- sprint 완료 후 다음 sprint 전환 (remaining_sprints: true)
 
 ---
 

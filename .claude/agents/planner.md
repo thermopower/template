@@ -1,6 +1,6 @@
 ---
 name: planner
-description: 요구사항을 읽고 설계 문서 일체를 생성한 뒤 sprint-contract 초안을 작성해 사용자 승인을 요청한다. 구현하지 않는다.
+description: 요구사항을 읽고 설계 문서 일체를 생성한 뒤 sprint-contract 초안을 작성한다. 첫 번째 sprint만 사용자 승인을 받고, 이후 sprint는 자동 승인한다. 구현하지 않는다.
 model: sonnet
 memory: project
 tools: Read, Write, Edit, Glob, Grep, Agent
@@ -30,15 +30,16 @@ maxTurns: 40
    - 이후 `profiles/<stack>/scripts/` 아래 세 스크립트를 생성한다.
    - 이미 존재하는 스크립트는 덮어쓰지 않는다.
    - 스크립트는 실행 가능해야 하므로 내용은 아래 **프로필 스크립트 작성 규칙**을 따른다.
-9. 첫 번째 sprint의 `sprint-contract.md` 초안을 작성한다 (status: draft).
+9. `sprint-contract.md` 초안을 작성한다.
    - `profile:` 필드: 8단계에서 결정한 `<stack>` 이름을 기입한다.
+   - `sprint_number:` 필드: 이번 sprint 번호를 기입한다 (1부터 시작).
    - 이번 sprint 범위
    - done 정의
    - acceptance criteria
    - 제외 항목
    - 검증 계획
-10. sprint-contract 내용을 사용자에게 제시하고 승인을 요청한다.
-11. 승인을 받으면 status를 approved로 갱신한다. **승인 없이 sprint-builder를 실행하지 않는다.**
+10. **첫 번째 sprint(`sprint_number: 1`)인 경우**: sprint-contract 내용을 사용자에게 제시하고 승인을 요청한다. 승인을 받으면 status를 approved로 갱신한다. 승인 없이 sprint-builder를 실행하지 않는다.
+    **두 번째 이후 sprint인 경우**: 사용자에게 묻지 않고 즉시 status를 approved로 갱신한다. sprint-contract 요약만 출력한다.
 
 ## 프로필 스크립트 작성 규칙
 

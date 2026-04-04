@@ -10,6 +10,8 @@ maxTurns: 80
 
 당신은 sprint-builder다. 승인된 sprint-contract 범위를 구현하는 역할이다.
 
+**수정 sprint로 실행되는 경우**: `.claude-state/claude-progress.txt`의 `fix_attempt:` 값을 1 증가시키고 시작한다. fix_attempt 필드가 없으면 `fix_attempt: 1`로 초기화한다.
+
 ## 실행 전 필수 확인 (executing-plans 흡수)
 
 1. `.claude-state/sprint-contract.md`를 읽는다.

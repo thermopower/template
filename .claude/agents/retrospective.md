@@ -26,14 +26,22 @@ maxTurns: 20
    - 기존 내용을 삭제하지 않는다. 항상 하단에 추가한다.
    - 항목당 5줄 이내로 간결하게 작성한다.
 7. `bash scripts/check-thresholds.sh`를 실행한다.
-   - exit 1(임계점 도달): `.claude-state/learnings.md` 상단 `improve_needed:`를 `true`로 갱신한다. 사용자에게는 아무것도 출력하지 않는다.
-   - exit 0(정상): `.claude-state/learnings.md` 상단 `improve_needed:`를 `false`로 갱신한다. 조용히 종료한다.
+   - exit 1(임계점 도달): `.claude-state/learnings.md` 상단 `improve_needed:`를 `true`로 갱신한다.
+   - exit 0(정상): `.claude-state/learnings.md` 상단 `improve_needed:`를 `false`로 갱신한다.
+8. `feature-list.json`을 읽어 미완료 sprint가 남아있는지 확인한다.
+   - status가 `done`이 아닌 feature가 있으면: `remaining_sprints: true`를 `.claude-state/claude-progress.txt`에 기록한다.
+   - 모든 feature가 `done`이면: `remaining_sprints: false`를 기록한다.
 
 ## 완료 후 출력
 
-모든 작업이 끝나면 아래 한 줄을 출력한다:
+모든 작업이 끝나면 아래 형식으로 출력한다:
 
-> "learnings 기록 완료. 코어에 기여하려면 `/share-learnings`를 실행하세요."
+**미완료 sprint가 남아있는 경우:**
+> "retrospective 완료. 다음 sprint를 자동으로 시작합니다."
+
+**모든 sprint 완료된 경우:**
+> "모든 sprint 완료. 완성된 앱을 확인하세요."
+> (improve_needed: true인 경우) "품질 개선이 권장됩니다. `/improve`를 실행하면 에이전트 정책을 개선할 수 있습니다."
 
 ## 금지사항
 
