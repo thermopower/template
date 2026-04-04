@@ -19,7 +19,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
         ↓
     [plan-writer(feature-A) + plan-writer(feature-B) + ...] 병렬  ← 상태 설계 포함
         ↓
-    [implementer(parallel_safe:true 묶음)] 병렬
+    [implementer(parallel_safe:true 묶음)] 병렬  ← 각 feature 완료 시 즉시 feature 단위 커밋
     [implementer(parallel_safe:false 순차)]
         ↓
     code-reviewer ──→ [NEEDS_WORK → implementer (최대 2회 루프)]
@@ -63,12 +63,12 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 |---|---|---|---|---|---|---|
 | **requirement-writer** | sonnet | 20 | WebSearch | 사용자 인터뷰→docs/requirement.md 작성. 섹션 순서: 목표→(자동 리서치)→기능→스택. 섹션 1 완료 직후 WebSearch 2회 이내로 유사 서비스 자동 조사 후 기능 명세에 반영. 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리, WebSearch 3회 이상 |
 | **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안. prd/userflow 병렬, dataflow/usecase 병렬. feature-list.json에 parallel_safe 필드 포함. 기존 코드베이스 있으면 수정 대상 패턴 전체 탐색 후 sprint 범위 확정. AC에 범주형·파생 필드의 저장→변환→레이어 위치를 명시해야 통과. **AC는 정상/경계/에러 케이스를 반드시 분리 작성. 요구사항에 없는 경계·에러도 planner가 직접 채움** | `writing-plans` | 구현, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물, 데이터 변환 설계 누락 AC, 정상 케이스만 있는 AC |
-| **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 승인된 범위만 구현. common-module 먼저 확정 후 plan-writer(feature 단위) 병렬, parallel_safe 기준으로 implementer 병렬/순차 분리. code-reviewer 루프(최대 2회) 포함 | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회 |
+| **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 승인된 범위만 구현. common-module 먼저 확정(실패 시 BLOCKER) 후 plan-writer(feature 단위) 병렬, parallel_safe 기준으로 implementer 병렬/순차 분리(각 feature 커밋 후 code-reviewer 실행). code-reviewer 루프: code_review_attempt 필드로 추적, 2회 초과 시 BLOCKER | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회 |
 | **code-reviewer** | sonnet | 20 | — | sprint 내부 코드 리뷰. major 이상만 피드백. LGTM 또는 NEEDS_WORK 반환. 수정 패턴과 동일한 패턴의 잔존 여부 grep 확인 포함. minor 언급 금지 | — | minor 지적, 리팩터링 제안, 범위 확장 요구 |
 | **evaluator** | haiku | 40 | Playwright MCP, Edit 포함 | pass/fail 판정만. 브라우저 실동작 검증 포함. evaluation-report.md 작성. 완료 후 browser_close·스크린샷 삭제·cleanup 기록. sprint-contract.md 수정 금지 | — | 개선 제안, reviewer 역할, sprint-contract 수정 |
 | **reviewer** | opus | 40 | — | 품질 비평·개선 제안. 1-A: requirement.md→구현 직접 비교(AC 완결성 검증, AC에 없어도 요구사항에 있으면 누락). 1-B: sprint-contract AC→구현 비교. Critical/Major → 통합 개선 우선순위. Minor → Backlog 후보 섹션에만 기록 | — | pass/fail 판정, evaluator 역할, minor를 개선 우선순위에 포함, requirement.md 비교 생략 |
-| **integration-fixer** | sonnet | 50 | `isolation: worktree`, Playwright MCP | evaluation-report fail 시 진입. 환경/의존성/broken state 복구. 6단계 조사 절차 (5단계 기록 + 6단계 레거시 정리). 완료 후 browser_close·스크린샷 삭제·cleanup 기록 | `systematic-debugging` | 기능 추가, 범위 확장, 근본 원인 미확인 수정 |
-| **retrospective** | haiku | 20 | — | review-notes reviewed 시 진입. 지표 수집, learnings 누적 | — | learnings.md·metrics.json 외 파일 수정 |
+| **integration-fixer** | sonnet | 50 | `isolation: worktree`, Playwright MCP | evaluation-report fail 시 진입. 진입 즉시 sprint-contract.md의 fix_attempt를 증가 기록. 환경/의존성/broken state 복구. 6단계 조사 절차 (5단계 기록 + 6단계 레거시 정리). 완료 후 browser_close·스크린샷 삭제·cleanup 기록 | `systematic-debugging` | 기능 추가, 범위 확장, 근본 원인 미확인 수정 |
+| **retrospective** | haiku | 20 | — | review-notes reviewed 시 진입. 지표 수집, learnings 누적. improve_needed:true이면 policy-updater 자동 실행 | — | learnings.md·metrics.json 외 파일 수정, improve_needed:false인데 policy-updater 실행 |
 | **policy-updater** | sonnet | 30 | — | learnings 존재 시 진입. learnings 기반 에이전트/정책 개정안 생성 | — | 승인 없이 파일 수정 |
 | **implementer** | sonnet | 60 | — | plan.md 존재 시 진입. 구현 계획 기반 TDD 구현. 테스트 먼저, 구현 코드 나중 | `test-driven-development` | 테스트 없이 구현 코드 작성, TDD 사이클 위반 |
 | **common-module-writer** | sonnet | 30 | — | 공통 모듈 계획 작성 및 TDD 구현. `docs/usecases/` 전체를 읽고 2개 이상 기능(feature)에서 반복될 패턴을 미리 추출해 `docs/common-modules.md`에 포함 | `test-driven-development` | 테스트 없이 구현 코드 작성, 문서 근거 없는 모듈 설계 |
@@ -79,8 +79,8 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 |---|---|---|---|
 | **prd-writer** | 20 | project | `docs/prd.md`. 기능(feature) 목록 및 기능 기반 IA 포함 |
 | **userflow-writer** | 20 | project | `docs/userflow.md` (prd 완료 후) |
-| **dataflow-writer** | 20 | project | `docs/database.md` ← usecase-writer와 병렬 실행 (prd+userflow 완료 후). requirement+prd+userflow 모두 참조 |
-| **usecase-writer** | 20 | project | `docs/usecases/{feature_id}/spec.md` ← dataflow-writer와 병렬 실행. 경로의 feature_id는 feature-list.json과 일치 |
+| **dataflow-writer** | 20 | project | `docs/database.md` ← usecase-writer와 병렬 실행 (feature-list.json 초안 생성 후). requirement+prd+userflow 모두 참조 |
+| **usecase-writer** | 20 | project | `docs/usecases/{feature_id}/spec.md` ← feature-list.json 초안 생성 후 dataflow-writer와 병렬 실행. feature-list.json 없으면 중단 (임의 ID 부여 금지) |
 | **common-module-writer** | 30 | — | `docs/common-modules.md` + 구현 |
 | **plan-writer** | 25 | — | `docs/features/{feature_id}/plan.md`. 개요(모듈 위치/설명), affected_modules, 상태 설계(source of truth·전역/로컬 구분·상태 목록·derived value·cross-feature 공유 상태 레이어), Diagram, Implementation Plan 포함. 필요한 포트가 `docs/common-modules.md`에 없으면 중단 후 보완 요청 |
 | **implementer** | 60 | — | 구현 코드 (plan.md 존재 시 진입) |
@@ -92,7 +92,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | 파일 | 작성자 | 핵심 필드 |
 |---|---|---|
 | `claude-progress.txt` | 모든 에이전트 | 현재 상태, blocker, 다음 액션 |
-| `sprint-contract.md` | planner | `status: none/draft/approved/implemented` |
+| `sprint-contract.md` | planner | `status: none/draft/approved/implemented`, `fix_attempt`, `code_review_attempt` |
 | `product-spec.md` | planner | 제품 목표, 핵심 플로우, 범위 |
 | `feature-list.json` | planner | id, priority, status, acceptance_criteria, verification_linkage, parallel_safe, depends_on |
 | `sprint-plan.md` | planner | feature 순서, 예상 리스크 |
@@ -129,7 +129,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | `check-thresholds.sh [--summary]` | 임계점 판정 | retrospective, session-start |
 
 스택별 스크립트 위치: `profiles/<stack>/scripts/{smoke,unit,e2e}` (planner가 sprint 시작 시 생성)  
-생성 후 `scripts/{smoke,unit,e2e}` 루트에도 복사됨. 훅과 evaluator는 `scripts/` 루트를 참조한다.
+생성 후 `scripts/` 루트에 복사됨 (단, 이미 존재하면 복사하지 않아 사용자 커스터마이징을 보존). 훅과 evaluator는 `scripts/` 루트를 참조한다.
 
 ---
 

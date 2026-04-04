@@ -121,3 +121,22 @@ TDD 사이클을 따르는 구현 순서를 명시:
 - 각 공통 모듈의 구현 순서를 **TDD 사이클**로 명시
 - FIRST 원칙 준수: Fast, Independent, Repeatable, Self-validating, Timely
 - AAA 패턴 사용: Arrange, Act, Assert
+
+---
+
+## 완료 / 실패 반환 규약
+
+작업 완료 또는 실패 시 `.claude-state/claude-progress.txt`에 다음 필드를 기록한다.
+
+**성공**: `docs/common-modules.md`에 모든 포트·인터페이스가 기술되고 구현 코드와 테스트가 모두 통과한 경우.
+```
+common_module_status: done
+```
+
+**실패**: 요구사항 불명확, 의존성 설치 불가, 테스트 반복 실패 등으로 완료 불가 시.
+```
+common_module_status: failed
+common_module_error: <실패 사유를 구체적으로 기술>
+```
+
+실패 시 즉시 작업을 중단하고 메인 세션(sprint-builder)에 실패 사실과 사유를 보고한다.

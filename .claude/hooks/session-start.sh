@@ -67,7 +67,25 @@ else
             NEXT_STEP="review가 완료되었습니다. retrospective 에이전트를 실행하세요."
           else
             # remaining_sprints 및 improve_needed 확인
-            REMAINING=$(grep '^remaining_sprints:' ".claude-state/claude-progress.txt" 2>/dev/null | awk '{print $2}')
+            # remaining_sprints: feature-list.json의 미완료 feature 수로 판단 (1차)
+            REMAINING="false"
+            if [ -f ".claude-state/feature-list.json" ]; then
+              _PY=$(command -v python3 2>/dev/null || command -v python 2>/dev/null || echo "python")
+              PENDING=$("$_PY" -c "
+import json, sys
+try:
+    data = json.load(open('.claude-state/feature-list.json'))
+    features = data if isinstance(data, list) else data.get('features', [])
+    pending = [f for f in features if f.get('status','') not in ('done','skipped')]
+    print('true' if pending else 'false')
+except:
+    print('false')
+" 2>/dev/null || echo "false")
+              REMAINING="$PENDING"
+            fi
+            # fallback: claude-progress.txt에 명시된 경우 우선
+            PROGRESS_REMAINING=$(grep '^remaining_sprints:' ".claude-state/claude-progress.txt" 2>/dev/null | awk '{print $2}')
+            [ -n "$PROGRESS_REMAINING" ] && REMAINING="$PROGRESS_REMAINING"
             IMPROVE_NEEDED=$(grep '^improve_needed:' "$LEARNINGS" 2>/dev/null | awk '{print $2}')
             if [ "$REMAINING" = "true" ]; then
               NEXT_STEP="retrospective가 완료되었습니다. 미완료 sprint가 남아있습니다. 다음 sprint planner를 자동으로 실행하세요."

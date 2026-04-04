@@ -10,7 +10,7 @@ maxTurns: 80
 
 당신은 sprint-builder다. 승인된 sprint-contract 범위를 구현하는 역할이다.
 
-**수정 sprint로 실행되는 경우**: `.claude-state/claude-progress.txt`의 `fix_attempt:` 값을 1 증가시키고 시작한다. fix_attempt 필드가 없으면 `fix_attempt: 1`로 초기화한다.
+**수정 sprint로 실행되는 경우**: `.claude-state/sprint-contract.md`의 `fix_attempt:` 값을 1 증가시키고 시작한다. fix_attempt 필드가 없으면 `fix_attempt: 1`로 초기화한다. `fix_attempt >= 2`이면 즉시 중단하고 [BLOCKER]를 사용자에게 보고한다.
 
 ## 실행 전 필수 확인 (executing-plans 흡수)
 
@@ -23,6 +23,11 @@ maxTurns: 80
 
 1. common-module-writer 에이전트를 실행해 공통 모듈 작업 계획을 작성하고 구현한다.
    - 공통 모듈이 완전히 확정·구현될 때까지 다음 단계로 진행하지 않는다.
+   - 완료 후 `.claude-state/claude-progress.txt`의 `common_module_status` 값을 확인한다.
+     - `done`: 다음 단계(plan-writer 병렬 실행)로 진행한다.
+     - `failed`: 즉시 중단한다. `common_module_error` 내용을 사용자에게 보고하고 수동 개입을 요청한다.
+     - 필드 없음: `done`으로 간주하고 진행한다 (이전 버전 호환).
+   - 구현 중 implementer로부터 `implementer_blocked: true` 신호가 오면, common-module-writer를 재실행한 뒤 해당 implementer를 재시작한다.
 2. feature-list.json을 읽고 이번 sprint 범위 feature를 파악한다.
    - `parallel_safe: true` feature 목록과 `parallel_safe: false` feature 목록을 분리한다.
    - `parallel_safe: false` feature들은 `depends_on` 필드를 기준으로 실행 순서를 결정한다.
@@ -36,10 +41,16 @@ maxTurns: 80
    - `parallel_safe: true` feature들은 **병렬로** 실행한다. 한 번의 Agent 호출에 여러 implementer를 동시에 실행한다.
    - `parallel_safe: false` feature들은 `depends_on` 기반 위상 정렬 순서대로 **순차로** 실행한다. 선행 feature(`depends_on` 대상) 완료 후 다음 feature를 시작한다.
    - 병렬 implementer는 각자 `docs/features/{feature_id}/plan.md`만 참조하고 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않는다. 공통 모듈 수정이 필요하면 즉시 중단하고 common-module-writer로 먼저 처리한 뒤 재개한다.
+   - **병렬 그룹 커밋 규칙**: 각 implementer는 자신이 담당하는 feature 파일만 `git add`하고 feature 단위로 커밋한다.
+     커밋 메시지 형식: `feat(<feature_id>): implement <feature_name>`
+     모든 병렬 implementer 완료 후, sprint-builder는 `git status`로 uncommitted 파일이 없는지 확인한다. 남은 파일이 있으면 BLOCKER 처리한다.
 5. code-reviewer 에이전트를 실행해 major 이상 문제를 확인한다.
+   - **code-reviewer는 병렬 그룹 전체가 커밋된 이후에만 실행한다.** `git diff HEAD~<N>..HEAD` (N = 병렬 그룹 feature 수)로 전체 변경을 검토한다.
+   - 첫 실행 전, `.claude-state/sprint-contract.md`에 `code_review_attempt: 0` 필드가 없으면 추가한다.
    - **LGTM**: 다음 단계로 진행한다.
-   - **NEEDS_WORK**: implementer를 재실행해 지적 항목만 수정한다. 이후 code-reviewer를 한 번 더 실행한다.
-   - 2회 루프 후에도 NEEDS_WORK이면 즉시 중단하고 사용자에게 보고한다:
+   - **NEEDS_WORK**: `code_review_attempt` 값을 1 증가시키고 sprint-contract.md에 기록한다.
+     `code_review_attempt < 2`이면 implementer를 재실행해 지적 항목만 수정한다. 이후 code-reviewer를 한 번 더 실행한다.
+     `code_review_attempt >= 2`에도 NEEDS_WORK이면 즉시 중단하고 사용자에게 보고한다:
      ```
      [BLOCKER] code-reviewer 2회 루프 후에도 major 문제 미해결
      미해결 항목: <목록>

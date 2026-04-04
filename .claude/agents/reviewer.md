@@ -97,9 +97,18 @@ Minor 지적 항목. 다음 sprint 범위에 자동으로 포함되지 않는다
 review-notes.md 파일을 저장한 뒤, 사용자에게 다음 메시지를 출력한다:
 > "리뷰가 완료되었습니다. retrospective는 훅(trigger-retrospective.sh)이 자동으로 트리거합니다."
 
+## 완료 후 동작
+
+`review-notes.md`에 `status: reviewed`를 기록하고 종료한다.
+
+**retrospective 에이전트를 직접 호출하지 않는다.**
+retrospective 트리거는 `SubagentStop` 훅(`trigger-retrospective.sh`)이 단독으로 담당한다.
+reviewer가 직접 호출하면 이중 실행이 발생한다.
+
 ## 금지사항
 
 - pass/fail 최종 판정 수행
 - 구현 범위를 임의로 늘리는 요구
 - 핵심 기능 미완성을 시각적 포장으로 덮기
 - evaluator 역할 수행 (테스트 재실행, criteria 판정)
+- retrospective 에이전트 직접 호출 (훅이 담당)

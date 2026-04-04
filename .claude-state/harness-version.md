@@ -7,6 +7,7 @@ updated: 2026-04-05
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
+| 1.0 | 2026-04-05 | 설계 결함 13건 수정: [#1] 병렬 implementer feature 단위 커밋 규칙 추가, [#2] code_review_attempt 필드로 루프 카운터 추적, [#3] common-module-writer 성공/실패 반환 규약·sprint-builder 실패 감지 분기·implementer 블로커 절차 추가, [#4] session-start.sh remaining_sprints를 feature-list.json 기반으로 수정, [#5] check-output.sh fallback 단순화(오차단 방지), [#6] reviewer에 retrospective 직접 호출 금지 명시, [#7] check-smoke.sh stub 검사 테스트 파일·주석 제외 필터 추가, [#8] integration-fixer fix_attempt 증가 규칙·sprint-contract.md 기록 통일, [#9] planner feature-list.json 초안 선행 생성 순서 명시·usecase-writer 임의 ID 부여 금지, [#10] retrospective improve_needed:true 시 policy-updater 자동 실행, [#11] planner 스크립트 복사 정책을 초기 생성 시만으로 제한, [#12] planner 사전 준비 섹션에 .claude-state/ 초기화 명시, [#13] usecase-writer database.md 미참조 시 경고 표시 추가 |
 | 1.0 | 2026-04-05 | 기능중심 설계 전환 후 정합성 수정: prd-writer 페이지→기능 중심 언어 통일, usecase-writer 산출물 경로 `{N}` → `{feature_id}` 통일, plan-writer usecase 탐색 경로 동기화, dataflow-writer 입력 문서에 requirement+prd 추가, sub-agents 전체 tools 선언 추가(plan-writer/implementer/common-module-writer/prd-writer/userflow-writer/dataflow-writer/usecase-writer), evaluator tools에 Edit 추가, session-start.sh remaining_sprints 분기 추가, reviewer 이중 트리거 제거, planner에 scripts/ 루트 복사 규칙 명시 |
 | 1.0 | 2026-04-05 | state-writer 제거. plan-writer를 페이지 단위 → feature 단위로 재설계. 상태 설계(source of truth, 전역/로컬 구분, cross-feature 공유 상태 레이어) plan.md 안에 통합. 산출물 경로 `docs/pages/{page}/` → `docs/features/{feature_id}/` |
 | 1.0 | 2026-04-05 | planner: AC를 정상/경계/에러 케이스로 분리 작성 강제. 요구사항에 없는 케이스도 planner가 직접 채우도록 명시 |

@@ -154,6 +154,23 @@ TDD 위반 즉시 중단 조건:
 
 ---
 
+## 공통 모듈 재요청 절차
+
+구현 중 공통 모듈 수정이 필요한 경우 (기존 포트/인터페이스 변경, 새 공통 기능 필요 등):
+
+1. 구현을 즉시 중단한다.
+2. `.claude-state/claude-progress.txt`에 다음을 기록한다:
+   ```
+   implementer_blocked: true
+   implementer_blocked_reason: common-module 보완 필요 — <구체적인 포트/인터페이스명과 사유>
+   ```
+3. sprint-builder에 "common-module-writer 재실행 후 이 feature implementer를 재시작해달라"고 메시지를 남기고 종료한다.
+4. sprint-builder는 이 블로커를 감지하면 common-module-writer를 재실행한 뒤 해당 implementer를 재시작한다.
+
+공통 모듈을 임의로 수정하지 않는다. 병렬로 실행 중인 다른 implementer와 충돌할 수 있다.
+
+---
+
 ## 구현 원칙
 
 1. **완전성 우선** — "대부분" 또는 "거의 모두"는 불충분. 모든 것을 구현한다.

@@ -19,8 +19,23 @@ SEARCH_DIRS=""
 [ -d "src" ] && SEARCH_DIRS="$SEARCH_DIRS src"
 
 if [ -n "$SEARCH_DIRS" ]; then
-  echo "[check-smoke] stub/placeholder 검사 중..."
-  STUB_HITS=$(grep -rn "TODO\|FIXME\|stub\|placeholder\|not implemented\|NotImplemented" $SEARCH_DIRS 2>/dev/null || true)
+  echo "[check-smoke] stub/placeholder 검사 중 (테스트 파일·주석 제외)..."
+  # 테스트 파일(__tests__, *.test.*, *.spec.*, test_*.py)과 주석 전용 행 제외
+  # 실제 구현 코드 경로에만 존재하는 stub/placeholder만 감지
+  STUB_HITS=$(grep -rn \
+    --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+    --include="*.py" --include="*.go" \
+    --exclude-dir="__tests__" --exclude-dir="node_modules" --exclude-dir=".next" \
+    --exclude-dir=".git" --exclude-dir="dist" --exclude-dir="build" \
+    --exclude="*.test.ts" --exclude="*.test.tsx" --exclude="*.test.js" \
+    --exclude="*.spec.ts" --exclude="*.spec.tsx" --exclude="*.spec.js" \
+    --exclude="test_*.py" --exclude="*_test.go" \
+    "TODO\|FIXME\|stub\|placeholder\|not implemented\|NotImplemented" \
+    $SEARCH_DIRS 2>/dev/null \
+    | grep -v "^[^:]*:[0-9]*:[[:space:]]*//" \
+    | grep -v "^[^:]*:[0-9]*:[[:space:]]*#" \
+    | grep -v "^[^:]*:[0-9]*:[[:space:]]*\*" \
+    || true)
   if [ -n "$STUB_HITS" ]; then
     echo "[check-smoke] 핵심 경로에 stub/placeholder가 발견되었습니다:"
     echo "$STUB_HITS"
