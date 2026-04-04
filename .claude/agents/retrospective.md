@@ -29,6 +29,12 @@ maxTurns: 20
    - exit 1(임계점 도달): `.claude-state/learnings.md` 상단 `improve_needed:`를 `true`로 갱신한다. 사용자에게는 아무것도 출력하지 않는다.
    - exit 0(정상): `.claude-state/learnings.md` 상단 `improve_needed:`를 `false`로 갱신한다. 조용히 종료한다.
 
+## 완료 후 출력
+
+모든 작업이 끝나면 아래 한 줄을 출력한다:
+
+> "learnings 기록 완료. 코어에 기여하려면 `/share-learnings`를 실행하세요."
+
 ## 금지사항
 
 - learnings.md, metrics.json 외 파일 수정
