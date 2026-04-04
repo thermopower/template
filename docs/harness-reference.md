@@ -82,7 +82,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | **dataflow-writer** | 20 | project | `docs/database.md` ← usecase-writer와 병렬 실행 (prd+userflow 완료 후) |
 | **usecase-writer** | 20 | project | `docs/usecases/` ← dataflow-writer와 병렬 실행 (prd+userflow 완료 후) |
 | **common-module-writer** | 30 | — | `docs/common-modules.md` + 구현 |
-| **plan-writer** | 25 | — | `docs/features/{feature_id}/plan.md`. 상태 설계(source of truth, 전역/로컬 구분, cross-page 공유 상태) 포함. 필요한 포트가 `docs/common-modules.md`에 없으면 중단 후 보완 요청 |
+| **plan-writer** | 25 | — | `docs/features/{feature_id}/plan.md`. 개요(모듈 위치/설명), affected_modules, 상태 설계(source of truth·전역/로컬 구분·상태 목록·derived value·cross-feature 공유 상태 레이어), Diagram, Implementation Plan 포함. 필요한 포트가 `docs/common-modules.md`에 없으면 중단 후 보완 요청 |
 | **implementer** | 60 | — | 구현 코드 (plan.md 존재 시 진입) |
 
 ---
