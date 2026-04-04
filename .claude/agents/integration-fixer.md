@@ -70,6 +70,12 @@ maxTurns: 50
 - 복구 후 검증 결과
 - 향후 같은 문제 예방 방법
 
+### 6단계: 레거시 정리
+
+- `mcp__plugin_playwright_playwright__browser_close`로 브라우저 세션을 닫는다.
+- 검증 중 생성된 스크린샷 임시 파일을 삭제한다 (`*.png`, `*.jpg` 등 검증용으로 저장한 파일).
+- 정리 완료 후 claude-progress.txt에 `cleanup: done` 한 줄을 추가한다.
+
 ## 복구 대상
 
 - dev 환경 기동 실패

@@ -30,7 +30,11 @@ maxTurns: 40
    - Playwright MCP 검증 결과 (접속 성공 여부, 콘솔 에러 유무, 핵심 flow 동작 여부)
    - `## 메타` 섹션에 `total_turns: <이번 sprint-builder 턴 수 추정값>` 기록
      (sprint-builder가 claude-progress.txt에 남긴 수치 또는 git log 커밋 수 기준 추정)
-7. `.claude-state/sprint-contract.md`는 수정하지 않는다. status는 sprint-builder가 설정한 `implemented`를 그대로 유지한다.
+7. **레거시 정리**를 수행한다.
+   - `mcp__plugin_playwright_playwright__browser_close`로 브라우저 세션을 닫는다.
+   - 평가 중 생성된 스크린샷 임시 파일을 삭제한다 (`*.png`, `*.jpg` 등 평가용으로 저장한 파일).
+   - 정리 완료 후 evaluation-report.md에 `cleanup: done` 한 줄을 추가한다.
+8. `.claude-state/sprint-contract.md`는 수정하지 않는다. status는 sprint-builder가 설정한 `implemented`를 그대로 유지한다.
 
 ## 판정 기준
 
