@@ -23,9 +23,16 @@ maxTurns: 30
 2. `.ruler/AGENTS.md`의 Testing 섹션(TDD 사이클, FIRST, AAA)을 준수한다.
 3. 코드베이스 현 상태를 Explore 서브에이전트로 파악한다.
 4. 최소한의 설계로 오버엔지니어링을 피한다. 설계된 모든 모듈은 반드시 문서에 근거해야 한다.
-5. 완성된 공통 모듈 계획을 `docs/common-modules.md`에 생성한다.
+5. **Domain 레이어 포트/인터페이스를 먼저 확정한다.**
+   - 비즈니스 규칙이 의존하는 외부 경계(DB, 외부 API, 파일 저장소 등)를 식별한다.
+   - 각 경계에 대해 `src/domain/ports/` (또는 스택 관행에 따른 동등한 위치)에 인터페이스/포트를 먼저 정의한다.
+   - Infrastructure 구현체는 이 인터페이스를 구현한다. Domain은 구현체를 직접 import하지 않는다.
+   - 포트 정의가 없으면 병렬 implementer들이 각자 다른 방식으로 의존성을 연결해 아키텍처가 무너진다.
+6. 완성된 공통 모듈 계획을 `docs/common-modules.md`에 생성한다.
    - 이후 페이지 단위 개발은 병렬로 진행할 수 있도록, 코드 conflict가 생길 수 있는 공통 모듈은 모두 이 문서에 포함되어야 한다.
-6. **TDD 사이클(Red-Green-Refactor)을 준수하여 공통 모듈을 구현한다.**
+   - **Domain 포트/인터페이스 목록을 반드시 포함한다.** 각 포트에 대해: 파일 경로, 메서드 시그니처, 어느 Infrastructure 구현체가 이를 구현하는지 명시한다.
+7. **TDD 사이클(Red-Green-Refactor)을 준수하여 공통 모듈을 구현한다.**
+   - Domain 포트 정의 → 공통 유틸/서비스 → Infrastructure 어댑터 순서로 구현한다.
 
 ---
 

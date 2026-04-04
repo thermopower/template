@@ -15,6 +15,7 @@ maxTurns: 25
    - 연관된 state 문서 `docs/pages/{page_name}/state.md`가 있다면 파악한다.
 3. 페이지에 대한 최소한의 모듈화 설계를 진행한다:
    - 어느 레이어에 속하는지 먼저 판단한다 (`.ruler/AGENTS.md`의 Layered Architecture 준수)
+   - `docs/common-modules.md`에 정의된 Domain 포트/인터페이스를 참조한다. 이 페이지에서 필요한 포트가 문서에 없으면 **즉시 중단하고** `docs/common-modules.md`에 누락된 포트를 추가한 뒤 sprint-builder에 재실행을 요청한다. 임의로 포트를 새로 만들지 않는다.
    - shared로 분리 가능한 공통 모듈 및 제네릭을 고려한다
    - `.ruler/AGENTS.md`의 TDD 원칙에 입각한 테스트 설계를 포함한다
 4. 완성된 문서를 다음과 같이 구성하여 `docs/pages/{page_name}/plan.md`에 생성한다:

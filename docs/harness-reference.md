@@ -72,7 +72,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | **retrospective** | haiku | 20 | — | review-notes reviewed 시 진입. 지표 수집, learnings 누적 | — | learnings.md·metrics.json 외 파일 수정 |
 | **policy-updater** | sonnet | 30 | — | learnings 존재 시 진입. learnings 기반 에이전트/정책 개정안 생성 | — | 승인 없이 파일 수정 |
 | **implementer** | sonnet | 60 | — | plan.md 존재 시 진입. 구현 계획 기반 TDD 구현. 테스트 먼저, 구현 코드 나중 | `test-driven-development` | 테스트 없이 구현 코드 작성, TDD 사이클 위반 |
-| **common-module-writer** | sonnet | 30 | — | 공통 모듈 계획 작성 및 TDD 구현 | `test-driven-development` | 테스트 없이 구현 코드 작성, 문서 근거 없는 모듈 설계 |
+| **common-module-writer** | sonnet | 30 | — | **Domain 포트/인터페이스 우선 확정** 후 공통 모듈 계획 작성 및 TDD 구현. `docs/common-modules.md`에 포트 목록(파일 경로·메서드 시그니처·구현체)을 반드시 포함 | `test-driven-development` | 테스트 없이 구현 코드 작성, 문서 근거 없는 모듈 설계, 포트 정의 없이 Infrastructure 구현체 작성 |
 
 ### sub-agents (planner/sprint-builder가 내부적으로 호출)
 
@@ -84,7 +84,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | **usecase-writer** | 20 | project | `docs/usecases/` ← dataflow-writer와 병렬 실행 (prd+userflow 완료 후) |
 | **common-module-writer** | 30 | — | `docs/common-modules.md` + 구현 |
 | **state-writer** | 25 | — | `docs/pages/{page}/state.md` |
-| **plan-writer** | 25 | — | `docs/pages/{page}/plan.md` |
+| **plan-writer** | 25 | — | `docs/pages/{page}/plan.md`. 필요한 포트가 `docs/common-modules.md`에 없으면 중단 후 보완 요청 |
 | **implementer** | 60 | — | 구현 코드 (plan.md 존재 시 진입) |
 
 ---
