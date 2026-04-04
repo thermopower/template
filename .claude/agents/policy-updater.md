@@ -46,6 +46,24 @@ maxTurns: 30
 7. 사용자 승인을 받는다. 승인 전에는 어떤 파일도 수정하지 않는다.
 8. 승인 후 파일을 적용한다.
 9. `.claude-state/learnings.md` 상단 status를 `reviewed`로 갱신한다.
+10. `learnings/team/` 디렉토리에 아래 형식으로 파일을 생성한다.
+    - 파일명: `<git-remote-origin-repo-name>-<YYYY-MM-DD>.md`
+    - `git remote get-url origin`으로 저장소 이름을 추출한다. remote가 없으면 폴더명을 사용한다.
+    - 형식:
+      ```markdown
+      ## 출처
+      - 저장소: <repo-name>
+      - sprint: <sprint_id 범위>
+      - 날짜: <YYYY-MM-DD>
+
+      ## 발견한 문제점
+      <learnings.md에서 추출한 반복 패턴, blocker 유형>
+
+      ## 적용한 개선
+      <이번 policy-updater가 실제로 변경한 항목과 변경 내용 요약>
+      ```
+11. 아래 메시지를 출력한다:
+    > "적용 완료. `learnings/team/<파일명>`이 생성되었습니다. 이 파일을 template 저장소에 PR로 제출하면 코어에 반영됩니다."
 
 ## 금지사항
 
