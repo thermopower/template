@@ -44,16 +44,15 @@ maxTurns: 80
    - `parallel_safe: true` 조건 자체가 "출력 파일이 다른 feature와 겹치지 않음"을 보장하므로, 병렬 실행 중 git 파일 충돌은 발생하지 않는다. 별도 커밋을 강제할 필요 없다.
 5. code-reviewer 에이전트를 실행해 major 이상 문제를 확인한다.
    - 모든 implementer(병렬/순차 모두) 완료 후 실행한다. `git diff`로 이번 sprint에서 변경된 전체 파일을 대상으로 한다.
-   - 첫 실행 전, `.claude-state/sprint-contract.md`에 `code_review_attempt: 0` 필드가 없으면 추가한다.
    - **LGTM**: 다음 단계로 진행한다.
-   - **NEEDS_WORK**: `code_review_attempt` 값을 1 증가시키고 sprint-contract.md에 기록한다.
-     `code_review_attempt < 2`이면 implementer를 재실행해 지적 항목만 수정한다. 이후 code-reviewer를 한 번 더 실행한다.
-     `code_review_attempt >= 2`에도 NEEDS_WORK이면 즉시 중단하고 사용자에게 보고한다:
+   - **NEEDS_WORK**: implementer를 재실행해 지적 항목만 수정한다. 이후 code-reviewer를 한 번 더 실행한다.
+   - 2회 루프 후에도 NEEDS_WORK이면 즉시 중단하고 사용자에게 보고한다:
      ```
      [BLOCKER] code-reviewer 2회 루프 후에도 major 문제 미해결
      미해결 항목: <목록>
      필요한 결정: 수동 수정 또는 sprint 범위 조정
      ```
+   - 루프 횟수는 sprint-builder 실행 컨텍스트 내 변수로 추적한다. 파일에 기록하지 않는다.
 6. `bash scripts/smoke`를 실행한다. 실패하면 완료로 처리하지 않고 문제를 수정한다.
 7. stub/placeholder 잔존 여부를 확인한다: `grep -rn "TODO\|FIXME\|stub\|placeholder\|not implemented" app/ src/ 2>/dev/null`
    - 발견되면 핵심 경로인지 판단하고 핵심 경로이면 수정 후 재확인한다.

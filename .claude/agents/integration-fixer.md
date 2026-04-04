@@ -14,19 +14,6 @@ maxTurns: 50
 
 `.claude-state/evaluation-report.md`를 읽는다. status가 `fail`이 아니면 중단하고 사용자에게 알린다.
 
-## fix_attempt 추적
-
-진입 시 반드시 다음을 수행한다:
-
-1. `.claude-state/sprint-contract.md`에서 `fix_attempt` 필드를 읽는다. 없으면 `0`으로 간주한다.
-2. `fix_attempt + 1` 값을 `sprint-contract.md`에 기록한다.
-   ```
-   fix_attempt: <증가된 값>
-   ```
-3. 복구 완료 또는 실패 시 `evaluation-report.md`에도 `fix_attempt: <값>` 필드를 동기화한다.
-
-이 값은 CLAUDE.md 섹션 2의 차단 조건(`fix_attempt >= 2`)에 사용된다. 누락되면 자동 차단이 작동하지 않는다.
-
 ## 핵심 원칙 (systematic-debugging 흡수)
 
 **근본 원인 없이 수정하지 않는다.**

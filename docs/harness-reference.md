@@ -92,7 +92,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | 파일 | 작성자 | 핵심 필드 |
 |---|---|---|
 | `claude-progress.txt` | 모든 에이전트 | 현재 상태, blocker, 다음 액션 |
-| `sprint-contract.md` | planner | `status: none/draft/approved/implemented`, `fix_attempt`, `code_review_attempt` |
+| `sprint-contract.md` | planner | `status: none/draft/approved/implemented`, `fix_attempt` |
 | `product-spec.md` | planner | 제품 목표, 핵심 플로우, 범위 |
 | `feature-list.json` | planner | id, priority, status, acceptance_criteria, verification_linkage, parallel_safe, depends_on |
 | `sprint-plan.md` | planner | feature 순서, 예상 리스크 |

@@ -82,10 +82,38 @@ case "$AGENT_NAME" in
     check_json_updated "$METRICS" "retrospective"
     ;;
   *)
-    # 에이전트 이름 판별 불가 — 안전하게 통과 처리 (오판으로 인한 과차단 방지)
-    # check-output.sh는 이름이 명확히 판별된 경우에만 차단한다.
-    # 각 에이전트는 자신의 산출물을 직접 작성하므로, 이름 판별 실패 시 통과가 더 안전하다.
-    echo "[check-output] 에이전트 이름 판별 불가 (raw: '${AGENT_NAME}'). 검사 건너뜀."
+    # 에이전트 이름 판별 불가 — 최근 5분 내 갱신된 산출물 파일을 기준으로 검사
+    # 방금 실행된 에이전트가 담당 파일을 갱신했는지 mtime으로 판단한다.
+    # 이 방식은 휴리스틱 상태 추론 없이도 "방금 쓰였는가"를 직접 확인한다.
+    RECENT_SECS=300  # 5분
+    NOW=$(date +%s)
+    BLOCKED=0
+
+    check_recent() {
+      local FILE="$1"
+      local LABEL="$2"
+      if [ ! -f "$FILE" ]; then return; fi
+      FILE_MTIME=$(date -r "$FILE" +%s 2>/dev/null || stat -c %Y "$FILE" 2>/dev/null || echo "0")
+      AGE=$((NOW - FILE_MTIME))
+      if [ "$AGE" -le "$RECENT_SECS" ]; then
+        # 최근 수정된 파일이 있음 — status 확인
+        STATUS=$(grep '^status:' "$FILE" 2>/dev/null | awk '{print $2}')
+        if [ -z "$STATUS" ] || [ "$STATUS" = "none" ]; then
+          echo "[$LABEL] $FILE 최근 수정됐으나 status가 갱신되지 않았습니다." >&2
+          BLOCKED=1
+        fi
+      fi
+    }
+
+    check_recent "$EVAL_REPORT" "evaluator"
+    check_recent "$REVIEW_NOTES" "reviewer"
+    check_recent "$LEARNINGS" "retrospective"
+
+    if [ "$BLOCKED" = "1" ]; then
+      exit 2
+    fi
+
+    echo "[check-output] 에이전트 이름 판별 불가 (raw: '${AGENT_NAME}'). mtime 검사 완료."
     ;;
 esac
 

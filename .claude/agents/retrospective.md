@@ -32,30 +32,20 @@ maxTurns: 20
    - status가 `done`이 아닌 feature가 있으면: `remaining_sprints: true`를 `.claude-state/claude-progress.txt`에 기록한다.
    - 모든 feature가 `done`이면: `remaining_sprints: false`를 기록한다.
 
-## 완료 후 동작
+## 완료 후 출력
 
-모든 작업이 끝나면 `remaining_sprints` 값에 따라 분기한다:
+모든 작업이 끝나면 아래 형식으로 출력한다:
 
-**미완료 sprint가 남아있는 경우 (`remaining_sprints: true`):**
+**미완료 sprint가 남아있는 경우:**
 > "retrospective 완료. 다음 sprint를 자동으로 시작합니다."
 
-메인 세션에 다음 sprint planner 실행을 알린다.
-
-**모든 sprint 완료된 경우 (`remaining_sprints: false`):**
-
-- `improve_needed: false`인 경우:
-  > "모든 sprint 완료. 완성된 앱을 확인하세요."
-
-- `improve_needed: true`인 경우:
-  > "모든 sprint 완료. 완성된 앱을 확인하세요."
-  > "품질 임계점에 도달했습니다. policy-updater를 실행해 에이전트 정책을 개선합니다."
-  
-  이후 **policy-updater 에이전트를 직접 실행한다.**
-  policy-updater는 개정안을 생성하고 사용자 승인을 요청한다. 승인 없이 파일을 수정하지 않는다.
+**모든 sprint 완료된 경우:**
+> "모든 sprint 완료. 완성된 앱을 확인하세요."
+> (improve_needed: true인 경우) "품질 개선이 권장됩니다. `/improve`를 실행하면 에이전트 정책을 개선할 수 있습니다."
 
 ## 금지사항
 
 - learnings.md, metrics.json 외 파일 수정
+- policy-updater 자동 실행
 - 개선 방향 상세 제안 (요약 패턴 기록만)
 - evaluation-report.md, sprint-contract.md 수정
-- improve_needed: false인데 policy-updater 실행
