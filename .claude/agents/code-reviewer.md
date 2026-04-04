@@ -38,6 +38,10 @@ git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD
 - AC 문구에 명시된 조건이 구현에서 생략됐는가
 - 핵심 경로에 stub/placeholder가 남아있는가
 
+**패턴 잔존 여부**
+- 이번 sprint에서 수정한 코드 패턴과 동일한 패턴이 다른 파일에 남아 있는가
+- `grep -rn "<수정 패턴>" src/`로 확인한다. 잔존 파일이 있으면 NEEDS_WORK로 보고한다.
+
 **런타임 오류 가능성**
 - null/undefined 참조, 타입 불일치 등 런타임에 터질 수 있는 명확한 버그
 

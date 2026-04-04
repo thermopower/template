@@ -18,26 +18,27 @@ maxTurns: 40
 5. userflow 완료 후, dataflow-writer와 usecase-writer를 **병렬로** 실행한다.
    - dataflow-writer → `docs/database.md` (prd.md + userflow.md 필요)
    - usecase-writer → `docs/usecases/` (prd.md + userflow.md 필요)
-6. 다음 파일을 `.claude-state/`에 작성한다:
+6. **기존 코드베이스가 있으면** Explore 서브에이전트를 실행해 수정 대상 패턴이 프로젝트 전체에 얼마나 퍼져 있는지 파악한다. 파악된 범위를 sprint 범위에 포함하거나 제외 항목으로 명시한다. 신규 프로젝트면 이 단계를 SKIP한다.
+7. 다음 파일을 `.claude-state/`에 작성한다:
    - `product-spec.md` — 제품 목표, 핵심 사용자, 핵심 플로우, 범위, 제외 범위
    - `feature-list.json` — 기능 ID, 우선순위, status, acceptance_criteria, verification_linkage
    - `sprint-plan.md` — feature 순서, sprint sequencing, 예상 리스크
-7. 요구사항에서 기술 스택을 결정하고, `src/` 아래 레이어드 아키텍처 폴더 구조를 확정한다.
+8. 요구사항에서 기술 스택을 결정하고, `src/` 아래 레이어드 아키텍처 폴더 구조를 확정한다.
    - 앱 코드는 항상 `src/` 아래에 위치한다.
    - 폴더명은 스택 관행을 따르되, `.ruler/AGENTS.md`의 Folder Structure 표를 기준으로 각 폴더가 어느 레이어(Presentation/Application/Domain/Infrastructure)에 해당하는지 명시한다.
    - 확정된 폴더 구조를 `product-spec.md`의 비기능 요구사항 항목에 기록한다.
    - 이후 `profiles/<stack>/scripts/` 아래 세 스크립트를 생성한다.
    - 이미 존재하는 스크립트는 덮어쓰지 않는다.
    - 스크립트는 실행 가능해야 하므로 내용은 아래 **프로필 스크립트 작성 규칙**을 따른다.
-8. 첫 번째 sprint의 `sprint-contract.md` 초안을 작성한다 (status: draft).
-   - `profile:` 필드: 7단계에서 결정한 `<stack>` 이름을 기입한다.
+9. 첫 번째 sprint의 `sprint-contract.md` 초안을 작성한다 (status: draft).
+   - `profile:` 필드: 8단계에서 결정한 `<stack>` 이름을 기입한다.
    - 이번 sprint 범위
    - done 정의
    - acceptance criteria
    - 제외 항목
    - 검증 계획
-9. sprint-contract 내용을 사용자에게 제시하고 승인을 요청한다.
-10. 승인을 받으면 status를 approved로 갱신한다. **승인 없이 sprint-builder를 실행하지 않는다.**
+10. sprint-contract 내용을 사용자에게 제시하고 승인을 요청한다.
+11. 승인을 받으면 status를 approved로 갱신한다. **승인 없이 sprint-builder를 실행하지 않는다.**
 
 ## 프로필 스크립트 작성 규칙
 
@@ -98,7 +99,6 @@ sprint-contract와 feature-list.json 작성 시 반드시 지킨다:
 
 - **플레이스홀더 금지**: TBD, TODO, "추후 결정" 등 미완성 항목을 남기지 않는다.
 - **검증 가능한 acceptance criteria**: "잘 동작한다" 같은 주관적 기준은 금지. 구체적인 입력/출력/조건으로 작성한다.
-- **패턴 전파 확인 지시 포함**: AC에서 특정 파일을 수정하도록 지시할 때, "같은 패턴이 프로젝트 전체에 잔존하는지 grep으로 확인하라"는 지시를 AC에 명시한다. 예: `grep -rn "<패턴>" src/`로 동일 패턴을 가진 모든 파일을 확인하고 일괄 수정한다.
 - **verification_linkage 필수**: feature-list.json의 각 기능에 테스트 파일 경로 또는 검증 명령을 명시한다.
 - **parallel_safe 필드 필수**: feature-list.json의 각 기능에 `"parallel_safe": true/false`를 명시한다.
   - `true` 조건: 출력 파일이 다른 feature와 겹치지 않고, 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않음.
