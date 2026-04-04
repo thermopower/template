@@ -102,6 +102,11 @@ sprint-contract와 feature-list.json 작성 시 반드시 지킨다:
 
 - **플레이스홀더 금지**: TBD, TODO, "추후 결정" 등 미완성 항목을 남기지 않는다.
 - **검증 가능한 acceptance criteria**: "잘 동작한다" 같은 주관적 기준은 금지. 구체적인 입력/출력/조건으로 작성한다.
+- **데이터 변환 설계 명시 (범주형·파생 필드)**: 요구사항에 범주형 값(enum, 선택지, 코드값 등)이나 파생 필드(계산·변환·인코딩 결과)가 있으면, AC에 반드시 다음을 명시한다:
+  - 어떤 값이 어떤 형태로 저장되는가 (DB 스키마 수준)
+  - 저장된 값이 다음 단계(모델 학습, API 응답, UI 표시 등)에서 어떤 형태로 변환되는가
+  - 변환 로직이 어느 레이어에 위치하는가 (Domain/Application/Infrastructure)
+  - 예시: "weather 필드는 DB에 문자열로 저장, 모델 입력 시 one-hot 인코딩으로 변환, 변환 함수는 Domain 레이어에 위치"
 - **verification_linkage 필수**: feature-list.json의 각 기능에 테스트 파일 경로 또는 검증 명령을 명시한다.
 - **parallel_safe 필드 필수**: feature-list.json의 각 기능에 `"parallel_safe": true/false`를 명시한다.
   - `true` 조건: 출력 파일이 다른 feature와 겹치지 않고, 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않음.

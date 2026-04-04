@@ -1,12 +1,13 @@
 # Harness Version
 
-version: 1.0
-updated: 2026-04-04
+version: 1.1
+updated: 2026-04-05
 
 ## 변경 이력
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
+| 1.1 | 2026-04-05 | planner: 범주형·파생 필드 AC 명시 규칙 추가 (저장→변환→레이어). reviewer: 1-A 요구사항↔구현 직접 비교 단계 추가 (AC 완결성 검증) |
 | 1.0 | 2026-04-04 | smoke에 lint 추가, evaluation-gate에 npm audit(high 이상) 추가, planner smoke 템플릿 업데이트 |
 | 1.0 | 2026-04-01 | 정식 출시. Playwright MCP 브라우저 검증 통합, session-start.sh \n 정규화 버그 수정, 설계문서 실구현 동기화 완료 |
 | 1.0 | 2026-04-01 | profiles/nextjs-supabase 예시 제거 (planner가 sprint마다 생성), collect-metrics.sh BLOCKER_COUNT 버그 수정 |
