@@ -3,7 +3,7 @@
 Claude Code 기반 앱 개발을 위한 구조화된 하네스 템플릿입니다.  
 요구사항 수집부터 구현, 평가, 회고까지 전체 개발 루프를 에이전트로 자동화합니다.
 
-> **버전**: 1.0 (2026-04-01)
+> **버전**: 1.0 (2026-04-04)
 
 ---
 
@@ -79,7 +79,7 @@ requirement-writer  →  사용자 인터뷰 → docs/requirement.md
   commands/        # 커스텀 커맨드
   settings.json    # 훅 연결 설정
 .claude-state/     # sprint 상태 · 진행상황 · learnings · metrics
-scripts/           # smoke · unit · e2e · evaluation-gate · collect-metrics · check-thresholds
+scripts/           # smoke(lint+타입+빌드) · unit · e2e · evaluation-gate(+npm audit) · collect-metrics · check-thresholds
 profiles/          # 스택별 검증 스크립트 (planner가 sprint 시작 시 생성)
 docs/              # 설계 문서 · harness-reference.md
 src/               # 앱 코드 (planner가 스택 확정 후 생성)
