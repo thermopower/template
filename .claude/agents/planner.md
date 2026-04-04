@@ -98,6 +98,7 @@ sprint-contract와 feature-list.json 작성 시 반드시 지킨다:
 
 - **플레이스홀더 금지**: TBD, TODO, "추후 결정" 등 미완성 항목을 남기지 않는다.
 - **검증 가능한 acceptance criteria**: "잘 동작한다" 같은 주관적 기준은 금지. 구체적인 입력/출력/조건으로 작성한다.
+- **패턴 전파 확인 지시 포함**: AC에서 특정 파일을 수정하도록 지시할 때, "같은 패턴이 프로젝트 전체에 잔존하는지 grep으로 확인하라"는 지시를 AC에 명시한다. 예: `grep -rn "<패턴>" src/`로 동일 패턴을 가진 모든 파일을 확인하고 일괄 수정한다.
 - **verification_linkage 필수**: feature-list.json의 각 기능에 테스트 파일 경로 또는 검증 명령을 명시한다.
 - **parallel_safe 필드 필수**: feature-list.json의 각 기능에 `"parallel_safe": true/false`를 명시한다.
   - `true` 조건: 출력 파일이 다른 feature와 겹치지 않고, 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않음.
