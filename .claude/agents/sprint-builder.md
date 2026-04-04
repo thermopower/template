@@ -25,14 +25,14 @@ maxTurns: 80
    - 공통 모듈이 완전히 확정·구현될 때까지 다음 단계로 진행하지 않는다.
 2. feature-list.json을 읽고 이번 sprint 범위 feature를 파악한다.
    - `parallel_safe: true` feature 목록과 `parallel_safe: false` feature 목록을 분리한다.
-3. 각 페이지/feature에 대해 state-writer와 plan-writer를 **병렬로** 실행한다.
+3. 각 feature에 대해 plan-writer를 **병렬로** 실행한다.
    - 한 번의 Agent 호출에 여러 에이전트를 동시에 실행한다.
-   - 각 에이전트의 출력 파일: `docs/pages/{page}/state.md`, `docs/pages/{page}/plan.md`
+   - 각 에이전트의 출력 파일: `docs/features/{feature_id}/plan.md`
    - 파일 경로가 겹치지 않으므로 병렬 실행이 안전하다.
 4. implementer를 실행한다.
    - `parallel_safe: true` feature들은 **병렬로** 실행한다. 한 번의 Agent 호출에 여러 implementer를 동시에 실행한다.
    - `parallel_safe: false` feature들은 **순차로** 실행한다. 선행 feature 완료 후 다음 feature를 시작한다.
-   - 병렬 implementer는 각자 `docs/pages/{page}/plan.md`만 참조하고 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않는다. 공통 모듈 수정이 필요하면 즉시 중단하고 common-module-writer로 먼저 처리한 뒤 재개한다.
+   - 병렬 implementer는 각자 `docs/features/{feature_id}/plan.md`만 참조하고 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않는다. 공통 모듈 수정이 필요하면 즉시 중단하고 common-module-writer로 먼저 처리한 뒤 재개한다.
 5. code-reviewer 에이전트를 실행해 major 이상 문제를 확인한다.
    - **LGTM**: 다음 단계로 진행한다.
    - **NEEDS_WORK**: implementer를 재실행해 지적 항목만 수정한다. 이후 code-reviewer를 한 번 더 실행한다.
