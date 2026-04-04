@@ -66,12 +66,15 @@ else
           if [ -z "$LEARN_STATUS" ] || [ "$LEARN_STATUS" = "none" ]; then
             NEXT_STEP="review가 완료되었습니다. retrospective 에이전트를 실행하세요."
           else
-            # improve_needed 확인
+            # remaining_sprints 및 improve_needed 확인
+            REMAINING=$(grep '^remaining_sprints:' ".claude-state/claude-progress.txt" 2>/dev/null | awk '{print $2}')
             IMPROVE_NEEDED=$(grep '^improve_needed:' "$LEARNINGS" 2>/dev/null | awk '{print $2}')
-            if [ "$IMPROVE_NEEDED" = "true" ]; then
-              NEXT_STEP="retrospective가 완료되었습니다. 개선 임계점에 도달했습니다. 사용자에게 /improve 실행을 권장하세요."
+            if [ "$REMAINING" = "true" ]; then
+              NEXT_STEP="retrospective가 완료되었습니다. 미완료 sprint가 남아있습니다. 다음 sprint planner를 자동으로 실행하세요."
+            elif [ "$IMPROVE_NEEDED" = "true" ]; then
+              NEXT_STEP="모든 sprint가 완료되었습니다. 개선 임계점에 도달했습니다. 사용자에게 완성품을 제시하고 /improve 실행을 권장하세요."
             else
-              NEXT_STEP="retrospective가 완료되었습니다. 사용자에게 다음 sprint 진행 여부를 확인하세요."
+              NEXT_STEP="모든 sprint가 완료되었습니다. 사용자에게 완성품을 제시하고 종료하세요."
             fi
           fi
         fi

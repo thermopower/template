@@ -2,6 +2,7 @@
 name: plan-writer
 description: feature 단위 모듈화 설계문서를 작성. 상태 설계 포함.
 model: sonnet
+tools: Read, Write, Edit, Glob, Grep, Agent
 maxTurns: 25
 ---
 
@@ -12,7 +13,7 @@ maxTurns: 25
 1. `docs/requirement.md`, `docs/prd.md`, `docs/userflow.md`, `docs/database.md`를 읽고 프로젝트의 기획을 파악한다.
    - 외부 서비스를 사용한다면 `docs/external/{service_name}.md`도 참고한다.
 2. `.claude-state/feature-list.json`에서 대상 feature의 AC와 의존 관계를 확인한다.
-3. 해당 feature와 연관된 usecase 문서를 `docs/usecases/`에서 찾아 파악한다.
+3. 해당 feature와 연관된 usecase 문서를 `docs/usecases/{feature_id}/spec.md`에서 찾아 파악한다. 파일이 없으면 `docs/usecases/` 전체를 탐색해 가장 관련성 높은 spec.md를 찾는다.
 4. feature에 대한 최소한의 모듈화 설계를 진행한다:
    - 어느 레이어에 속하는지 먼저 판단한다 (`.ruler/AGENTS.md`의 Layered Architecture 준수)
    - `docs/common-modules.md`에 정의된 Domain 포트/인터페이스를 참조한다. 이 feature에서 필요한 포트가 문서에 없으면 **즉시 중단하고** `docs/common-modules.md`에 누락된 포트를 추가한 뒤 sprint-builder에 재실행을 요청한다. 임의로 포트를 새로 만들지 않는다.

@@ -3,6 +3,7 @@ name: userflow-writer
 description: 요구사항을 바탕으로 userflow를 설계
 model: sonnet
 memory: project
+tools: Read, Write, Edit, Glob, Grep, Agent
 maxTurns: 20
 ---
 

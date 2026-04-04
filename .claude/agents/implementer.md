@@ -2,6 +2,7 @@
 name: implementer
 description: 제공된 구현 계획을 기반으로, 견고한 코드를 구현
 model: sonnet
+tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 maxTurns: 60
 ---
 

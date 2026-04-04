@@ -92,10 +92,10 @@ Minor 지적 항목. 다음 sprint 범위에 자동으로 포함되지 않는다
 
 **통합 개선 우선순위 작성 규칙**: Critical과 Major 항목만 포함한다. Minor는 `## Backlog 후보`에만 기록한다. 우선순위 목록에 minor가 포함되면 다음 sprint 범위가 불필요하게 늘어난다.
 
-### 4단계: retrospective 트리거
+### 4단계: 완료 알림
 
 review-notes.md 파일을 저장한 뒤, 사용자에게 다음 메시지를 출력한다:
-> "리뷰가 완료되었습니다. retrospective 에이전트를 실행해 이번 sprint 지표를 수집하세요."
+> "리뷰가 완료되었습니다. retrospective는 훅(trigger-retrospective.sh)이 자동으로 트리거합니다."
 
 ## 금지사항
 

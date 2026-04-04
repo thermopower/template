@@ -2,6 +2,7 @@
 name: common-module-writer
 description: 공통 로직이나 라이브러리 세팅을 위한 공통 모듈 작업 계획을 작성하고 구현
 model: sonnet
+tools: Read, Write, Edit, Glob, Grep, Bash, Agent
 maxTurns: 30
 ---
 

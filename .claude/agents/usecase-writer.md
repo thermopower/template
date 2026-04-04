@@ -3,6 +3,7 @@ name: usecase-writer
 description: userflow를 바탕으로 기능별 usecase를 작성
 model: sonnet
 memory: project
+tools: Read, Write, Edit, Glob, Grep, Agent
 maxTurns: 20
 ---
 
@@ -22,4 +23,6 @@ maxTurns: 20
      - Business Rules
    - PlantUML 문법을 사용한 Sequence Diagram 포함 (User / FE / BE / Database 구분)
    - 절대 구현과 관련된 구체적인 코드는 포함하지 않는다.
-3. 최종 usecase 문서를 `docs/usecases/{N}/spec.md`에 생성한다. {N}은 userflow에 명시된 기능 번호와 같다.
+3. 최종 usecase 문서를 `docs/usecases/{feature_id}/spec.md`에 생성한다.
+   - `{feature_id}`는 `.claude-state/feature-list.json`에 정의된 기능 ID와 정확히 일치해야 한다 (예: `feature-001`).
+   - feature-list.json이 아직 없으면 userflow의 기능 순서를 기준으로 `feature-001`, `feature-002` 형식으로 번호를 매기고, planner가 이후 feature-list.json 생성 시 같은 순서를 따른다는 전제로 작성한다.

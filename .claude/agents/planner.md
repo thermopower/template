@@ -30,6 +30,7 @@ maxTurns: 40
    - 이후 `profiles/<stack>/scripts/` 아래 세 스크립트를 생성한다.
    - 이미 존재하는 스크립트는 덮어쓰지 않는다.
    - 스크립트는 실행 가능해야 하므로 내용은 아래 **프로필 스크립트 작성 규칙**을 따른다.
+   - 생성 후 `scripts/` 루트에도 동일한 파일을 복사한다 (`cp profiles/<stack>/scripts/smoke scripts/smoke` 등). 훅(check-smoke.sh)과 evaluator는 `scripts/` 루트를 직접 참조하기 때문이다. 이미 존재하면 덮어쓴다.
 9. `sprint-contract.md` 초안을 작성한다.
    - `profile:` 필드: 8단계에서 결정한 `<stack>` 이름을 기입한다.
    - `sprint_number:` 필드: 이번 sprint 번호를 기입한다 (1부터 시작).

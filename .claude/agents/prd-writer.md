@@ -3,6 +3,7 @@ name: prd-writer
 description: 요구사항을 파악하여 PRD를 설계
 model: sonnet
 memory: project
+tools: Read, Write, Edit, Glob, Grep, Agent
 maxTurns: 20
 ---
 
@@ -14,7 +15,7 @@ maxTurns: 20
 2. 다음 내용을 반드시 포함하라.
    - 제품 개요
    - stakeholders
-   - 포함 페이지 목록
-   - 사용자 여정: 타겟 유저 segment, 페이지를 반드시 명시
-   - IA: tree 형태 시각화
+   - 핵심 기능(feature) 목록: 각 기능의 이름과 한 줄 설명
+   - 사용자 여정: 타겟 유저 segment, 각 여정에서 수행하는 기능(feature)을 반드시 명시. 특정 페이지/화면 이름 대신 기능 단위로 기술한다.
+   - IA: 기능 계층을 tree 형태로 시각화 (페이지 구조가 아닌 기능 구조 기준)
 3. 완성된 문서는 `docs/prd.md`에 생성하라.

@@ -7,6 +7,7 @@ updated: 2026-04-05
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
+| 1.0 | 2026-04-05 | 기능중심 설계 전환 후 정합성 수정: prd-writer 페이지→기능 중심 언어 통일, usecase-writer 산출물 경로 `{N}` → `{feature_id}` 통일, plan-writer usecase 탐색 경로 동기화, dataflow-writer 입력 문서에 requirement+prd 추가, sub-agents 전체 tools 선언 추가(plan-writer/implementer/common-module-writer/prd-writer/userflow-writer/dataflow-writer/usecase-writer), evaluator tools에 Edit 추가, session-start.sh remaining_sprints 분기 추가, reviewer 이중 트리거 제거, planner에 scripts/ 루트 복사 규칙 명시 |
 | 1.0 | 2026-04-05 | state-writer 제거. plan-writer를 페이지 단위 → feature 단위로 재설계. 상태 설계(source of truth, 전역/로컬 구분, cross-feature 공유 상태 레이어) plan.md 안에 통합. 산출물 경로 `docs/pages/{page}/` → `docs/features/{feature_id}/` |
 | 1.0 | 2026-04-05 | planner: AC를 정상/경계/에러 케이스로 분리 작성 강제. 요구사항에 없는 케이스도 planner가 직접 채우도록 명시 |
 | 1.0 | 2026-04-05 | common-module-writer: docs/usecases/ 전체 읽고 반복 패턴 미리 추출하는 단계 추가. plan-writer: 필요한 공통 모듈 누락 시 중단 후 보완 요청 경로 추가 |
