@@ -15,8 +15,16 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
     planner ──→ sprint-contract (draft) ──→ [사용자 승인]
         ↓
   sprint-builder:
-    implementer ──→ code-reviewer ──→ [NEEDS_WORK → implementer (최대 2회 루프)]
-                                   ──→ [LGTM → smoke → status: implemented]
+    common-module-writer (공통 영역 먼저 확정)
+        ↓
+    [state-writer(페이지A) + state-writer(페이지B) + ...] 병렬
+    [plan-writer(페이지A)  + plan-writer(페이지B)  + ...] 병렬
+        ↓
+    [implementer(parallel_safe:true 묶음)] 병렬
+    [implementer(parallel_safe:false 순차)]
+        ↓
+    code-reviewer ──→ [NEEDS_WORK → implementer (최대 2회 루프)]
+                   ──→ [LGTM → smoke → status: implemented]
         ↓ (hook: check-smoke.sh)
     evaluator ──→ evaluation-report (pass/fail)
         ↓ fail → integration-fixer 또는 수정 sprint
@@ -51,8 +59,8 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | 에이전트 | 모델 | maxTurns | 특이 설정 | 역할 | 흡수한 스킬 | 금지 |
 |---|---|---|---|---|---|---|
 | **requirement-writer** | sonnet | 30 | — | 사용자 인터뷰→docs/requirement.md 작성. 단계별 명확화 질문, 대안 탐색, 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리 |
-| **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안. 플레이스홀더 금지, 검증 가능한 criteria, TDD 사이클 포함 계획 작성 | `writing-plans` | 구현, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물 |
-| **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 승인된 범위만 구현. implementer → code-reviewer 루프(최대 2회) 포함. 블로커 즉시 중단·보고 | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회 |
+| **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안. prd/userflow 병렬, dataflow/usecase 병렬. feature-list.json에 parallel_safe 필드 포함 | `writing-plans` | 구현, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물 |
+| **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 승인된 범위만 구현. common-module 먼저 확정 후 state/plan-writer 병렬, parallel_safe 기준으로 implementer 병렬/순차 분리. code-reviewer 루프(최대 2회) 포함 | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회 |
 | **code-reviewer** | sonnet | 20 | — | sprint 내부 코드 리뷰. major 이상만 피드백. LGTM 또는 NEEDS_WORK 반환. minor 언급 금지 | — | minor 지적, 리팩터링 제안, 범위 확장 요구 |
 | **evaluator** | haiku | 40 | Playwright MCP | pass/fail 판정만. 브라우저 실동작 검증 포함. evaluation-report.md 작성. sprint-contract.md 수정 금지 | — | 개선 제안, reviewer 역할, sprint-contract 수정 |
 | **reviewer** | opus | 40 | — | 품질 비평·개선 제안. Critical/Major → 통합 개선 우선순위. Minor → Backlog 후보 섹션에만 기록 | — | pass/fail 판정, evaluator 역할, minor를 개선 우선순위에 포함 |
@@ -66,10 +74,10 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 
 | 에이전트 | maxTurns | memory | 산출물 |
 |---|---|---|---|
-| **prd-writer** | 20 | project | `docs/prd.md` |
-| **userflow-writer** | 20 | project | `docs/userflow.md` |
-| **dataflow-writer** | 20 | project | `docs/database.md` |
-| **usecase-writer** | 20 | project | `docs/usecases/` |
+| **prd-writer** | 20 | project | `docs/prd.md` ← userflow-writer와 병렬 실행 |
+| **userflow-writer** | 20 | project | `docs/userflow.md` ← prd-writer와 병렬 실행 |
+| **dataflow-writer** | 20 | project | `docs/database.md` ← usecase-writer와 병렬 실행 (prd/userflow 완료 후) |
+| **usecase-writer** | 20 | project | `docs/usecases/` ← dataflow-writer와 병렬 실행 |
 | **common-module-writer** | 30 | — | `docs/common-modules.md` + 구현 |
 | **state-writer** | 25 | — | `docs/pages/{page}/state.md` |
 | **plan-writer** | 25 | — | `docs/pages/{page}/plan.md` |

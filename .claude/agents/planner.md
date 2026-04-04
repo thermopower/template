@@ -13,11 +13,12 @@ maxTurns: 40
 
 1. `docs/requirement.md`를 읽고 요구사항을 파악한다.
 2. 요구사항이 비어 있으면 사용자에게 요구사항 작성을 요청하고 중단한다.
-3. prd-writer 에이전트를 실행해 `docs/prd.md`를 생성한다.
-4. userflow-writer 에이전트를 실행해 `docs/userflow.md`를 생성한다.
-5. dataflow-writer와 usecase-writer를 가능하면 병렬로 실행한다.
-   - `docs/database.md` 생성
-   - `docs/usecases/` 생성
+3. prd-writer와 userflow-writer를 **병렬로** 실행한다.
+   - prd-writer → `docs/prd.md`
+   - userflow-writer → `docs/userflow.md`
+4. 3단계 완료 후, dataflow-writer와 usecase-writer를 **병렬로** 실행한다.
+   - dataflow-writer → `docs/database.md` (prd.md + userflow.md 필요)
+   - usecase-writer → `docs/usecases/` (userflow.md 필요)
 6. 다음 파일을 `.claude-state/`에 작성한다:
    - `product-spec.md` — 제품 목표, 핵심 사용자, 핵심 플로우, 범위, 제외 범위
    - `feature-list.json` — 기능 ID, 우선순위, status, acceptance_criteria, verification_linkage
@@ -99,6 +100,10 @@ sprint-contract와 feature-list.json 작성 시 반드시 지킨다:
 - **플레이스홀더 금지**: TBD, TODO, "추후 결정" 등 미완성 항목을 남기지 않는다.
 - **검증 가능한 acceptance criteria**: "잘 동작한다" 같은 주관적 기준은 금지. 구체적인 입력/출력/조건으로 작성한다.
 - **verification_linkage 필수**: feature-list.json의 각 기능에 테스트 파일 경로 또는 검증 명령을 명시한다.
+- **parallel_safe 필드 필수**: feature-list.json의 각 기능에 `"parallel_safe": true/false`를 명시한다.
+  - `true` 조건: 출력 파일이 다른 feature와 겹치지 않고, 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않음.
+  - `false` 조건: 공통 모듈 수정, 다른 feature와 파일 충돌 가능성, 선행 feature 결과 필요.
+  - 판단 불가 시 `false`로 설정한다. 안전 방향을 우선한다.
 - **TDD 사이클 포함**: 각 feature의 구현 순서에 RED→GREEN→REFACTOR 단계를 명시한다.
 - **2-5분 단위 태스크**: sprint-plan.md의 각 태스크는 독립적으로 완료 가능한 작은 단위로 쪼갠다.
 
