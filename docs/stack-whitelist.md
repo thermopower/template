@@ -35,15 +35,13 @@
 | **Supabase** | PostgreSQL DB + Auth + Storage + Realtime | 기본 권장 (오픈소스, self-host 가능) |
 | **Firebase** | Firestore/Realtime DB + Auth + Storage | Google 생태계 선호 시 |
 | **PlanetScale** | 서버리스 MySQL | 대용량 확장 필요 시 |
-| **Neon** | 서버리스 PostgreSQL | Vercel 통합 용이 |
+| **Neon** | 서버리스 PostgreSQL | Vercel 통합 용이, Next.js 권장 조합 |
 
 ### 3-2. ORM / 쿼리 빌더
 
 | 라이브러리 | 용도 | 비고 |
 |---|---|---|
-| **Prisma** | TypeScript ORM | Next.js + PostgreSQL/MySQL 기본 권장 |
-| **Drizzle ORM** | 경량 TypeScript ORM | 서버리스 환경, 번들 크기 중요 시 |
-| **Supabase JS SDK** | Supabase 전용 쿼리 | Supabase 사용 시 Prisma 대신 가능 |
+| **Supabase JS SDK** | Supabase 전용 쿼리 | Supabase 사용 시 기본 권장 |
 
 ### 3-3. 자체 API 서버 (Python)
 
@@ -61,7 +59,6 @@
 | **SQLite** | 파일 기반 경량 DB | 로컬 앱, 프로토타입, 단일 서버 |
 | **better-sqlite3** | Node.js SQLite 드라이버 (동기) | Next.js API Route / Electron |
 | **Turso (libSQL)** | SQLite 호환 엣지 DB | 서버리스 + SQLite 원할 때 |
-| **Drizzle ORM + SQLite** | SQLite용 TypeScript ORM | better-sqlite3 / Turso와 조합 |
 
 ---
 
