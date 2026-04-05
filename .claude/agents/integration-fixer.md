@@ -70,15 +70,7 @@ maxTurns: 50
 - 복구 후 검증 결과
 - 향후 같은 문제 예방 방법
 
-### 6단계: 메인 브랜치 반영
-
-이 에이전트는 `isolation: worktree`로 실행되므로 수정 결과가 격리된 worktree에만 존재한다. 복구 완료 후 다음 절차로 메인 브랜치에 반영한다.
-
-1. worktree에서 변경 사항을 커밋한다: `git add -A && git commit -m "fix: integration-fixer 복구"`
-2. 메인 브랜치로 이동해 머지한다: `git checkout main && git merge --no-ff <worktree-branch>`
-3. 머지 충돌 발생 시 즉시 중단하고 사용자에게 보고한다. 충돌을 임의로 해결하지 않는다.
-
-### 8단계: 레거시 정리
+### 6단계: 레거시 정리
 
 - `mcp__plugin_playwright_playwright__browser_close`로 브라우저 세션을 닫는다.
 - 검증 중 생성된 스크린샷 임시 파일을 삭제한다 (`*.png`, `*.jpg` 등 검증용으로 저장한 파일).
