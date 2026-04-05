@@ -54,7 +54,22 @@ maxTurns: 80
      ```
    - 루프 횟수는 sprint-builder 실행 컨텍스트 내 변수로 추적한다. 파일에 기록하지 않는다.
 6. `bash scripts/smoke`를 실행한다. 실패하면 완료로 처리하지 않고 문제를 수정한다.
-7. stub/placeholder 잔존 여부를 확인한다: `grep -rn "TODO\|FIXME\|stub\|placeholder\|not implemented" app/ src/ 2>/dev/null`
+7. stub/placeholder 잔존 여부를 확인한다 (테스트 파일·주석 제외):
+   ```bash
+   grep -rn \
+     --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+     --include="*.py" --include="*.go" \
+     --exclude-dir="__tests__" --exclude-dir="node_modules" --exclude-dir=".next" \
+     --exclude-dir=".git" --exclude-dir="dist" --exclude-dir="build" \
+     --exclude="*.test.ts" --exclude="*.test.tsx" --exclude="*.test.js" \
+     --exclude="*.spec.ts" --exclude="*.spec.tsx" --exclude="*.spec.js" \
+     --exclude="test_*.py" --exclude="*_test.go" \
+     "TODO\|FIXME\|stub\|placeholder\|not implemented\|NotImplemented" \
+     app/ src/ 2>/dev/null \
+     | grep -v "^[^:]*:[0-9]*:[[:space:]]*//" \
+     | grep -v "^[^:]*:[0-9]*:[[:space:]]*#" \
+     | grep -v "^[^:]*:[0-9]*:[[:space:]]*\*"
+   ```
    - 발견되면 핵심 경로인지 판단하고 핵심 경로이면 수정 후 재확인한다.
 7-1. **완료 선언 전 자가 검증** — 아래 항목을 직접 확인한다. 하나라도 해당하면 수정 후 재확인한다.
    - **AC → 코드 추적**: AC 문구에 명시된 조건(필터링, 정렬, 분기 등)이 실제 코드 경로에 구현됐는가. "구현했다"는 판단이 아니라 코드를 직접 읽어 확인한다.
