@@ -54,6 +54,15 @@
 | **Alembic** | Python DB 마이그레이션 | SQLAlchemy와 함께 사용 |
 | **Pydantic v2** | 데이터 검증 및 직렬화 | FastAPI 내장 |
 
+### 3-4. 경량 / 로컬 DB
+
+| 라이브러리/서비스 | 용도 | 비고 |
+|---|---|---|
+| **SQLite** | 파일 기반 경량 DB | 로컬 앱, 프로토타입, 단일 서버 |
+| **better-sqlite3** | Node.js SQLite 드라이버 (동기) | Next.js API Route / Electron |
+| **Turso (libSQL)** | SQLite 호환 엣지 DB | 서버리스 + SQLite 원할 때 |
+| **Drizzle ORM + SQLite** | SQLite용 TypeScript ORM | better-sqlite3 / Turso와 조합 |
+
 ---
 
 ## 4. 인증 (Authentication)
