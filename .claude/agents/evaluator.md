@@ -14,8 +14,22 @@ maxTurns: 40
 1. `.claude-state/sprint-contract.md`를 읽고 acceptance criteria를 확인한다.
 2. `scripts/evaluation-gate`를 실행한다.
 3. 각 acceptance criteria 항목을 검증한다.
-4. stub/placeholder 잔존 여부를 확인한다.
-   - `grep -rn "TODO\|FIXME\|stub\|placeholder\|not implemented"` (app/ 또는 src/ 기준)
+4. stub/placeholder 잔존 여부를 확인한다 (테스트 파일·주석 제외):
+   ```bash
+   grep -rn \
+     --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+     --include="*.py" --include="*.go" \
+     --exclude-dir="__tests__" --exclude-dir="node_modules" --exclude-dir=".next" \
+     --exclude-dir=".git" --exclude-dir="dist" --exclude-dir="build" \
+     --exclude="*.test.ts" --exclude="*.test.tsx" --exclude="*.test.js" \
+     --exclude="*.spec.ts" --exclude="*.spec.tsx" --exclude="*.spec.js" \
+     --exclude="test_*.py" --exclude="*_test.go" \
+     "TODO\|FIXME\|stub\|placeholder\|not implemented\|NotImplemented" \
+     app/ src/ 2>/dev/null \
+     | grep -v "^[^:]*:[0-9]*:[[:space:]]*//" \
+     | grep -v "^[^:]*:[0-9]*:[[:space:]]*#" \
+     | grep -v "^[^:]*:[0-9]*:[[:space:]]*\*"
+   ```
 5. 앱이 실제로 동작하는지 **Playwright MCP**로 브라우저 검증한다.
    - `mcp__plugin_playwright_playwright__browser_navigate`로 앱에 접속한다.
    - acceptance criteria의 핵심 user flow를 직접 실행한다 (클릭, 폼 입력 등).
