@@ -35,7 +35,7 @@ maxTurns: 40
    - acceptance criteria의 핵심 user flow를 직접 실행한다 (클릭, 폼 입력 등).
    - `mcp__plugin_playwright_playwright__browser_console_messages`로 콘솔 에러 여부를 확인한다.
    - 검증 결과(스크린샷 포함)를 evaluation-report.md에 기록한다.
-   - 앱이 아직 실행 중이 아니라면 이 단계를 SKIP하고 그 사유를 report에 명시한다.
+   - **앱이 실행되지 않은 상태라면 SKIP이 아니라 fail로 처리한다.** 브라우저로 접속을 시도하고 실패하면 blocker로 기록하고 status: fail을 판정한다. "앱 미실행"은 acceptance criteria 미충족과 동일하다.
 6. `.claude-state/evaluation-report.md`에 결과를 기록한다:
    - status: pass 또는 fail
    - 검증 항목별 결과

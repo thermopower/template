@@ -25,7 +25,8 @@ maxTurns: 40
 4. prd 완료 후 userflow-writer 에이전트를 실행해 `docs/userflow.md`를 생성한다.
 5. userflow 완료 후, **feature-list.json 초안**을 `.claude-state/feature-list.json`에 먼저 작성한다.
    - 이 시점의 초안에는 `feature_id`, `name`, `status: pending` 만 포함한다.
-   - 나머지 필드(acceptance_criteria, verification_linkage, parallel_safe, depends_on)는 7단계에서 보완한다.
+   - 나머지 필드(`acceptance_criteria`, `verification_linkage`, `parallel_safe`, `depends_on`)는 7단계에서 보완한다.
+   - 필드명 규칙: `feature_id` (id 아님), `depends_on` (dependencies 아님). 에이전트 전체가 이 이름을 사용한다.
    - usecase-writer가 feature_id를 참조하므로 이 파일을 먼저 생성해야 한다.
 6. feature-list.json 초안 완료 후, dataflow-writer와 usecase-writer를 **병렬로** 실행한다.
    - dataflow-writer → `docs/database.md` (prd.md + userflow.md 필요)
@@ -43,7 +44,8 @@ maxTurns: 40
    - 이미 존재하는 스크립트는 덮어쓰지 않는다.
    - 스크립트는 실행 가능해야 하므로 내용은 아래 **프로필 스크립트 작성 규칙**을 따른다.
    - 생성 후 `scripts/` 루트에도 복사한다 (`cp profiles/<stack>/scripts/smoke scripts/smoke` 등). 훅(check-smoke.sh)과 evaluator는 `scripts/` 루트를 직접 참조하기 때문이다.
-   - **단, `scripts/` 루트에 이미 파일이 존재하면 복사하지 않는다** (사용자 커스터마이징 보존). 새 스택 프로필을 사용하는 첫 번째 sprint에서만 복사가 발생한다.
+   - **복사 규칙**: `scripts/` 루트에 파일이 없거나, `sprint-contract.md`의 `profile:` 값이 직전 sprint와 달라진 경우 덮어쓴다. 동일한 프로필의 연속 sprint에서는 기존 파일을 보존한다 (사용자 커스터마이징 보존).
+   - 덮어쓰기 발생 시 로그에 "프로필 변경으로 scripts/ 덮어쓰기" 메시지를 출력한다.
 10. `sprint-contract.md` 초안을 작성한다.
    - `profile:` 필드: 8단계에서 결정한 `<stack>` 이름을 기입한다.
    - `sprint_number:` 필드: 이번 sprint 번호를 기입한다 (1부터 시작).

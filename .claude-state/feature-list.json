@@ -1,11 +1,12 @@
 [
   // 예시:
   // {
-  //   "id": "F001",
+  //   "feature_id": "F001",
   //   "name": "기능 이름",
   //   "priority": "high",
   //   "status": "pending",
-  //   "dependencies": [],
+  //   "depends_on": [],
+  //   "parallel_safe": true,
   //   "acceptance_criteria": [],
   //   "verification_linkage": []
   // }

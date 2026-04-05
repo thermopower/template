@@ -23,8 +23,9 @@ if grep -q '^fix_attempt:' "$CONTRACT"; then
   _PY=$(command -v python3 2>/dev/null || command -v python 2>/dev/null || echo "python")
   "$_PY" -c "
 import re, sys
+next_val = int('$NEXT')
 content = open('$CONTRACT').read()
-content = re.sub(r'^fix_attempt:.*$', 'fix_attempt: $NEXT', content, flags=re.MULTILINE)
+content = re.sub(r'^fix_attempt:.*$', f'fix_attempt: {next_val}', content, flags=re.MULTILINE)
 open('$CONTRACT', 'w').write(content)
 " 2>/dev/null
 else

@@ -93,7 +93,7 @@ case "$AGENT_NAME" in
       local FILE="$1"
       local LABEL="$2"
       if [ ! -f "$FILE" ]; then return; fi
-      FILE_MTIME=$(date -r "$FILE" +%s 2>/dev/null || stat -c %Y "$FILE" 2>/dev/null || echo "0")
+      FILE_MTIME=$(date -r "$FILE" +%s 2>/dev/null || stat -c %Y "$FILE" 2>/dev/null || stat -f%m "$FILE" 2>/dev/null || echo "9999999999")
       AGE=$((NOW - FILE_MTIME))
       if [ "$AGE" -le "$RECENT_SECS" ]; then
         # 최근 수정된 파일이 있음 — status 확인

@@ -76,8 +76,10 @@ maxTurns: 80
    - **dead code**: 선언됐지만 값이 채워지지 않는 상태/컬렉션(Set, Map, 배열 등)이 있는가. 초기화만 하고 사용되지 않는 변수가 있는가.
    - **catch 블록**: 빈 catch, 주석 처리된 에러 처리, `// 무시` 패턴이 있는가. 에러를 삼키는 코드는 완료가 아니다.
    - **제어 흐름**: 오류가 발생했을 때 성공 경로가 계속 실행되지 않는가. (예: 에러 후 router.push가 여전히 실행되는 경우)
-8. `.claude-state/sprint-contract.md`의 status를 `implemented`로 갱신한다.
-9. `.claude-state/claude-progress.txt`를 갱신한다. total_turns 추정값을 기록한다.
+8. `.claude-state/feature-list.json`에서 이번 sprint에 구현한 feature들의 `status`를 `done`으로 갱신한다.
+   - retrospective가 `remaining_sprints` 판단 시 이 값을 사용하므로 반드시 갱신해야 한다.
+9. `.claude-state/sprint-contract.md`의 status를 `implemented`로 갱신한다.
+10. `.claude-state/claude-progress.txt`를 갱신한다. total_turns 추정값을 기록한다.
 
 ## 블로커 처리 원칙 (executing-plans 흡수)
 

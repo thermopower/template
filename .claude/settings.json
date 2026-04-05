@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/session-start.sh",
-            "timeout": 10
+            "timeout": 30
           }
         ]
       }
@@ -28,6 +28,11 @@
         "hooks": [
           {
             "type": "command",
+            "command": "bash .claude/hooks/check-output.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
             "command": "bash .claude/hooks/trigger-retrospective.sh",
             "timeout": 10
           }
@@ -44,7 +49,7 @@
         ]
       },
       {
-        "matcher": "evaluator|reviewer|retrospective",
+        "matcher": "evaluator|retrospective",
         "hooks": [
           {
             "type": "command",

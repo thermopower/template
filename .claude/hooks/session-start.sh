@@ -11,7 +11,7 @@ CONTEXT=""
 
 # 1. progress 요약
 if [ -f "$PROGRESS" ]; then
-  RECENT=$(head -20 "$PROGRESS")
+  RECENT=$(tail -20 "$PROGRESS")
   CONTEXT="${CONTEXT}\n## 최근 진행 상황\n${RECENT}\n"
 else
   CONTEXT="${CONTEXT}\n## 상태\n초기 상태입니다. docs/requirement.md에 요구사항을 작성하고 planner를 실행하세요.\n"
