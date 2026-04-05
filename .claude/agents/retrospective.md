@@ -18,6 +18,10 @@ maxTurns: 20
 1. `.claude-state/evaluation-report.md`를 읽어 eval 결과, blocker 목록을 파악한다.
 2. `.claude-state/sprint-contract.md`를 읽어 sprint ID와 범위를 파악한다.
 3. `.claude-state/review-notes.md`를 읽어 반복 코멘트 패턴을 파악한다.
+3-a. review-notes.md의 Critical/Major 항목을 `.claude-state/backlog.md`에 등록한다.
+   - 파일이 없으면 새로 생성한다.
+   - 이미 등록된 항목(같은 sprint_id + 항목명)은 중복 등록하지 않는다.
+   - 형식: `- [<sprint_id>] <항목명>: <한 줄 설명>`
 4. `~/.claude/projects/` memory를 참조해 cross-session 패턴을 확인한다.
 5. `bash scripts/collect-metrics.sh <sprint_id>`를 실행해 metrics.json을 갱신한다.
 6. `.claude-state/learnings.md`에 이번 sprint 요약을 누적한다.
@@ -45,7 +49,7 @@ maxTurns: 20
 
 ## 금지사항
 
-- learnings.md, metrics.json 외 파일 수정
+- learnings.md, metrics.json, backlog.md 외 파일 수정
 - policy-updater 자동 실행
 - 개선 방향 상세 제안 (요약 패턴 기록만)
 - evaluation-report.md, sprint-contract.md 수정
