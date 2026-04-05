@@ -1,6 +1,7 @@
 # Sprint Contract
 
 status: none
+fix_attempt: 0
 
 ---
 

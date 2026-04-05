@@ -49,6 +49,7 @@ maxTurns: 40
 10. `sprint-contract.md` 초안을 작성한다.
    - `profile:` 필드: 8단계에서 결정한 `<stack>` 이름을 기입한다.
    - `sprint_number:` 필드: 이번 sprint 번호를 기입한다 (1부터 시작).
+   - `fix_attempt: 0` 필드: **반드시 포함한다.** integration-fixer SubagentStop 훅이 이 값을 증가시키며, 새 sprint마다 0으로 초기화해야 카운트가 누적되지 않는다.
    - 이번 sprint 범위
    - done 정의
    - acceptance criteria
