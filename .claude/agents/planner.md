@@ -60,6 +60,9 @@ maxTurns: 40
    - `feature-list.json` — 5단계 초안에 나머지 필드(acceptance_criteria, verification_linkage, parallel_safe, depends_on) 보완
    - `sprint-plan.md` — feature 순서, sprint sequencing, 예상 리스크
 9. 요구사항에서 기술 스택을 결정하고, `src/` 아래 레이어드 아키텍처 폴더 구조를 확정한다.
+   - **시작 전 `docs/stack-whitelist.md`를 읽는다.** 화이트리스트를 참조해 각 카테고리(ORM, 상태관리, 폼 검증 등)에서 라이브러리를 선택한다.
+   - requirement.md에 `(화이트리스트 외)` 표시가 있는 항목은 sprint-contract의 `non_whitelist_libs` 필드에 기록하고 사유를 명시한다.
+   - 화이트리스트에 없는 라이브러리가 필요한 경우, 사용자에게 사유를 설명하고 명시적 승인을 받은 뒤 진행한다.
    - 앱 코드는 항상 `src/` 아래에 위치한다.
    - 폴더명은 스택 관행을 따르되, `.ruler/AGENTS.md`의 Folder Structure 표를 기준으로 각 폴더가 어느 레이어(Presentation/Application/Domain/Infrastructure)에 해당하는지 명시한다.
    - 확정된 폴더 구조를 `product-spec.md`의 비기능 요구사항 항목에 기록한다.

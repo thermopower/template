@@ -160,6 +160,15 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 
 ---
 
+## 스택 화이트리스트
+
+검증된 라이브러리 목록은 `docs/stack-whitelist.md`를 참조한다.
+- requirement-writer: 섹션 3(기술 스택) 진입 전 이 파일을 읽고 "기본 권장" 항목을 안내한다.
+- planner: 스택 결정(9단계) 전 이 파일을 읽고 카테고리별 라이브러리를 선택한다.
+- 화이트리스트 외 항목 사용 시: requirement.md에 `(화이트리스트 외)` 표시 → sprint-contract `non_whitelist_libs` 필드에 기록 + 사유 명시 + 사용자 승인.
+
+---
+
 ## 스택 판단 기준 (planner가 프로필 스크립트 생성 시)
 
 | 요구사항 키워드 | profile 이름 | 빌드 도구 | 단위 테스트 | E2E | src/ 레이어 구조 |
