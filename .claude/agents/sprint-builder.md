@@ -44,7 +44,8 @@ maxTurns: 80
    - 병렬 implementer는 각자 `docs/features/{feature_id}/plan.md`만 참조하고 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않는다. 공통 모듈 수정이 필요하면 즉시 중단하고 common-module-writer로 먼저 처리한 뒤 재개한다.
    - `parallel_safe: true` 조건 자체가 "출력 파일이 다른 feature와 겹치지 않음"을 보장하므로, 병렬 실행 중 git 파일 충돌은 발생하지 않는다. 별도 커밋을 강제할 필요 없다.
 5. **Personal 모드가 아닌 경우**: code-reviewer 에이전트를 실행해 major 이상 문제를 확인한다.
-   - 모든 implementer(병렬/순차 모두) 완료 후 실행한다. `git diff`로 이번 sprint에서 변경된 전체 파일을 대상으로 한다.
+   - 모든 implementer(병렬/순차 모두) 완료 후 실행한다.
+   - common-module-writer 실행 직전에 `git rev-parse HEAD`로 sprint 시작 기준 SHA를 기록해두고, code-reviewer 호출 시 `SPRINT_BASE_SHA=<SHA>`로 전달한다. code-reviewer는 이 SHA를 기준으로 `git diff <SHA> HEAD --name-only`로 변경 파일 목록을 산정한다.
    - **LGTM**: 다음 단계로 진행한다.
    - **NEEDS_WORK**: implementer를 재실행해 지적 항목만 수정한다. 이후 code-reviewer를 한 번 더 실행한다.
    - 2회 루프 후에도 NEEDS_WORK이면 즉시 중단하고 사용자에게 보고한다:

@@ -18,7 +18,13 @@ sprint-builder가 다음 정보를 전달한다:
 
 ### 1단계: 변경 코드 파악
 
+sprint-builder가 `SPRINT_BASE_SHA`를 전달한 경우 해당 SHA를 기준으로 diff를 산정한다. 전달받지 못한 경우에만 fallback을 사용한다.
+
 ```bash
+# SPRINT_BASE_SHA가 전달된 경우 (우선)
+git diff --name-only ${SPRINT_BASE_SHA} HEAD 2>/dev/null
+
+# fallback: SHA 없을 때
 git diff --name-only HEAD~1 HEAD 2>/dev/null || git diff --name-only HEAD
 ```
 

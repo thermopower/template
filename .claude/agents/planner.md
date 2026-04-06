@@ -37,12 +37,12 @@ maxTurns: 40
    - usecase-writer → `docs/usecases/` (feature-list.json 초안 + prd.md + userflow.md 필요)
 6. **기존 코드베이스가 있으면** Explore 서브에이전트를 실행해 수정 대상 패턴이 프로젝트 전체에 얼마나 퍼져 있는지 파악한다. 신규 프로젝트면 SKIP한다.
 7. 다음 파일을 `.claude-state/`에 작성한다 (feature-list.json은 초안 보완):
-   - `product-spec.md` — 제품 목표, 핵심 사용자, 핵심 플로우, 범위, 제외 범위, 구현 레벨
+   - `product-spec.md` — **초안**. 제품 목표, 핵심 사용자, 핵심 플로우, 범위, 제외 범위, 구현 레벨을 기록한다. 폴더 구조·스택 상세는 8단계 stack-selector 완료 후 추가되므로 이 시점에는 비워두거나 "stack-selector 결과로 보완 예정"으로 표시한다.
    - `feature-list.json` — 4단계 초안에 나머지 필드(acceptance_criteria, verification_linkage, parallel_safe, depends_on) 보완
    - `sprint-plan.md` — feature 순서, sprint sequencing, 예상 리스크
 8. stack-selector 에이전트를 실행해 기술 스택 확정 및 프로필 스크립트를 생성한다.
    - stack-selector는 `docs/requirement.md`와 `docs/stack-whitelist.md`를 읽고 스택을 결정한다.
-   - 완료 후 `product-spec.md`의 비기능 요구사항 항목에 폴더 구조가 기록된다.
+   - 완료 후 stack-selector가 `product-spec.md`의 비기능 요구사항 항목에 확정된 스택과 폴더 구조를 직접 기록한다. product-spec.md의 최종본은 이 단계 이후에 완성된다.
 9. `sprint-contract.md` 초안을 작성한다.
    - `profile:` 필드: stack-selector가 결정한 `<stack>` 이름을 기입한다.
    - `sprint_number:` 필드: 이번 sprint 번호를 기입한다 (1부터 시작).

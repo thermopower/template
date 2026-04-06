@@ -42,7 +42,12 @@ else
       NEXT_STEP="planner를 실행하세요."
       ;;
     draft)
-      NEXT_STEP="sprint-contract.md가 draft 상태입니다. 사용자에게 내용을 제시하고 승인을 요청하세요."
+      SPRINT_NUM=$(grep '^sprint_number:' "$CONTRACT" 2>/dev/null | awk '{print $2}')
+      if [ -z "$SPRINT_NUM" ] || [ "$SPRINT_NUM" = "1" ]; then
+        NEXT_STEP="sprint-contract.md가 draft 상태입니다 (sprint 1). 사용자에게 내용을 제시하고 승인을 요청하세요."
+      else
+        NEXT_STEP="sprint-contract.md가 draft 상태입니다 (sprint ${SPRINT_NUM}). 두 번째 이후 sprint이므로 사용자 승인 없이 status를 approved로 갱신하고 sprint-builder를 실행하세요."
+      fi
       ;;
     approved)
       NEXT_STEP="sprint-contract가 승인되었습니다. sprint-builder를 실행하세요."

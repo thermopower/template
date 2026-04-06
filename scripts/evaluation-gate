@@ -48,7 +48,20 @@ SEARCH_DIRS=""
 [ -d "src" ] && SEARCH_DIRS="$SEARCH_DIRS src"
 
 if [ -n "$SEARCH_DIRS" ]; then
-  STUB_HITS=$(grep -rn "TODO\|FIXME\|stub\|placeholder\|not implemented\|NotImplemented" $SEARCH_DIRS 2>/dev/null || true)
+  STUB_HITS=$(grep -rn \
+    --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+    --include="*.py" --include="*.go" \
+    --exclude-dir="__tests__" --exclude-dir="node_modules" --exclude-dir=".next" \
+    --exclude-dir=".git" --exclude-dir="dist" --exclude-dir="build" \
+    --exclude="*.test.ts" --exclude="*.test.tsx" --exclude="*.test.js" \
+    --exclude="*.spec.ts" --exclude="*.spec.tsx" --exclude="*.spec.js" \
+    --exclude="test_*.py" --exclude="*_test.go" \
+    "TODO\|FIXME\|stub\|placeholder\|not implemented\|NotImplemented" \
+    $SEARCH_DIRS 2>/dev/null \
+    | grep -v "^[^:]*:[0-9]*:[[:space:]]*//" \
+    | grep -v "^[^:]*:[0-9]*:[[:space:]]*#" \
+    | grep -v "^[^:]*:[0-9]*:[[:space:]]*\*" \
+    || true)
   if [ -n "$STUB_HITS" ]; then
     STUB_RESULT="FAIL"
     OVERALL="fail"

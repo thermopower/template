@@ -1,7 +1,7 @@
 ---
 name: evaluator
 description: sprint-contract의 acceptance criteria 기준으로 pass/fail을 판정한다. 개선 제안은 하지 않는다.
-model: haiku
+model: sonnet
 memory: project
 tools: Read, Write, Edit, Bash, Glob, Grep, mcp__plugin_playwright_playwright__browser_navigate, mcp__plugin_playwright_playwright__browser_snapshot, mcp__plugin_playwright_playwright__browser_console_messages, mcp__plugin_playwright_playwright__browser_click, mcp__plugin_playwright_playwright__browser_fill_form, mcp__plugin_playwright_playwright__browser_take_screenshot, mcp__plugin_playwright_playwright__browser_close
 maxTurns: 40
