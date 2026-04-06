@@ -38,21 +38,32 @@ maxTurns: 40
        - 아키텍처: 프로덕션 수준 동일 (레이어드 아키텍처)
        - 로직: Happy path 위주, 엣지케이스 최소화
        - 테스트: smoke test만 (단위 테스트 생략 가능)
+
+   [3] Personal (개인 업무용)
+       - 보안: 인증/secret 분리 (업무 데이터 보호 최소선)
+       - 아키텍처: 평평한 구조 허용 (레이어 분리 생략 가능)
+       - 로직: Happy path만. 앱이 죽지 않을 정도의 에러 처리
+       - 테스트: 생략 (smoke test도 선택 사항)
+       - 설계 단계: prd/userflow/usecase/dataflow 생략, feature-list만 작성
+       - code-reviewer 루프: 생략
    ```
 
    선택한 레벨을 `product-spec.md`의 **구현 레벨** 항목에 기록하고, 이후 모든 sprint-contract의 acceptance criteria 작성 기준으로 삼는다.
 
    - **프로덕션 수준**: AC에 정상/경계/에러 케이스 3가지 모두 필수.
    - **Secure MVP**: AC에 정상 케이스 필수, 경계/에러 케이스는 "치명적인 것만" 포함.
+   - **Personal**: AC에 정상 케이스만. 경계/에러 케이스 생략.
 
-4. prd-writer 에이전트를 실행해 `docs/prd.md`를 생성한다.
-4. prd 완료 후 userflow-writer 에이전트를 실행해 `docs/userflow.md`를 생성한다.
-5. userflow 완료 후, **feature-list.json 초안**을 `.claude-state/feature-list.json`에 먼저 작성한다.
+4. **Personal 모드가 아닌 경우**: prd-writer 에이전트를 실행해 `docs/prd.md`를 생성한다.
+   **Personal 모드인 경우**: prd-writer, userflow-writer, dataflow-writer, usecase-writer를 모두 건너뛴다. 5단계로 바로 이동한다.
+4. **Personal 모드가 아닌 경우**: prd 완료 후 userflow-writer 에이전트를 실행해 `docs/userflow.md`를 생성한다.
+5. **feature-list.json 초안**을 `.claude-state/feature-list.json`에 먼저 작성한다.
    - 이 시점의 초안에는 `feature_id`, `name`, `status: pending` 만 포함한다.
    - 나머지 필드(`acceptance_criteria`, `verification_linkage`, `parallel_safe`, `depends_on`)는 7단계에서 보완한다.
    - 필드명 규칙: `feature_id` (id 아님), `depends_on` (dependencies 아님). 에이전트 전체가 이 이름을 사용한다.
    - usecase-writer가 feature_id를 참조하므로 이 파일을 먼저 생성해야 한다.
-6. feature-list.json 초안 완료 후, dataflow-writer와 usecase-writer를 **병렬로** 실행한다.
+   - **Personal 모드**: feature-list.json 작성 후 6단계를 건너뛰고 7단계로 이동한다.
+6. **Personal 모드가 아닌 경우**: feature-list.json 초안 완료 후, dataflow-writer와 usecase-writer를 **병렬로** 실행한다.
    - dataflow-writer → `docs/database.md` (prd.md + userflow.md 필요)
    - usecase-writer → `docs/usecases/` (feature-list.json 초안 + prd.md + userflow.md 필요)
 7. **기존 코드베이스가 있으면** Explore 서브에이전트를 실행해 수정 대상 패턴이 프로젝트 전체에 얼마나 퍼져 있는지 파악한다. 파악된 범위를 sprint 범위에 포함하거나 제외 항목으로 명시한다. 신규 프로젝트면 이 단계를 SKIP한다.
@@ -157,6 +168,7 @@ sprint-contract와 feature-list.json 작성 시 반드시 지킨다:
     - **에러 케이스**: 잘못된 입력, 권한 없음, 외부 서비스 실패, 네트워크 오류 시 처리 방식
     - 요구사항에 명시되지 않은 경계/에러 케이스도 도메인 상식 수준에서 planner가 직접 채운다. "요구사항에 없으므로 생략"은 금지.
   - **Secure MVP**: 각 기능의 AC에 정상 케이스는 필수. 경계/에러 케이스는 "데이터 손실, 보안 취약점, 앱 크래시"를 유발하는 것만 포함하고 나머지는 생략한다.
+  - **Personal**: 각 기능의 AC에 정상 케이스만 작성한다. 경계/에러 케이스는 생략한다. verification_linkage는 수동 확인("브라우저에서 직접 확인") 수준으로 작성해도 된다.
 - **데이터 변환 설계 명시 (범주형·파생 필드)**: 요구사항에 범주형 값(enum, 선택지, 코드값 등)이나 파생 필드(계산·변환·인코딩 결과)가 있으면, AC에 반드시 다음을 명시한다:
   - 어떤 값이 어떤 형태로 저장되는가 (DB 스키마 수준)
   - 저장된 값이 다음 단계(모델 학습, API 응답, UI 표시 등)에서 어떤 형태로 변환되는가

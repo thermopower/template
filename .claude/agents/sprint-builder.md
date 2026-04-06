@@ -17,6 +17,7 @@ maxTurns: 80
 1. `.claude-state/sprint-contract.md`를 읽는다.
 2. status가 `approved`인지 확인한다. approved가 아니면 중단하고 사용자에게 알린다.
 3. 이번 sprint 범위, done 정의, acceptance criteria를 숙지한다.
+3-a. `.claude-state/product-spec.md`의 **구현 레벨** 항목을 확인한다. `Personal`이면 이 문서 전체에서 "Personal 모드인 경우" 지시를 따른다.
 4. **계획을 비판적으로 검토한다**: 모순, 누락, 실행 불가능한 항목이 있으면 시작 전에 사용자에게 알린다.
 
 ## 실행 순서
@@ -42,7 +43,7 @@ maxTurns: 80
    - `parallel_safe: false` feature들은 `depends_on` 기반 위상 정렬 순서대로 **순차로** 실행한다. 선행 feature(`depends_on` 대상) 완료 후 다음 feature를 시작한다.
    - 병렬 implementer는 각자 `docs/features/{feature_id}/plan.md`만 참조하고 공통 모듈(`src/lib/`, `src/domain/` 등)을 수정하지 않는다. 공통 모듈 수정이 필요하면 즉시 중단하고 common-module-writer로 먼저 처리한 뒤 재개한다.
    - `parallel_safe: true` 조건 자체가 "출력 파일이 다른 feature와 겹치지 않음"을 보장하므로, 병렬 실행 중 git 파일 충돌은 발생하지 않는다. 별도 커밋을 강제할 필요 없다.
-5. code-reviewer 에이전트를 실행해 major 이상 문제를 확인한다.
+5. **Personal 모드가 아닌 경우**: code-reviewer 에이전트를 실행해 major 이상 문제를 확인한다.
    - 모든 implementer(병렬/순차 모두) 완료 후 실행한다. `git diff`로 이번 sprint에서 변경된 전체 파일을 대상으로 한다.
    - **LGTM**: 다음 단계로 진행한다.
    - **NEEDS_WORK**: implementer를 재실행해 지적 항목만 수정한다. 이후 code-reviewer를 한 번 더 실행한다.
@@ -53,7 +54,9 @@ maxTurns: 80
      필요한 결정: 수동 수정 또는 sprint 범위 조정
      ```
    - 루프 횟수는 sprint-builder 실행 컨텍스트 내 변수로 추적한다. 파일에 기록하지 않는다.
+   **Personal 모드인 경우**: code-reviewer를 건너뛰고 바로 6단계로 진행한다.
 6. `bash scripts/smoke`를 실행한다. 실패하면 완료로 처리하지 않고 문제를 수정한다.
+   - **Personal 모드인 경우**: smoke 실패 시 빌드 오류만 수정한다. lint/타입 오류는 앱 실행에 영향이 없으면 무시할 수 있다.
 7. stub/placeholder 잔존 여부를 확인한다 (테스트 파일·주석 제외):
    ```bash
    grep -rn \
