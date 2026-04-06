@@ -19,137 +19,41 @@ maxTurns: 40
 
 ## 실행 순서
 
-1. `docs/requirement.md`를 읽고 요구사항을 파악한다.
+1. `docs/requirement.md`를 읽고 요구사항 및 구현 레벨을 파악한다.
+   - `# 5. 구현 레벨` 항목을 확인한다. 없으면 사용자에게 requirement-writer를 먼저 실행하도록 안내하고 중단한다.
+   - 구현 레벨을 `product-spec.md`의 **구현 레벨** 항목에 기록하고, 이후 모든 sprint-contract의 AC 기준으로 삼는다.
 2. 요구사항이 비어 있으면 사용자에게 요구사항 작성을 요청하고 중단한다.
 2-a. `.claude-state/backlog.md`가 존재하면 읽어서 Critical/Major 미해결 항목을 파악하고, 이번 sprint 범위 후보에 포함할지 검토한다.
-3. **구현 레벨 선택**: 사용자에게 아래 두 옵션을 제시하고 선택을 받는다. 선택 전까지 다음 단계로 진행하지 않는다.
-
-   ```
-   구현 레벨을 선택해 주세요:
-
-   [1] 프로덕션 수준 (기본값)
-       - 보안: 인증/인가, input validation, secret 분리
-       - 아키텍처: 레이어드 아키텍처, 관심사 분리
-       - 로직: 에러 처리, 엣지케이스, 경계 조건 완전 처리
-       - 테스트: 단위/통합 테스트 포함
-
-   [2] Secure MVP (프로토타입)
-       - 보안: 프로덕션 수준 동일 (인증/인가, secret 분리)
-       - 아키텍처: 프로덕션 수준 동일 (레이어드 아키텍처)
-       - 로직: Happy path 위주, 엣지케이스 최소화
-       - 테스트: smoke test만 (단위 테스트 생략 가능)
-
-   [3] Personal (개인 업무용)
-       - 보안: 인증/secret 분리 (업무 데이터 보호 최소선)
-       - 아키텍처: 평평한 구조 허용 (레이어 분리 생략 가능)
-       - 로직: Happy path만. 앱이 죽지 않을 정도의 에러 처리
-       - 테스트: 생략 (smoke test도 선택 사항)
-       - 설계 단계: prd/userflow/usecase/dataflow 생략, feature-list만 작성
-       - code-reviewer 루프: 생략
-   ```
-
-   선택한 레벨을 `product-spec.md`의 **구현 레벨** 항목에 기록하고, 이후 모든 sprint-contract의 acceptance criteria 작성 기준으로 삼는다.
-
-   - **프로덕션 수준**: AC에 정상/경계/에러 케이스 3가지 모두 필수.
-   - **Secure MVP**: AC에 정상 케이스 필수, 경계/에러 케이스는 "치명적인 것만" 포함.
-   - **Personal**: AC에 정상 케이스만. 경계/에러 케이스 생략.
-
-4. **Personal 모드가 아닌 경우**: prd-writer 에이전트를 실행해 `docs/prd.md`를 생성한다.
-   **Personal 모드인 경우**: prd-writer, userflow-writer, dataflow-writer, usecase-writer를 모두 건너뛴다. 5단계로 바로 이동한다.
-4. **Personal 모드가 아닌 경우**: prd 완료 후 userflow-writer 에이전트를 실행해 `docs/userflow.md`를 생성한다.
-5. **feature-list.json 초안**을 `.claude-state/feature-list.json`에 먼저 작성한다.
+3. **Personal 모드가 아닌 경우**: prd-writer 에이전트를 실행해 `docs/prd.md`를 생성한다.
+   prd 완료 후 userflow-writer 에이전트를 실행해 `docs/userflow.md`를 생성한다.
+   **Personal 모드인 경우**: prd-writer, userflow-writer, dataflow-writer, usecase-writer를 건너뛰고 4단계로 이동한다.
+4. **feature-list.json 초안**을 `.claude-state/feature-list.json`에 먼저 작성한다.
    - 이 시점의 초안에는 `feature_id`, `name`, `status: pending` 만 포함한다.
-   - 나머지 필드(`acceptance_criteria`, `verification_linkage`, `parallel_safe`, `depends_on`)는 7단계에서 보완한다.
+   - 나머지 필드(`acceptance_criteria`, `verification_linkage`, `parallel_safe`, `depends_on`)는 6단계에서 보완한다.
    - 필드명 규칙: `feature_id` (id 아님), `depends_on` (dependencies 아님). 에이전트 전체가 이 이름을 사용한다.
    - usecase-writer가 feature_id를 참조하므로 이 파일을 먼저 생성해야 한다.
-   - **Personal 모드**: feature-list.json 작성 후 6단계를 건너뛰고 7단계로 이동한다.
-6. **Personal 모드가 아닌 경우**: feature-list.json 초안 완료 후, dataflow-writer와 usecase-writer를 **병렬로** 실행한다.
+5. **Personal 모드가 아닌 경우**: feature-list.json 초안 완료 후, dataflow-writer와 usecase-writer를 **병렬로** 실행한다.
    - dataflow-writer → `docs/database.md` (prd.md + userflow.md 필요)
    - usecase-writer → `docs/usecases/` (feature-list.json 초안 + prd.md + userflow.md 필요)
-7. **기존 코드베이스가 있으면** Explore 서브에이전트를 실행해 수정 대상 패턴이 프로젝트 전체에 얼마나 퍼져 있는지 파악한다. 파악된 범위를 sprint 범위에 포함하거나 제외 항목으로 명시한다. 신규 프로젝트면 이 단계를 SKIP한다.
-8. 다음 파일을 `.claude-state/`에 작성한다 (feature-list.json은 초안 보완):
-   - `product-spec.md` — 제품 목표, 핵심 사용자, 핵심 플로우, 범위, 제외 범위
-   - `feature-list.json` — 5단계 초안에 나머지 필드(acceptance_criteria, verification_linkage, parallel_safe, depends_on) 보완
+6. **기존 코드베이스가 있으면** Explore 서브에이전트를 실행해 수정 대상 패턴이 프로젝트 전체에 얼마나 퍼져 있는지 파악한다. 신규 프로젝트면 SKIP한다.
+7. 다음 파일을 `.claude-state/`에 작성한다 (feature-list.json은 초안 보완):
+   - `product-spec.md` — 제품 목표, 핵심 사용자, 핵심 플로우, 범위, 제외 범위, 구현 레벨
+   - `feature-list.json` — 4단계 초안에 나머지 필드(acceptance_criteria, verification_linkage, parallel_safe, depends_on) 보완
    - `sprint-plan.md` — feature 순서, sprint sequencing, 예상 리스크
-9. 요구사항에서 기술 스택을 결정하고, `src/` 아래 레이어드 아키텍처 폴더 구조를 확정한다.
-   - **시작 전 `docs/stack-whitelist.md`를 읽는다.** 화이트리스트를 참조해 각 카테고리(ORM, 상태관리, 폼 검증 등)에서 라이브러리를 선택한다.
-   - requirement.md에 `(화이트리스트 외)` 표시가 있는 항목은 sprint-contract의 `non_whitelist_libs` 필드에 기록하고 사유를 명시한다.
-   - 화이트리스트에 없는 라이브러리가 필요한 경우, 사용자에게 사유를 설명하고 명시적 승인을 받은 뒤 진행한다.
-   - 앱 코드는 항상 `src/` 아래에 위치한다.
-   - 폴더명은 스택 관행을 따르되, `.ruler/AGENTS.md`의 Folder Structure 표를 기준으로 각 폴더가 어느 레이어(Presentation/Application/Domain/Infrastructure)에 해당하는지 명시한다.
-   - 확정된 폴더 구조를 `product-spec.md`의 비기능 요구사항 항목에 기록한다.
-   - 이후 `profiles/<stack>/scripts/` 아래 세 스크립트를 생성한다.
-   - 이미 존재하는 스크립트는 덮어쓰지 않는다.
-   - 스크립트는 실행 가능해야 하므로 내용은 아래 **프로필 스크립트 작성 규칙**을 따른다.
-   - 생성 후 `scripts/` 루트에도 복사한다 (`cp profiles/<stack>/scripts/smoke scripts/smoke` 등). 훅(check-smoke.sh)과 evaluator는 `scripts/` 루트를 직접 참조하기 때문이다.
-   - **복사 규칙**: `scripts/` 루트에 파일이 없거나, `sprint-contract.md`의 `profile:` 값이 직전 sprint와 달라진 경우 덮어쓴다. 동일한 프로필의 연속 sprint에서는 기존 파일을 보존한다 (사용자 커스터마이징 보존).
-   - 덮어쓰기 발생 시 로그에 "프로필 변경으로 scripts/ 덮어쓰기" 메시지를 출력한다.
-10. `sprint-contract.md` 초안을 작성한다.
-   - `profile:` 필드: 8단계에서 결정한 `<stack>` 이름을 기입한다.
+8. stack-selector 에이전트를 실행해 기술 스택 확정 및 프로필 스크립트를 생성한다.
+   - stack-selector는 `docs/requirement.md`와 `docs/stack-whitelist.md`를 읽고 스택을 결정한다.
+   - 완료 후 `product-spec.md`의 비기능 요구사항 항목에 폴더 구조가 기록된다.
+9. `sprint-contract.md` 초안을 작성한다.
+   - `profile:` 필드: stack-selector가 결정한 `<stack>` 이름을 기입한다.
    - `sprint_number:` 필드: 이번 sprint 번호를 기입한다 (1부터 시작).
    - `fix_attempt: 0` 필드: **반드시 포함한다.** integration-fixer SubagentStop 훅이 이 값을 증가시키며, 새 sprint마다 0으로 초기화해야 카운트가 누적되지 않는다.
    - 이번 sprint 범위
    - done 정의
-   - acceptance criteria
+   - acceptance criteria (구현 레벨 기준 적용)
    - 제외 항목
    - 검증 계획
-11. **첫 번째 sprint(`sprint_number: 1`)인 경우**: sprint-contract 내용을 사용자에게 제시하고 승인을 요청한다. 승인을 받으면 status를 approved로 갱신한다. 승인 없이 sprint-builder를 실행하지 않는다.
+10. **첫 번째 sprint(`sprint_number: 1`)인 경우**: sprint-contract 내용을 사용자에게 제시하고 승인을 요청한다. 승인을 받으면 status를 approved로 갱신한다. 승인 없이 sprint-builder를 실행하지 않는다.
     **두 번째 이후 sprint인 경우**: 사용자에게 묻지 않고 즉시 status를 approved로 갱신한다. sprint-contract 요약만 출력한다.
-
-## 프로필 스크립트 작성 규칙
-
-세 파일 `profiles/<stack>/scripts/smoke`, `unit`, `e2e`를 bash 스크립트로 작성한다.
-
-### smoke
-- 빌드 성공 여부와 타입 체크를 검증한다.
-- 실패 시 exit 1, 성공 시 exit 0.
-- 예시 (nextjs-supabase):
-  ```bash
-  #!/usr/bin/env bash
-  set -e
-  echo "[smoke] lint..."
-  npm run lint
-  echo "[smoke] type check..."
-  npx tsc --noEmit
-  echo "[smoke] build..."
-  npm run build
-  echo "[smoke] PASS"
-  ```
-
-### unit
-- 프로젝트의 단위 테스트를 실행한다.
-- 테스트 파일이 없으면 SKIP(exit 0)으로 처리해 CI를 막지 않는다.
-- 예시 (nextjs-supabase, vitest):
-  ```bash
-  #!/usr/bin/env bash
-  if ! find . -name "*.test.*" -not -path "*/node_modules/*" | grep -q .; then
-    echo "[unit] SKIP - 테스트 파일 없음"
-    exit 0
-  fi
-  npx vitest run
-  ```
-
-### e2e
-- E2E 테스트를 실행한다.
-- 테스트 파일이 없으면 SKIP(exit 0).
-- 예시 (nextjs-supabase, playwright):
-  ```bash
-  #!/usr/bin/env bash
-  if ! find . -name "*.spec.*" -not -path "*/node_modules/*" | grep -q .; then
-    echo "[e2e] SKIP - 테스트 파일 없음"
-    exit 0
-  fi
-  npx playwright test
-  ```
-
-### 스택별 판단 기준
-| 요구사항 키워드 | profile 이름 | smoke (lint→type→build) | 단위 테스트 | E2E |
-|---|---|---|---|---|
-| Next.js + Supabase | nextjs-supabase | `npm run lint` + `tsc --noEmit` + `npm run build` | vitest | playwright |
-| Next.js (단독) | nextjs | `npm run lint` + `tsc --noEmit` + `npm run build` | vitest | playwright |
-| React + Vite | react-vite | `npm run lint` + `npm run build` | vitest | playwright |
-| Python FastAPI | fastapi | `ruff check` + `python -m py_compile` | pytest | httpx |
-| 판단 불가 | generic | `npm run build` (있으면) | SKIP | SKIP |
 
 ## 구현 계획 품질 기준 (writing-plans 흡수)
 

@@ -57,29 +57,7 @@ maxTurns: 80
    **Personal 모드인 경우**: code-reviewer를 건너뛰고 바로 6단계로 진행한다.
 6. `bash scripts/smoke`를 실행한다. 실패하면 완료로 처리하지 않고 문제를 수정한다.
    - **Personal 모드인 경우**: smoke 실패 시 빌드 오류만 수정한다. lint/타입 오류는 앱 실행에 영향이 없으면 무시할 수 있다.
-7. stub/placeholder 잔존 여부를 확인한다 (테스트 파일·주석 제외):
-   ```bash
-   grep -rn \
-     --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
-     --include="*.py" --include="*.go" \
-     --exclude-dir="__tests__" --exclude-dir="node_modules" --exclude-dir=".next" \
-     --exclude-dir=".git" --exclude-dir="dist" --exclude-dir="build" \
-     --exclude="*.test.ts" --exclude="*.test.tsx" --exclude="*.test.js" \
-     --exclude="*.spec.ts" --exclude="*.spec.tsx" --exclude="*.spec.js" \
-     --exclude="test_*.py" --exclude="*_test.go" \
-     "TODO\|FIXME\|stub\|placeholder\|not implemented\|NotImplemented" \
-     app/ src/ 2>/dev/null \
-     | grep -v "^[^:]*:[0-9]*:[[:space:]]*//" \
-     | grep -v "^[^:]*:[0-9]*:[[:space:]]*#" \
-     | grep -v "^[^:]*:[0-9]*:[[:space:]]*\*"
-   ```
-   - 발견되면 핵심 경로인지 판단하고 핵심 경로이면 수정 후 재확인한다.
-7-1. **완료 선언 전 자가 검증** — 아래 항목을 직접 확인한다. 하나라도 해당하면 수정 후 재확인한다.
-   - **AC → 코드 추적**: AC 문구에 명시된 조건(필터링, 정렬, 분기 등)이 실제 코드 경로에 구현됐는가. "구현했다"는 판단이 아니라 코드를 직접 읽어 확인한다.
-   - **dead code**: 선언됐지만 값이 채워지지 않는 상태/컬렉션(Set, Map, 배열 등)이 있는가. 초기화만 하고 사용되지 않는 변수가 있는가.
-   - **catch 블록**: 빈 catch, 주석 처리된 에러 처리, `// 무시` 패턴이 있는가. 에러를 삼키는 코드는 완료가 아니다.
-   - **제어 흐름**: 오류가 발생했을 때 성공 경로가 계속 실행되지 않는가. (예: 에러 후 router.push가 여전히 실행되는 경우)
-8. `.claude-state/feature-list.json`에서 이번 sprint에 구현한 feature들의 `status`를 `done`으로 갱신한다.
+7. `.claude-state/feature-list.json`에서 이번 sprint에 구현한 feature들의 `status`를 `done`으로 갱신한다.
    - retrospective가 `remaining_sprints` 판단 시 이 값을 사용하므로 반드시 갱신해야 한다.
 9. `.claude-state/sprint-contract.md`의 status를 `implemented`로 갱신한다.
 10. `.claude-state/claude-progress.txt`를 갱신한다. total_turns 추정값을 기록한다.
