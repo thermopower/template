@@ -50,9 +50,11 @@ class TestOpenCodeAdapter:
     def test_capabilities(self):
         adapter = OpenCodeAdapter()
         caps = adapter.capabilities
-        assert caps.supports_sub_agents is False
-        assert caps.supports_mcp is False
-        assert caps.max_context_window == 32_000
+        assert caps.supports_sub_agents is True
+        assert caps.supports_mcp is True
+        assert caps.max_context_window == 200_000
+        assert "file:edit" in caps.supported_tools
+        assert "agent:invoke" in caps.supported_tools
 
 
 class TestAdapterRegistration:

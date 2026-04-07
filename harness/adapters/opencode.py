@@ -1,12 +1,12 @@
-"""OpenCodeInterpreter adapter.
+"""OpenCode adapter — wraps the `opencode` CLI (opencode.ai).
 
-Wraps OpenCodeInterpreter for code-generation agents (implementer,
-common-module-writer). Uses the tool abstraction layer for file I/O
-since OCI may not have native file editing like Claude Code.
+OpenCode is a Go-based terminal AI coding agent that supports 75+ LLM
+providers. It has its own agent system (.opencode/agents/), MCP support,
+and non-interactive mode (`opencode run -p "prompt"`).
 
-Supports two modes:
-1. API mode: Direct HTTP calls to an OCI server
-2. CLI mode: Subprocess invocation of an OCI command
+Two execution modes:
+1. CLI mode: `opencode run -p "prompt"` (non-interactive)
+2. Headless mode: `opencode serve` → HTTP API → `opencode run --attach`
 """
 
 from __future__ import annotations
@@ -26,27 +26,36 @@ from harness.adapters.base import (
 )
 from harness.agents.loader import load_agent_spec
 from harness.prompt_builder import PromptBuilder
-from harness.tools.registry import create_tool_registry
 
 logger = logging.getLogger(__name__)
 
+# Default headless server port
+DEFAULT_SERVE_URL = "http://localhost:4096"
+
 
 class OpenCodeAdapter(ModelAdapter):
-    """Adapter for OpenCodeInterpreter.
+    """Adapter for OpenCode (opencode.ai).
 
-    Best suited for coding agents (implementer, common-module-writer).
-    The orchestrator handles sub-agent orchestration since OCI doesn't
-    support agent nesting.
+    OpenCode is a terminal AI coding agent similar to Claude Code.
+    Key differences:
+    - Supports 75+ LLM providers (GPT, Gemini, local models)
+    - Has its own .opencode/agents/ system (markdown-based)
+    - Supports MCP servers
+    - Non-interactive mode: `opencode run -p "prompt" -f json`
+
+    Best for all agent types since OpenCode has full file editing,
+    shell access, and agent capabilities — unlike OpenCodeInterpreter
+    which is limited to code generation.
     """
 
     def __init__(
         self,
         prompts_dir: str = "harness/prompts",
-        server_url: str | None = None,
+        serve_url: str | None = None,
     ) -> None:
         self._prompts_dir = prompts_dir
-        self._server_url = server_url or os.environ.get(
-            "OPENCODE_SERVER_URL", "http://localhost:8080"
+        self._serve_url = serve_url or os.environ.get(
+            "OPENCODE_SERVE_URL", DEFAULT_SERVE_URL
         )
 
     @property
@@ -56,36 +65,47 @@ class OpenCodeAdapter(ModelAdapter):
     @property
     def capabilities(self) -> AdapterCapabilities:
         return AdapterCapabilities(
-            supports_sub_agents=False,
-            supports_parallel=False,
-            supports_mcp=False,
-            supports_memory=False,
-            supports_isolation=False,
-            max_context_window=32_000,
-            supported_tools=["file:read", "file:write", "shell:exec"],
+            supports_sub_agents=True,   # .opencode/agents/ 지원
+            supports_parallel=False,    # 오케스트레이터에서 병렬 관리
+            supports_mcp=True,          # MCP 서버 지원
+            supports_memory=False,      # 세션 간 메모리 없음
+            supports_isolation=False,   # worktree 격리 미지원
+            max_context_window=200_000, # 프로바이더에 따라 다름
+            supported_tools=[
+                "file:read",
+                "file:write",
+                "file:edit",
+                "file:search",
+                "code:search",
+                "shell:exec",
+                "agent:invoke",
+            ],
         )
 
     async def check_available(self) -> bool:
-        """Check if OCI server is reachable or CLI is installed."""
-        # Check CLI
-        if shutil.which("opencode") or shutil.which("open-interpreter"):
-            return True
-        # Check server
-        try:
-            import urllib.request
-
-            req = urllib.request.Request(
-                f"{self._server_url}/health", method="GET"
-            )
-            urllib.request.urlopen(req, timeout=3)
-            return True
-        except Exception:
-            return False
+        """Check if `opencode` CLI is installed."""
+        return shutil.which("opencode") is not None
 
     async def run_agent(
         self, agent_name: str, context: AgentContext
     ) -> AgentResult:
-        # Build prompt with context files
+        opencode_bin = shutil.which("opencode")
+        if opencode_bin is None:
+            return AgentResult(
+                success=False,
+                error="'opencode' CLI not found in PATH. Install from https://opencode.ai/",
+            )
+
+        # Build the prompt
+        prompt = self._build_prompt(agent_name, context)
+
+        # Try headless (attach) mode first, fall back to direct run
+        if await self._headless_available():
+            return await self._run_attach(opencode_bin, prompt, context)
+        return await self._run_direct(opencode_bin, prompt, context)
+
+    def _build_prompt(self, agent_name: str, context: AgentContext) -> str:
+        """Build full prompt from prompt_builder + context message."""
         spec = load_agent_spec(agent_name)
         prompt_builder = PromptBuilder(self._prompts_dir)
         system_prompt = prompt_builder.build(agent_name, adapter_name="opencode")
@@ -93,109 +113,101 @@ class OpenCodeAdapter(ModelAdapter):
         if not system_prompt and spec:
             system_prompt = spec.description
 
-        # Inject relevant state file contents into the prompt
-        tool_registry = create_tool_registry(cwd=context.project_dir)
-        enriched_prompt = await self._enrich_prompt(
-            system_prompt, context, spec, tool_registry
-        )
+        parts = []
+        if system_prompt:
+            parts.append(system_prompt)
+        if context.message:
+            parts.append(context.message)
 
-        full_prompt = f"{enriched_prompt}\n\n---\n\n{context.message}"
+        return "\n\n---\n\n".join(parts) if parts else f"Run {agent_name} agent."
 
-        # Try API mode first, fall back to CLI
-        if await self._try_api(full_prompt, context):
-            return await self._run_api(full_prompt, context)
-        return await self._run_cli(full_prompt, context)
-
-    async def _enrich_prompt(
-        self, base_prompt: str, context: AgentContext, spec: Any, registry: dict
-    ) -> str:
-        """Read input files and inject their contents into the prompt."""
-        if spec is None or not spec.inputs:
-            return base_prompt
-
-        file_reader = registry.get("file:read")
-        if file_reader is None:
-            return base_prompt
-
-        sections = [base_prompt]
-        for input_path in spec.inputs:
-            result = await file_reader.execute(
-                path=os.path.join(context.project_dir, input_path)
-            )
-            if result.success and result.output.strip():
-                sections.append(f"\n## {input_path}\n```\n{result.output}\n```")
-
-        return "\n".join(sections)
-
-    async def _try_api(self, prompt: str, context: AgentContext) -> bool:
-        """Check if API mode is available."""
+    async def _headless_available(self) -> bool:
+        """Check if an OpenCode headless server is running."""
         try:
             import urllib.request
 
             req = urllib.request.Request(
-                f"{self._server_url}/health", method="GET"
+                f"{self._serve_url}/health", method="GET"
             )
             urllib.request.urlopen(req, timeout=2)
             return True
         except Exception:
             return False
 
-    async def _run_api(
-        self, prompt: str, context: AgentContext
+    async def _run_attach(
+        self, opencode_bin: str, prompt: str, context: AgentContext
     ) -> AgentResult:
-        """Run via OCI HTTP API."""
-        try:
-            import urllib.request
+        """Run via headless server: `opencode run --attach <url> -p "prompt"`."""
+        cmd = [
+            opencode_bin,
+            "run",
+            "--attach",
+            self._serve_url,
+            "-p",
+            prompt,
+            "-f",
+            "json",
+            "-q",
+        ]
 
-            payload = json.dumps({
-                "prompt": prompt,
-                "working_directory": context.project_dir,
-            }).encode("utf-8")
+        return await self._execute_cmd(cmd, context)
 
-            req = urllib.request.Request(
-                f"{self._server_url}/generate",
-                data=payload,
-                headers={"Content-Type": "application/json"},
-                method="POST",
-            )
-            with urllib.request.urlopen(req, timeout=300) as resp:
-                result = json.loads(resp.read().decode("utf-8"))
-
-            return AgentResult(
-                success=True,
-                output=result.get("output", ""),
-                files_changed=result.get("files_changed", []),
-            )
-        except Exception as e:
-            logger.exception("OCI API error")
-            return AgentResult(success=False, error=str(e))
-
-    async def _run_cli(
-        self, prompt: str, context: AgentContext
+    async def _run_direct(
+        self, opencode_bin: str, prompt: str, context: AgentContext
     ) -> AgentResult:
-        """Run via OCI CLI (open-interpreter or similar)."""
-        cli = shutil.which("opencode") or shutil.which("open-interpreter")
-        if cli is None:
-            return AgentResult(
-                success=False,
-                error="Neither 'opencode' nor 'open-interpreter' CLI found, and API server not reachable.",
-            )
+        """Run directly: `opencode run -p "prompt" -f json -q`."""
+        cmd = [
+            opencode_bin,
+            "run",
+            "-p",
+            prompt,
+            "-f",
+            "json",
+            "-q",  # quiet mode (no spinner, for scripts)
+        ]
+
+        return await self._execute_cmd(cmd, context)
+
+    async def _execute_cmd(
+        self, cmd: list[str], context: AgentContext
+    ) -> AgentResult:
+        """Execute an opencode CLI command and parse results."""
+        logger.info("Running: %s", " ".join(cmd[:5]) + " ...")
 
         proc = await asyncio.create_subprocess_exec(
-            cli,
-            "--non-interactive",
-            "--message",
-            prompt,
+            *cmd,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
             cwd=context.project_dir,
         )
-        stdout, stderr = await proc.communicate()
+        stdout_bytes, stderr_bytes = await proc.communicate()
+        stdout = stdout_bytes.decode("utf-8", errors="replace")
+        stderr = stderr_bytes.decode("utf-8", errors="replace")
+
         exit_code = proc.returncode or 0
+        success = exit_code == 0
+
+        if not success:
+            logger.warning(
+                "opencode exited with code %d: %s", exit_code, stderr[:500]
+            )
+
+        # Try to parse JSON output (from -f json flag)
+        output_text = stdout
+        files_changed: list[str] = []
+
+        try:
+            parsed = json.loads(stdout)
+            if isinstance(parsed, dict):
+                output_text = parsed.get("output", parsed.get("text", stdout))
+                files_changed = parsed.get("files_changed", [])
+        except (json.JSONDecodeError, TypeError):
+            pass
 
         return AgentResult(
-            success=exit_code == 0,
-            output=stdout.decode("utf-8", errors="replace"),
+            success=success,
+            output=output_text,
             exit_code=exit_code,
-            error=stderr.decode("utf-8", errors="replace") if exit_code != 0 else None,
+            error=stderr if not success else None,
+            files_changed=files_changed,
         )
