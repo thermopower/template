@@ -52,7 +52,21 @@ maxTurns: 40
    - acceptance criteria (구현 레벨 기준 적용)
    - 제외 항목
    - 검증 계획
-10. **첫 번째 sprint(`sprint_number: 1`)인 경우**: sprint-contract 내용을 사용자에게 제시하고 승인을 요청한다. 승인을 받으면 status를 approved로 갱신한다. 승인 없이 sprint-builder를 실행하지 않는다.
+10. **첫 번째 sprint(`sprint_number: 1`)인 경우**:
+    1. 먼저 **전체 스프린트 로드맵 요약**을 사용자에게 제시한다. `sprint-plan.md`와 `feature-list.json`을 기반으로 아래 형식의 테이블을 출력한다:
+       ```
+       ## 전체 스프린트 로드맵
+
+       > 모든 요구사항은 아래 일정에 걸쳐 구현됩니다. 이번 승인 대상은 Sprint 1입니다.
+
+       | Sprint | 주요 기능 | 포함 Feature |
+       |--------|----------|-------------|
+       | Sprint 1 (승인 대상) | 기능 A, 기능 B | F001, F002 |
+       | Sprint 2 | 기능 C, 기능 D | F003, F004 |
+       | Sprint 3 | 기능 E | F005 |
+       ```
+    2. 로드맵 테이블 아래에 sprint-contract 내용을 제시하고 승인을 요청한다.
+    3. 승인을 받으면 status를 approved로 갱신한다. 승인 없이 sprint-builder를 실행하지 않는다.
     **두 번째 이후 sprint인 경우**: 사용자에게 묻지 않고 즉시 status를 approved로 갱신한다. sprint-contract 요약만 출력한다.
 
 ## 구현 계획 품질 기준 (writing-plans 흡수)

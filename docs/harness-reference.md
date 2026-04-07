@@ -62,7 +62,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 | 에이전트 | 모델 | maxTurns | 특이 설정 | 역할 | 흡수한 스킬 | 금지 |
 |---|---|---|---|---|---|---|
 | **requirement-writer** | sonnet | 20 | WebSearch | 사용자 인터뷰→docs/requirement.md 작성. 섹션 순서: 목표→(자동 리서치)→기능→스택→구현 레벨 선택. 섹션 1 완료 직후 WebSearch 2회 이내로 유사 서비스 자동 조사 후 기능 명세에 반영. 구현 레벨([1]프로덕션 [2]Secure MVP [3]Personal)을 requirement.md #5에 기록. 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리, WebSearch 3회 이상 |
-| **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안 오케스트레이션. requirement.md에서 구현 레벨 읽기. Personal 모드는 prd/userflow/usecase/dataflow 생략, feature-list만 작성. prd/userflow 병렬, dataflow/usecase 병렬(Personal 제외). stack-selector 호출로 스택 확정. feature-list.json에 parallel_safe 필드 포함. | `writing-plans` | 구현, 구현 레벨 사용자에게 다시 묻기, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물 |
+| **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안 오케스트레이션. requirement.md에서 구현 레벨 읽기. Personal 모드는 prd/userflow/usecase/dataflow 생략, feature-list만 작성. prd/userflow 병렬, dataflow/usecase 병렬(Personal 제외). stack-selector 호출로 스택 확정. feature-list.json에 parallel_safe 필드 포함. 첫 sprint 승인 시 전체 로드맵 요약 테이블을 먼저 출력. | `writing-plans` | 구현, 구현 레벨 사용자에게 다시 묻기, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물 |
 | **stack-selector** | sonnet | 15 | — | requirement.md + stack-whitelist.md 읽고 스택 결정. 프로필 스크립트(smoke/unit/e2e) 생성. product-spec.md에 폴더 구조 기록. planner가 내부 호출. | — | 구현 코드 작성, 사용자에게 스택 재질문, 기존 스크립트 덮어쓰기 |
 | **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 오케스트레이션만. common-module → plan-writer(병렬) → implementer(parallel_safe 기준 병렬/순차) → code-reviewer 루프 → smoke 순서로 서브에이전트 호출. Personal 모드: code-reviewer 생략. | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회, stub 검사 직접 수행 |
 | **code-reviewer** | sonnet | 20 | — | sprint 내부 코드 품질 리뷰. major 이상만 피드백(테스트 품질·구현 누락·패턴 잔존·런타임 오류). LGTM 또는 NEEDS_WORK 반환. minor 언급 금지. | — | minor 지적, 리팩터링 제안, 범위 확장 요구, stub/AC 검증(evaluator 역할) |
@@ -150,7 +150,7 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 
 **원칙: 요구사항 승인 한 번 → 완성품이 나올 때까지 자동 진행**
 
-1. **첫 번째 sprint-contract**: 범위 제시 → 승인 후에만 sprint-builder 시작. 이후 sprint는 자동 승인.
+1. **첫 번째 sprint-contract**: 전체 스프린트 로드맵 요약 테이블을 먼저 제시한 뒤 Sprint 1 범위 제시 → 승인 후에만 sprint-builder 시작. 이후 sprint는 자동 승인.
 2. **수정 sprint 2회 초과**: evaluation fail 후 fix_attempt ≥ 2이면 [BLOCKER] 보고 후 중단.
 3. **policy-updater 완료 후**: 개정안 diff 제시 → 승인 후에만 파일 적용.
 
