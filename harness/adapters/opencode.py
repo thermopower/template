@@ -2,11 +2,17 @@
 
 OpenCode is a Go-based terminal AI coding agent that supports 75+ LLM
 providers. It has its own agent system (.opencode/agents/), MCP support,
-and non-interactive mode (`opencode run -p "prompt"`).
+and non-interactive mode.
+
+CLI flags (global):
+  -p, --prompt    Run single prompt non-interactively
+  -f, --output-format  Output format (text, json)
+  -q, --quiet     Hide spinner in non-interactive mode
+  -c, --cwd       Set working directory
 
 Two execution modes:
-1. CLI mode: `opencode run -p "prompt"` (non-interactive)
-2. Headless mode: `opencode serve` → HTTP API → `opencode run --attach`
+1. CLI mode: `opencode -p "prompt" -f json -q` (non-interactive)
+2. Headless mode: `opencode serve` → `opencode attach --port <port>`
 """
 
 from __future__ import annotations
@@ -137,12 +143,14 @@ class OpenCodeAdapter(ModelAdapter):
     async def _run_attach(
         self, opencode_bin: str, prompt: str, context: AgentContext
     ) -> AgentResult:
-        """Run via headless server: `opencode run --attach <url> -p "prompt"`."""
+        """Run via headless server: `opencode attach` + prompt."""
+        # Parse port from serve URL
+        port = self._serve_url.rsplit(":", 1)[-1] if ":" in self._serve_url else "4096"
         cmd = [
             opencode_bin,
-            "run",
-            "--attach",
-            self._serve_url,
+            "attach",
+            "--port",
+            port,
             "-p",
             prompt,
             "-f",
@@ -155,15 +163,19 @@ class OpenCodeAdapter(ModelAdapter):
     async def _run_direct(
         self, opencode_bin: str, prompt: str, context: AgentContext
     ) -> AgentResult:
-        """Run directly: `opencode run -p "prompt" -f json -q`."""
+        """Run directly: `opencode -p "prompt" -f json -q`.
+
+        -p is a global flag, not a subcommand flag.
+        """
         cmd = [
             opencode_bin,
-            "run",
             "-p",
             prompt,
             "-f",
             "json",
             "-q",  # quiet mode (no spinner, for scripts)
+            "-c",
+            context.project_dir,  # set working directory
         ]
 
         return await self._execute_cmd(cmd, context)
