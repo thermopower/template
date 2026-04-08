@@ -24,6 +24,7 @@
 5. 앱이 실제로 동작하는지 **Playwright MCP**로 브라우저 검증한다.
    - `mcp__plugin_playwright_playwright__browser_navigate`로 앱에 접속한다.
    - acceptance criteria의 핵심 user flow를 직접 실행한다 (클릭, 폼 입력 등).
+   - 네비게이션 링크(Sidebar, redirect, 버튼)를 클릭한 뒤 실제 이동 URL이 의도한 라우트인지 확인한다. 404 또는 `/dashboard` 같은 route group 폴더명이 URL에 그대로 노출되면 fail로 처리한다.
    - `mcp__plugin_playwright_playwright__browser_console_messages`로 콘솔 에러 여부를 확인한다.
    - 검증 결과(스크린샷 포함)를 evaluation-report.md에 기록한다.
    - **앱이 실행되지 않은 상태라면 SKIP이 아니라 fail로 처리한다.** 브라우저로 접속을 시도하고 실패하면 blocker로 기록하고 status: fail을 판정한다. "앱 미실행"은 acceptance criteria 미충족과 동일하다.
