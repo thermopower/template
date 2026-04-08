@@ -8,10 +8,7 @@
 4. `src/` 아래 레이어드 아키텍처 폴더 구조를 확정한다.
    - Personal 모드인 경우: 평평한 구조 허용. `src/` 아래 `components/`, `lib/`, `pages/` 수준으로 단순화할 수 있다.
    - 프로덕션/Secure MVP: `.ruler/AGENTS.md`의 Folder Structure 표 기준으로 각 폴더의 레이어를 명시한다.
-   - **Next.js App Router 사용 시**: route group `(name)` 폴더는 URL에 포함되지 않는다. 폴더 구조 기록 시 각 `page.tsx`의 실제 URL을 주석으로 명시한다.
-     예: `(dashboard)/page.tsx  # URL: /`
-         `(dashboard)/assessments/page.tsx  # URL: /assessments`
-     리다이렉트 경로와 Sidebar href는 이 실제 URL을 기준으로 작성한다.
+
 5. `product-spec.md`의 비기능 요구사항 항목에 확정된 스택과 폴더 구조를 기록한다.
 6. `profiles/<stack>/scripts/` 아래 세 스크립트를 생성한다.
    - 이미 존재하는 스크립트는 덮어쓰지 않는다.
