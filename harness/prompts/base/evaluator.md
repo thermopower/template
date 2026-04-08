@@ -53,6 +53,19 @@
   - catch 블록: 빈 catch, 에러를 삼키는 패턴이 있는가
   - 제어 흐름: 오류 발생 시 성공 경로가 계속 실행되지 않는가
 
+## 타입 안전성 회귀 검사 (5번 항목 — stub 검사와 별도 수행)
+
+```bash
+# 이중 캐스팅 검사
+grep -rn "as unknown as" src/ app/
+
+# 사유 없는 ts-expect-error 검사
+grep -rn "@ts-expect-error" src/ app/ | grep -v "// @ts-expect-error:"
+```
+
+- `as unknown as` 이중 캐스팅이 1건 이상 발견되면 **즉시 fail** 판정한다.
+- 사유 주석 없는 `@ts-expect-error`가 발견되면 **fail** 항목으로 처리한다.
+
 ## 금지사항
 
 - 개선 아이디어 중심으로 판단 흐리기

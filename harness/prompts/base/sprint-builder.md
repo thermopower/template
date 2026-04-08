@@ -81,3 +81,4 @@
 - 검증 없이 done 선언
 - 관련 없는 리팩터링 수행
 - 블로커를 임의로 우회하고 계속 진행
+- **status: implemented 전환 후 추가 구현**: sprint-contract status가 `implemented`로 갱신된 이후에는 사용자가 추가 구현을 요청하더라도 수행하지 않는다. evaluator → reviewer → retrospective → 다음 sprint 흐름으로 안내한다.

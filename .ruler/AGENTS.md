@@ -99,9 +99,12 @@
 - 프로젝트가 사용하는 언어, 프레임워크, 패키지 매니저, 테스트 도구, UI 라이브러리 규칙을 따른다.
 - 새 의존성은 꼭 필요할 때만 추가한다.
 - 기존 공통 컴포넌트/API 클라이언트/데이터 접근 계층이 있으면 우선 사용한다.
-- TypeScript에서는 any를 피한다.
+- TypeScript에서는 `any`를 절대 사용하지 않는다. `unknown` + 타입 가드로 대체한다.
+- `as unknown as` 이중 캐스팅은 신규 도입 금지. 기존 코드에서 발견하면 즉시 제거한다.
+- `@ts-expect-error`는 라이브러리 타입 결함처럼 불가피한 경우에만 허용하며, 반드시 사유 주석을 작성한다 (`// @ts-expect-error: <이유>`). 사유 없는 주석은 금지한다.
 - React/Next.js에서는 서버/클라이언트 경계를 혼동하지 않는다.
-- use client는 필요한 경우에만 사용한다.
+- `use client`는 필요한 경우에만 사용한다.
+- Next.js App Router: RSC(Server Component)에서 Client Component로 이벤트 핸들러를 prop으로 전달하지 않는다. 이벤트 핸들러가 필요한 컴포넌트는 `'use client'`를 선언하거나, 서버 측 로직은 Server Action으로 분리한다.
 
 ## Testing
 
