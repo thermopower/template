@@ -149,30 +149,7 @@ TDD 위반 즉시 중단 조건:
 
 신규 파일을 작성하기 전에 반드시 기존 유사 파일을 grep으로 스캔한다. 이전 sprint에서 제거한 안티패턴이 신규 파일에 재도입되는 것을 방지하기 위함이다.
 
-**금지 안티패턴 — 구현 완료 전 0건 확인 필수:**
-
-```bash
-# 이중 캐스팅
-grep -rn "as unknown as" src/
-
-# 사유 없는 ts-expect-error
-grep -rn "@ts-expect-error" src/ | grep -v "// @ts-expect-error:"
-
-# 빈 catch 블록
-grep -rn "catch.*{[[:space:]]*}" src/
-```
-
-- `as unknown as` 이중 캐스팅: 절대 금지. `unknown` + 타입 가드로 대체한다.
-- `@ts-expect-error`: 라이브러리 타입 결함처럼 불가피한 경우에만 허용. 반드시 사유 주석을 함께 작성한다 (`// @ts-expect-error: <이유>`).
-- 빈 catch 블록: 에러를 삼키지 않는다. 반드시 로깅 또는 재throw한다.
-
-**Next.js Server/Client 경계:**
-- RSC(Server Component)에서 Client Component로 이벤트 핸들러를 prop으로 전달하지 않는다.
-- 이벤트 핸들러가 필요한 컴포넌트는 `'use client'`를 선언하거나 Server Action으로 분리한다.
-
-**PDF/문서 렌더링 — CJK 폰트:**
-- PDF 렌더링 기능 구현 시 한글/중국어/일본어가 포함된 경우 `Font.register()`로 CJK 폰트를 반드시 등록한다.
-- `Helvetica` 등 기본 폰트만으로 구현 완료 선언 금지. CJK 문자가 깨지면 핵심 기능 미구현으로 간주한다.
+금지 패턴 기준은 `.ruler/AGENTS.md`의 `## Stack-Specific` 및 `## Coding Rules`를 따른다.
 
 ---
 
