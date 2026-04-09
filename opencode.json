@@ -4,8 +4,7 @@
   "mcp": {
     "playwright": {
       "type": "local",
-      "command": "npx",
-      "args": ["@anthropic-ai/mcp-server-playwright"]
+      "command": ["npx", "-y", "@anthropic-ai/mcp-server-playwright"]
     }
   }
 }
