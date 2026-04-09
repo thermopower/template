@@ -1,7 +1,8 @@
 ---
 description: evaluation pass 이후 코드와 UX를 품질 관점에서 비평하고 개선 방향을 제안한다. pass/fail 판정은 하지
   않는다.
-mode: primary
+mode: subagent
+model: claude-opus-4-6
 temperature: 0.1
 tools:
   read: true
@@ -12,6 +13,9 @@ tools:
   edit: true
   task: true
   webfetch: false
+permission:
+  task:
+    - "explore"
 permissions:
   edit: allow
   bash: allow

@@ -1,6 +1,7 @@
 ---
 description: 요구사항을 파악하여 PRD를 설계
 mode: subagent
+model: claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

@@ -1,6 +1,7 @@
 ---
 description: feature 단위 모듈화 설계문서를 작성. 상태 설계 포함.
 mode: subagent
+model: claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

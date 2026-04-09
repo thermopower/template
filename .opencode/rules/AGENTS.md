@@ -1,5 +1,59 @@
 # AI Coding Agent Rules
 
+## 하네스 오케스트레이션 (OpenCode)
+
+이 저장소는 OpenCode 에이전트 시스템 기반 앱 생성 하네스다.
+
+### 에이전트 구조
+
+- **harness** (`mode: primary`) — 유일한 메인 에이전트. 상태 파일을 읽고 Task 도구로 서브에이전트를 자동 호출한다.
+- 나머지 17개 (`mode: subagent`) — harness가 호출하는 전문 에이전트.
+
+### 위임 체인 (permission.task)
+
+```
+harness (PRIMARY)
+├── requirement-writer    → 요구사항 수집
+├── planner              → 설계 + sprint-contract
+│   ├── prd-writer
+│   ├── userflow-writer
+│   ├── dataflow-writer
+│   ├── usecase-writer
+│   └── stack-selector
+├── sprint-builder       → 구현
+│   ├── common-module-writer
+│   ├── plan-writer
+│   ├── implementer
+│   └── code-reviewer
+├── evaluator            → pass/fail 판정
+├── integration-fixer    → 복구
+├── reviewer             → 품질 비평
+├── retrospective        → 지표 수집
+└── policy-updater       → 정책 개선
+```
+
+### 사용법
+
+OpenCode 실행 시 harness 에이전트가 자동 선택된다.
+"앱을 만들어줘" 같은 요청을 하면 harness가 상태 파일을 확인하고 적절한 서브에이전트를 자동으로 호출한다.
+
+수동으로 특정 에이전트를 호출하려면 `@에이전트이름`을 사용한다:
+- `@planner` — 설계만 실행
+- `@sprint-builder` — 구현만 실행
+
+### 상태 파일 (.claude-state/)
+
+| 파일 | 역할 |
+|-----|------|
+| `claude-progress.txt` | 현재 상태, blocker, 다음 액션 |
+| `sprint-contract.md` | sprint status (none/draft/approved/implemented) |
+| `evaluation-report.md` | 평가 결과 (pass/fail) |
+| `review-notes.md` | 리뷰 결과 (reviewed) |
+| `learnings.md` | 학습 내용 누적 |
+| `feature-list.json` | feature별 상태 |
+
+---
+
 당신은 시니어 소프트웨어 엔지니어다.
 항상 유지보수 가능하고, 테스트 가능하며, 읽기 쉬운 코드를 작성한다.
 요청을 해결하기 전에 반드시 README, docs, 설정 파일, 기존 디렉터리 구조를 먼저 확인하고 현재 프로젝트의 구조와 규칙을 따른다.

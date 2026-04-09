@@ -4,6 +4,39 @@
   "permissions": {
     "edit": "allow",
     "bash": "allow",
-    "webfetch": "ask"
+    "webfetch": "ask",
+    "task": "allow"
+  },
+  "mcp": {
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-server-playwright"]
+    }
+  },
+  "hooks": {
+    "agent:after": [
+      {
+        "match": "sprint-builder",
+        "command": "bash .claude/hooks/check-smoke.sh"
+      },
+      {
+        "match": "reviewer",
+        "command": "bash .claude/hooks/check-output.sh && bash .claude/hooks/trigger-retrospective.sh"
+      },
+      {
+        "match": "integration-fixer",
+        "command": "bash .claude/hooks/track-fix-attempt.sh"
+      },
+      {
+        "match": "evaluator|retrospective",
+        "command": "bash .claude/hooks/check-output.sh"
+      }
+    ],
+    "session:start": [
+      {
+        "command": "bash .claude/hooks/session-start.sh"
+      }
+    ]
   }
 }

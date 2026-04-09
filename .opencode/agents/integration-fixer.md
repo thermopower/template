@@ -1,6 +1,7 @@
 ---
 description: 환경, 의존성, 런타임, 배선, broken state를 복구한다. 기능을 추가하지 않는다.
-mode: primary
+mode: subagent
+model: claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

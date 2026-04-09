@@ -1,7 +1,8 @@
 ---
 description: 사용자와 대화하여 프로젝트 요구사항을 수집하고 docs/requirement.md를 작성한다. requirement.md가
   비어있을 때 planner 이전에 실행한다.
-mode: primary
+mode: subagent
+model: claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

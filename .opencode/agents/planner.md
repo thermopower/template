@@ -1,7 +1,8 @@
 ---
 description: 요구사항을 읽고 설계 문서 일체를 생성한 뒤 sprint-contract 초안을 작성한다. 첫 번째 sprint만 사용자 승인을
   받고, 이후 sprint는 자동 승인한다. 구현하지 않는다.
-mode: primary
+mode: subagent
+model: claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true
@@ -12,6 +13,14 @@ tools:
   edit: true
   task: true
   webfetch: false
+permission:
+  task:
+    - "prd-writer"
+    - "userflow-writer"
+    - "usecase-writer"
+    - "dataflow-writer"
+    - "stack-selector"
+    - "explore"
 permissions:
   edit: allow
   task: allow
