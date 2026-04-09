@@ -13,14 +13,6 @@ tools:
   edit: true
   task: true
   webfetch: false
-permission:
-  task:
-    - "prd-writer"
-    - "userflow-writer"
-    - "usecase-writer"
-    - "dataflow-writer"
-    - "stack-selector"
-    - "explore"
 permissions:
   edit: allow
   task: allow

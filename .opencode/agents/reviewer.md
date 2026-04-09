@@ -13,9 +13,6 @@ tools:
   edit: true
   task: true
   webfetch: false
-permission:
-  task:
-    - "explore"
 permissions:
   edit: allow
   bash: allow

@@ -12,17 +12,6 @@ tools:
   grep: true
   task: true
   webfetch: false
-permission:
-  task:
-    - "requirement-writer"
-    - "planner"
-    - "sprint-builder"
-    - "evaluator"
-    - "integration-fixer"
-    - "reviewer"
-    - "retrospective"
-    - "policy-updater"
-    - "explore"
 permissions:
   edit: allow
   bash: allow

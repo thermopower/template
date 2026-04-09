@@ -12,13 +12,6 @@ tools:
   edit: true
   task: true
   webfetch: false
-permission:
-  task:
-    - "common-module-writer"
-    - "plan-writer"
-    - "implementer"
-    - "code-reviewer"
-    - "explore"
 permissions:
   edit: allow
   bash: allow
