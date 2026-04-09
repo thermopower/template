@@ -1,7 +1,7 @@
 ---
 description: 하네스 오케스트레이터. 상태 파일을 읽고 단계 전환 규칙에 따라 적절한 서브에이전트를 자동으로 호출하여 요구사항 수집부터 완성품까지 전체 개발 파이프라인을 자동 실행한다.
 mode: primary
-model: claude-sonnet-4-6
+model: anthropic:claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

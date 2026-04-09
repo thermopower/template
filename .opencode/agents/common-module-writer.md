@@ -1,7 +1,7 @@
 ---
 description: 공통 로직이나 라이브러리 세팅을 위한 공통 모듈 작업 계획을 작성하고 구현
 mode: subagent
-model: claude-sonnet-4-6
+model: anthropic:claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

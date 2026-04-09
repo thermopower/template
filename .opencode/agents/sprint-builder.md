@@ -1,7 +1,7 @@
 ---
 description: 승인된 sprint-contract 범위만 구현한다. 범위를 넘지 않는다.
 mode: subagent
-model: claude-sonnet-4-6
+model: anthropic:claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

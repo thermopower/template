@@ -2,7 +2,7 @@
 description: sprint 내부에서 implementer가 작성한 코드를 리뷰한다. major 이상 문제만 피드백하고 LGTM 또는 NEEDS_WORK를
   반환한다.
 mode: subagent
-model: claude-sonnet-4-6
+model: anthropic:claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

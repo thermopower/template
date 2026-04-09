@@ -1,7 +1,7 @@
 ---
 description: 요구사항을 바탕으로 userflow를 설계
 mode: subagent
-model: claude-sonnet-4-6
+model: anthropic:claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

@@ -1,7 +1,7 @@
 ---
 description: 제공된 구현 계획을 기반으로, 견고한 코드를 구현
 mode: subagent
-model: claude-sonnet-4-6
+model: anthropic:claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true
