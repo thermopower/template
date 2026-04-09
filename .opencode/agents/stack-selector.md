@@ -1,7 +1,6 @@
 ---
 description: 요구사항을 읽고 기술 스택을 확정한 뒤 프로필 스크립트를 생성한다. planner가 내부적으로 호출한다.
 mode: subagent
-model: anthropic:claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

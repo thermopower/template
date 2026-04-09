@@ -1,7 +1,6 @@
 ---
 description: userflow를 기반으로, dataflow와 데이터베이스 스키마를 설계
 mode: subagent
-model: anthropic:claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

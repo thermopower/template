@@ -2,7 +2,6 @@
 description: sprint 루프 종료 후 자동 실행. 정량 지표 분석 및 learnings 누적. 파일 수정은 learnings.md와 metrics.json만
   허용.
 mode: subagent
-model: anthropic:claude-haiku-4-5-20251001
 temperature: 0.1
 tools:
   read: true

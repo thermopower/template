@@ -1,7 +1,6 @@
 ---
 description: userflow를 바탕으로 기능별 usecase를 작성
 mode: subagent
-model: anthropic:claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true
