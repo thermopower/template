@@ -7,7 +7,8 @@ updated: 2026-04-05
 
 | 버전 | 날짜 | 변경 내용 |
 |------|------|-----------|
-| 1.1 | 2026-04-08 | 멀티모델 하네스 지원: Python 오케스트레이터(`harness/` 패키지) + 어댑터 패턴(claude-code / opencode / anthropic-api) 추가. OpenCode 실행 환경(opencode.json, .opencode/agents/ 17개, .opencode/rules/, .opencode/plugins/harness-hooks.js) 추가. harness.config.yaml, pyproject.toml, 범용 에이전트 스펙(harness/agents/*.agent.yaml), 프롬프트 관리(harness/prompts/), 도구 추상화(harness/tools/) 포함. `python -m harness run/start/status/agent` CLI 진입점 제공 |
+| 1.2 | 2026-04-09 | OpenCode 네이티브 에이전트 전환: Python 오케스트레이터(harness/, harness.config.yaml, pyproject.toml, tests/) 제거. harness.md를 유일한 mode:primary 오케스트레이터로 추가, 나머지 17개를 mode:subagent로 전환. permission.task 위임 체인 설정. opencode.json에 MCP/hooks/task 추가 |
+| 1.1 | 2026-04-08 | (제거됨) Python 오케스트레이터 + 어댑터 패턴. OpenCode 네이티브 전환으로 대체 |
 | 1.0 | 2026-04-07 | planner step 10: 첫 sprint 승인 시 전체 스프린트 로드맵 요약 테이블을 먼저 출력하도록 변경. 사용자가 모든 요구사항이 여러 sprint에 걸쳐 구현됨을 한눈에 파악할 수 있게 함 |
 | 1.0 | 2026-04-05 | 기술 스택 화이트리스트 도입: docs/stack-whitelist.md 신규 생성(15개 카테고리, 검증된 라이브러리 목록). requirement-writer 섹션 3에 화이트리스트 안내 원칙 추가. planner 9단계에 whitelist 참조 및 non_whitelist_libs 필드 기록 규칙 추가. harness-reference.md에 스택 화이트리스트 섹션 추가 |
 | 1.0 | 2026-04-05 | 설계 결함 13건 수정: [#1] 병렬 implementer feature 단위 커밋 규칙 추가, [#2] code_review_attempt 필드로 루프 카운터 추적, [#3] common-module-writer 성공/실패 반환 규약·sprint-builder 실패 감지 분기·implementer 블로커 절차 추가, [#4] session-start.sh remaining_sprints를 feature-list.json 기반으로 수정, [#5] check-output.sh fallback 단순화(오차단 방지), [#6] reviewer에 retrospective 직접 호출 금지 명시, [#7] check-smoke.sh stub 검사 테스트 파일·주석 제외 필터 추가, [#8] integration-fixer fix_attempt 증가 규칙·sprint-contract.md 기록 통일, [#9] planner feature-list.json 초안 선행 생성 순서 명시·usecase-writer 임의 ID 부여 금지, [#10] retrospective improve_needed:true 시 policy-updater 자동 실행, [#11] planner 스크립트 복사 정책을 초기 생성 시만으로 제한, [#12] planner 사전 준비 섹션에 .claude-state/ 초기화 명시, [#13] usecase-writer database.md 미참조 시 경고 표시 추가 |
@@ -35,14 +36,7 @@ updated: 2026-04-05
 | `profiles/<stack>/scripts/` | 스택별 smoke·unit·e2e 스크립트 |
 | `docs/stack-whitelist.md` | 기술 스택 화이트리스트 (15개 카테고리, requirement-writer·planner 참조) |
 | `docs/` | 설계 문서 (planner가 생성, harness-reference.md 포함) |
-| `harness/` | Python 오케스트레이터 패키지 (멀티모델 지원) |
-| `harness/adapters/` | claude-code / opencode / anthropic-api 어댑터 |
-| `harness/agents/` | 범용 AgentSpec YAML (17개) |
-| `harness/prompts/` | 에이전트별 프롬프트 (base / partials / overrides) |
-| `harness/tools/` | 도구 추상화 (file_ops / shell / browser) |
-| `harness.config.yaml` | 어댑터 선택·이벤트 핸들러·스크립트 경로 설정 |
-| `opencode.json` | OpenCode 프로젝트 설정 |
-| `.opencode/agents/` | OpenCode frontmatter 형식 에이전트 (17개) |
-| `.opencode/rules/AGENTS.md` | OpenCode용 코딩 원칙 |
-| `.opencode/plugins/harness-hooks.js` | OpenCode session.idle → bash 훅 브릿지 |
-| `scripts/convert_agents_opencode.py` | .claude/agents/ → .opencode/agents/ 변환 |
+| `opencode.json` | OpenCode 프로젝트 설정 (권한, MCP, hooks) |
+| `.opencode/agents/harness.md` | OpenCode PRIMARY 오케스트레이터 |
+| `.opencode/agents/*.md` | OpenCode 서브에이전트 (17개, `mode: subagent`) |
+| `.opencode/rules/AGENTS.md` | OpenCode용 코딩 원칙 + 오케스트레이션 가이드 |
