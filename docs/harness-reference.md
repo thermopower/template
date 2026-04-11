@@ -3,6 +3,9 @@
 > 매 세션 전체를 읽지 말고 이 문서만 참조하세요.  
 > 상세 내용이 필요할 때만 해당 파일을 직접 읽으세요.
 
+**이 하네스는 Claude Code와 OpenCode 양쪽에서 동작한다.**  
+에이전트 파일은 `.claude/agents/`(Claude Code)와 `.opencode/agents/`(OpenCode) 양쪽에 동일 본문으로 존재하며, 상태 파일(`.claude-state/`)과 산출물은 공유한다.
+
 ---
 
 ## 전체 흐름
