@@ -3,6 +3,9 @@
 > 매 세션 전체를 읽지 말고 이 문서만 참조하세요.  
 > 상세 내용이 필요할 때만 해당 파일을 직접 읽으세요.
 
+**이 하네스는 Claude Code와 OpenCode 양쪽에서 동작한다.**  
+에이전트 파일은 `.claude/agents/`(Claude Code)와 `.opencode/agents/`(OpenCode) 양쪽에 동일 본문으로 존재하며, 상태 파일(`.claude-state/`)과 산출물은 공유한다.
+
 ---
 
 ## 전체 흐름
@@ -61,18 +64,18 @@ requirement-writer (사용자 인터뷰 → 파일 작성)
 
 | 에이전트 | 모델 | maxTurns | 특이 설정 | 역할 | 흡수한 스킬 | 금지 |
 |---|---|---|---|---|---|---|
-| **requirement-writer** | sonnet | 20 | WebSearch | 사용자 인터뷰→docs/requirement.md 작성. 섹션 순서: 목표→(자동 리서치)→기능→스택→구현 레벨 선택. 섹션 1 완료 직후 WebSearch 2회 이내로 유사 서비스 자동 조사 후 기능 명세에 반영. 구현 레벨([1]프로덕션 [2]Secure MVP [3]Personal)을 requirement.md #5에 기록. 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리, WebSearch 3회 이상 |
-| **planner** | sonnet | 40 | — | 요구사항→설계 문서+sprint-contract 초안 오케스트레이션. requirement.md에서 구현 레벨 읽기. Personal 모드는 prd/userflow/usecase/dataflow 생략, feature-list만 작성. prd/userflow 병렬, dataflow/usecase 병렬(Personal 제외). stack-selector 호출로 스택 확정. feature-list.json에 parallel_safe 필드 포함. 첫 sprint 승인 시 전체 로드맵 요약 테이블을 먼저 출력. | `writing-plans` | 구현, 구현 레벨 사용자에게 다시 묻기, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물 |
-| **stack-selector** | sonnet | 15 | — | requirement.md + stack-whitelist.md 읽고 스택 결정. 프로필 스크립트(smoke/unit/e2e) 생성. product-spec.md에 폴더 구조 기록. planner가 내부 호출. | — | 구현 코드 작성, 사용자에게 스택 재질문, 기존 스크립트 덮어쓰기 |
-| **sprint-builder** | sonnet | 80 | `permissionMode: acceptEdits` | 오케스트레이션만. common-module → plan-writer(병렬) → implementer(parallel_safe 기준 병렬/순차) → code-reviewer 루프 → smoke 순서로 서브에이전트 호출. Personal 모드: code-reviewer 생략. | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회, stub 검사 직접 수행 |
-| **code-reviewer** | sonnet | 20 | — | sprint 내부 코드 품질 리뷰. major 이상만 피드백(테스트 품질·구현 누락·패턴 잔존·런타임 오류). LGTM 또는 NEEDS_WORK 반환. minor 언급 금지. | — | minor 지적, 리팩터링 제안, 범위 확장 요구, stub/AC 검증(evaluator 역할) |
-| **evaluator** | sonnet | 40 | Playwright MCP, Edit 포함 | pass/fail 판정만. 브라우저 실동작 검증 포함. stub 검사 시 테스트 파일·주석 제외 필터 적용. evaluation-report.md 작성. 완료 후 browser_close·스크린샷 삭제·cleanup 기록. sprint-contract.md 수정 금지 | — | 개선 제안, reviewer 역할, sprint-contract 수정 |
-| **reviewer** | opus | 40 | — | 품질 비평·개선 제안. 1-A: requirement.md→구현 직접 비교(AC 완결성 검증, AC에 없어도 요구사항에 있으면 누락). 1-B: sprint-contract AC→구현 비교. Critical/Major → 통합 개선 우선순위. Minor → Backlog 후보 섹션에만 기록 | — | pass/fail 판정, evaluator 역할, minor를 개선 우선순위에 포함, requirement.md 비교 생략 |
-| **integration-fixer** | sonnet | 50 | `isolation: worktree`, Playwright MCP | evaluation-report fail 시 진입. 환경/의존성/broken state 복구. fix_attempt 증가는 에이전트가 아닌 SubagentStop 훅(track-fix-attempt.sh)이 담당. 6단계 조사 절차 (5단계 기록 + 6단계 레거시 정리). 완료 후 browser_close·스크린샷 삭제·cleanup 기록 | `systematic-debugging` | 기능 추가, 범위 확장, 근본 원인 미확인 수정 |
-| **retrospective** | haiku | 20 | — | review-notes reviewed 시 진입. 지표 수집, learnings 누적. improve_needed:true이면 policy-updater 자동 실행 | — | learnings.md·metrics.json 외 파일 수정, improve_needed:false인데 policy-updater 실행 |
-| **policy-updater** | sonnet | 30 | — | learnings 존재 시 진입. learnings 기반 에이전트/정책 개정안 생성 | — | 승인 없이 파일 수정 |
-| **implementer** | sonnet | 60 | — | plan.md 존재 시 진입. 구현 계획 기반 TDD 구현. 테스트 먼저, 구현 코드 나중 | `test-driven-development` | 테스트 없이 구현 코드 작성, TDD 사이클 위반 |
-| **common-module-writer** | sonnet | 30 | — | 공통 모듈 계획 작성 및 TDD 구현. `docs/usecases/` 전체를 읽고 2개 이상 기능(feature)에서 반복될 패턴을 미리 추출해 `docs/common-modules.md`에 포함 | `test-driven-development` | 테스트 없이 구현 코드 작성, 문서 근거 없는 모듈 설계 |
+| **requirement-writer** | connect 기본값 | 20 | WebSearch | 사용자 인터뷰→docs/requirement.md 작성. 섹션 순서: 목표→(자동 리서치)→기능→스택→구현 레벨 선택. 섹션 1 완료 직후 WebSearch 2회 이내로 유사 서비스 자동 조사 후 기능 명세에 반영. 구현 레벨([1]프로덕션 [2]Secure MVP [3]Personal)을 requirement.md #5에 기록. 사용자 승인 게이트 포함 | `brainstorming` | 설계·구현, 스택 임의 결정, 섹션 건너뜀, 승인 없이 완료 처리, WebSearch 3회 이상 |
+| **planner** | connect 기본값 | 40 | — | 요구사항→설계 문서+sprint-contract 초안 오케스트레이션. requirement.md에서 구현 레벨 읽기. Personal 모드는 prd/userflow/usecase/dataflow 생략, feature-list만 작성. prd/userflow 병렬, dataflow/usecase 병렬(Personal 제외). stack-selector 호출로 스택 확정. feature-list.json에 parallel_safe 필드 포함. 첫 sprint 승인 시 전체 로드맵 요약 테이블을 먼저 출력. | `writing-plans` | 구현, 구현 레벨 사용자에게 다시 묻기, 승인 없이 sprint-builder 실행, TBD/TODO 포함 산출물 |
+| **stack-selector** | connect 기본값 | 15 | — | requirement.md + stack-whitelist.md 읽고 스택 결정. 프로필 스크립트(smoke/unit/e2e) 생성. product-spec.md에 폴더 구조 기록. planner가 내부 호출. | — | 구현 코드 작성, 사용자에게 스택 재질문, 기존 스크립트 덮어쓰기 |
+| **sprint-builder** | connect 기본값 | 80 | `permissionMode: acceptEdits` | 오케스트레이션만. common-module → plan-writer(병렬) → implementer(parallel_safe 기준 병렬/순차) → code-reviewer 루프 → smoke 순서로 서브에이전트 호출. Personal 모드: code-reviewer 생략. | `executing-plans` | 범위 초과, 검증 없이 done 선언, 블로커 임의 우회, stub 검사 직접 수행 |
+| **code-reviewer** | connect 기본값 | 20 | — | sprint 내부 코드 품질 리뷰. major 이상만 피드백(테스트 품질·구현 누락·패턴 잔존·런타임 오류). LGTM 또는 NEEDS_WORK 반환. minor 언급 금지. | — | minor 지적, 리팩터링 제안, 범위 확장 요구, stub/AC 검증(evaluator 역할) |
+| **evaluator** | connect 기본값 | 40 | Playwright MCP, Edit 포함 | pass/fail 판정만. 브라우저 실동작 검증 포함. stub 검사 시 테스트 파일·주석 제외 필터 적용. evaluation-report.md 작성. 완료 후 browser_close·스크린샷 삭제·cleanup 기록. sprint-contract.md 수정 금지 | — | 개선 제안, reviewer 역할, sprint-contract 수정 |
+| **reviewer** | connect 기본값 | 40 | — | 품질 비평·개선 제안. 1-A: requirement.md→구현 직접 비교(AC 완결성 검증, AC에 없어도 요구사항에 있으면 누락). 1-B: sprint-contract AC→구현 비교. Critical/Major → 통합 개선 우선순위. Minor → Backlog 후보 섹션에만 기록 | — | pass/fail 판정, evaluator 역할, minor를 개선 우선순위에 포함, requirement.md 비교 생략 |
+| **integration-fixer** | connect 기본값 | 50 | `isolation: worktree`, Playwright MCP | evaluation-report fail 시 진입. 환경/의존성/broken state 복구. fix_attempt 증가는 에이전트가 아닌 SubagentStop 훅(track-fix-attempt.sh)이 담당. 6단계 조사 절차 (5단계 기록 + 6단계 레거시 정리). 완료 후 browser_close·스크린샷 삭제·cleanup 기록 | `systematic-debugging` | 기능 추가, 범위 확장, 근본 원인 미확인 수정 |
+| **retrospective** | connect 기본값 | 20 | — | review-notes reviewed 시 진입. 지표 수집, learnings 누적. improve_needed:true이면 policy-updater 자동 실행 | — | learnings.md·metrics.json 외 파일 수정, improve_needed:false인데 policy-updater 실행 |
+| **policy-updater** | connect 기본값 | 30 | — | learnings 존재 시 진입. learnings 기반 에이전트/정책 개정안 생성 | — | 승인 없이 파일 수정 |
+| **implementer** | connect 기본값 | 60 | — | plan.md 존재 시 진입. 구현 계획 기반 TDD 구현. 테스트 먼저, 구현 코드 나중 | `test-driven-development` | 테스트 없이 구현 코드 작성, TDD 사이클 위반 |
+| **common-module-writer** | connect 기본값 | 30 | — | 공통 모듈 계획 작성 및 TDD 구현. `docs/usecases/` 전체를 읽고 2개 이상 기능(feature)에서 반복될 패턴을 미리 추출해 `docs/common-modules.md`에 포함 | `test-driven-development` | 테스트 없이 구현 코드 작성, 문서 근거 없는 모듈 설계 |
 
 ### sub-agents (planner/sprint-builder가 내부적으로 호출)
 
