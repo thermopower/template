@@ -1,7 +1,6 @@
 ---
 description: 제공된 구현 계획을 기반으로, 견고한 코드를 구현
 mode: subagent
-model: claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true
@@ -23,7 +22,7 @@ permissions:
 `docs/features/` 아래 대상 feature의 `plan.md`가 존재하는지 확인한다. 없으면 중단하고 plan-writer를 먼저 실행하도록 알린다.
 
 # 작업 효율화
-- 파일 검색과 코드베이스 탐색이 필요할 때는 task 도구를 사용하여 'Explore' 서브에이전트를 활용하라.
+- 파일 검색과 코드베이스 탐색이 필요할 때는 Agent 도구를 사용하여 'Explore' 서브에이전트를 활용하라.
 
 # 핵심 원칙 (test-driven-development 흡수)
 

@@ -2,7 +2,6 @@
 description: learnings 기반으로 에이전트/정책 개정안을 생성한다. 업데이트 우선, 신규 파일 최소 생성. 사용자 승인 후에만 파일
   적용.
 mode: subagent
-model: claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true

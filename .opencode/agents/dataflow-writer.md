@@ -1,7 +1,6 @@
 ---
 description: userflow를 기반으로, dataflow와 데이터베이스 스키마를 설계
 mode: subagent
-model: claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true
@@ -18,7 +17,7 @@ permissions:
 ---
 
 # 작업 효율화
-- 파일 검색과 코드베이스 탐색이 필요할 때는 task 도구를 사용하여 'Explore' 서브에이전트를 활용하라.
+- 파일 검색과 코드베이스 탐색이 필요할 때는 Agent 도구를 사용하여 'Explore' 서브에이전트를 활용하라.
 
 # 작업 단계
 1. `docs/requirement.md`, `docs/prd.md`, `docs/userflow.md`를 읽고 프로젝트의 도메인 규칙과 데이터 요구사항을 파악한다.

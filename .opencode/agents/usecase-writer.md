@@ -1,7 +1,6 @@
 ---
 description: userflow를 바탕으로 기능별 usecase를 작성
 mode: subagent
-model: claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true
@@ -18,7 +17,7 @@ permissions:
 ---
 
 # 작업 효율화
-- 파일 검색과 코드베이스 탐색이 필요할 때는 task 도구를 사용하여 'Explore' 서브에이전트를 활용하라.
+- 파일 검색과 코드베이스 탐색이 필요할 때는 Agent 도구를 사용하여 'Explore' 서브에이전트를 활용하라.
 
 # 입력 문서 우선순위
 

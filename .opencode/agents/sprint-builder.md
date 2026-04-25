@@ -1,7 +1,6 @@
 ---
 description: 승인된 sprint-contract 범위만 구현한다. 범위를 넘지 않는다.
 mode: subagent
-model: claude-sonnet-4-6
 temperature: 0.1
 tools:
   read: true
@@ -12,13 +11,6 @@ tools:
   edit: true
   task: true
   webfetch: false
-permission:
-  task:
-    - "common-module-writer"
-    - "plan-writer"
-    - "implementer"
-    - "code-reviewer"
-    - "explore"
 permissions:
   edit: allow
   bash: allow
