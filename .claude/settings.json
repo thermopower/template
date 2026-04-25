@@ -1,5 +1,15 @@
 {
   "enabledMcpjsonServers": ["playwright"],
+  "permissions": {
+    "allow": [
+      "Bash(bash scripts/smoke)",
+      "Bash(bash scripts/unit)",
+      "Bash(bash scripts/e2e)",
+      "Bash(bash scripts/evaluation-gate)",
+      "Bash(bash scripts/check-thresholds.sh:*)",
+      "Bash(bash scripts/collect-metrics.sh:*)"
+    ]
+  },
   "hooks": {
     "PostToolUse": [
       {

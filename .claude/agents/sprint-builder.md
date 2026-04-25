@@ -58,6 +58,28 @@ maxTurns: 80
    **Personal 모드인 경우**: code-reviewer를 건너뛰고 바로 6단계로 진행한다.
 6. `bash scripts/smoke`를 실행한다. 실패하면 완료로 처리하지 않고 문제를 수정한다.
    - **Personal 모드인 경우**: smoke 실패 시 빌드 오류만 수정한다. lint/타입 오류는 앱 실행에 영향이 없으면 무시할 수 있다.
+   - smoke 성공 후, 아래 패턴으로 단서를 수집해 `.claude-state/reviewer-hints.md`에 기록한다. 자체 차단하지 않는다 — 단서 수집만 한다. stack-selector가 확정한 언어에 맞는 패턴만 실행한다.
+     ```bash
+     : > /tmp/reviewer_hints.txt
+
+     # silent pass 후보 — Python: except 블록 다음 줄이 logger/raise/return 어디에도 해당하지 않는 경우만 추출
+     if ls src/**/*.py >/dev/null 2>&1 || ls src/*.py >/dev/null 2>&1; then
+       grep -rnA1 --include="*.py" "except.*:" src/ \
+         | awk 'BEGIN{RS="--\n"} /except[^\n]*:\n[^\n]*$/{
+                if ($0 !~ /logger\.|raise|return [a-zA-Z_]/) print $0 "\n"
+              }' >> /tmp/reviewer_hints.txt 2>/dev/null
+     fi
+
+     # silent pass 후보 — TypeScript/JavaScript: catch 블록이 비었거나 빈 객체/배열만 반환
+     if ls src/**/*.ts >/dev/null 2>&1 || ls src/**/*.tsx >/dev/null 2>&1 \
+        || ls src/**/*.js >/dev/null 2>&1 || ls src/**/*.jsx >/dev/null 2>&1; then
+       grep -rnE --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+         "catch[[:space:]]*\([^)]*\)[[:space:]]*\{[[:space:]]*\}" src/ >> /tmp/reviewer_hints.txt 2>/dev/null
+       # TypeScript 이중 캐스팅 (금지 패턴)
+       grep -rn --include="*.ts" --include="*.tsx" "as unknown as" src/ >> /tmp/reviewer_hints.txt 2>/dev/null
+     fi
+     ```
+     결과가 있으면 `.claude-state/reviewer-hints.md`에 파일 경로·라인 번호를 그대로 붙여넣는다. 결과가 없으면 파일에 `none` 한 줄만 기록한다. 이 단서는 reviewer가 우선 검토할 위치를 알려주는 힌트일 뿐, reviewer 판단을 대체하지 않는다.
 7. `.claude-state/feature-list.json`에서 이번 sprint에 구현한 feature들의 `status`를 `done`으로 갱신한다.
    - retrospective가 `remaining_sprints` 판단 시 이 값을 사용하므로 반드시 갱신해야 한다.
 9. `.claude-state/sprint-contract.md`의 status를 `implemented`로 갱신한다.

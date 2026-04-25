@@ -53,7 +53,18 @@ permissions:
 
 코드 탐색은 Explore 서브에이전트에 위임한다. 직접 대량의 파일을 읽지 않는다.
 
-다음 관점에서 비평한다 (code-reviewer와 중복되지 않는 영역 우선):
+**2-A: 구조적 품질 의무 체크리스트**
+
+`.claude-state/reviewer-hints.md`가 존재하면 먼저 읽어 grep 단서를 참고한다. 단서가 reviewer 판단을 대체하지 않는다.
+
+아래 항목을 코드 탐색으로 확인하고 위반 시 Critical로 분류한다. pass/fail 최종 판정은 하지 않는다 — 위반 사항을 기록하고 개선 방향을 제안하는 것이 이 단계의 역할이다. stack은 stack-selector가 확정한 결과(`.claude-state/profile.*`)를 따른다.
+
+- [ ] **레이어/DI**: Application 서비스가 Infrastructure 구현체를 직접 import하거나 생성하지 않는가? 모든 의존성이 프레임워크의 DI 메커니즘(FastAPI `Depends`, NestJS DI, Spring `@Autowired` 등)으로 주입되는가?
+- [ ] **테스트 격리**: 테스트가 전역 상태(설정, 싱글턴)를 직접 변경하지 않고 프레임워크의 DI 교체 경로(`dependency_overrides`, fixture, mock provider 등)를 사용하는가?
+- [ ] **단일 정의**: 두 개 이상의 모듈이 동일한 상수·컬럼 목록·피처 이름을 별도로 정의하지 않는가?
+- [ ] **silent pass**: 예외 처리 블록(`except`, `catch`) 중 로그 없이 빈 값·`pass`·빈 객체만 반환하는 패턴이 없는가?
+
+다음 관점에서도 비평한다 (code-reviewer와 중복되지 않는 영역 우선):
 - UX 흐름의 명확성
 - 기술 부채와 장기 유지보수성
 - 불필요한 복잡성
